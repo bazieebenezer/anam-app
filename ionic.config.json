@@ -1,0 +1,7 @@
+{
+  "name": "anam-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
