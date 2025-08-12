@@ -1,0 +1,10 @@
+ion-icon {
+  color: var(--ion-color-dark-shade);
+}
+
+ion-tab-bar {
+  --border: 1px solid var(--ion-color-very-light-gray);
+  border-radius: 24px 24px 0 0;
+  height: 62px;
+  --background: var(--ion-color-extra-light-gray);
+}
