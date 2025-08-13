@@ -2,26 +2,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  margin-bottom: 36px;
+  gap: 8px;
+  margin-bottom: 18px;
   .count {
     font-weight: 500;
     margin-left: 8px;
     color: var(--ion-color-primary);
   }
   ion-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     --box-shadow: none;
     text-transform: none;
     font-weight: 400;
     --border-radius: 8px;
-    width: 73px;
-    height: 36px;
+    width: 74px;
     --background: transparent;
-    color: var(--ion-color-gray);
-    font-size: 14px;
+    color: var(--ion-color-secondary-contrast);
   }
   ion-button.selected {
     --background: var(--ion-color-primary);
@@ -29,8 +24,8 @@
     font-weight: 500;
   }
   ion-button.unselect {
-    width: 73px;
     border-radius: 8px;
+    width: 74px;
     border: 2px solid var(--ion-color-very-light-gray);
     font-weight: 400;
   }
@@ -143,37 +138,6 @@ ion-content {
           margin-top: -3px;
           font-weight: 300;
         }
-      }
-      ion-badge {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 6px;
-        width: 110px;
-        height: 32px;
-        margin-inline-end: 16px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 400;
-      }
-      ion-badge svg {
-        width: 18px;
-        height: 18px;
-      }
-      ion-badge.urgent {
-        background: rgba(var(--ion-color-danger-rgb), 0.18);
-        border: 1px solid var(--ion-color-danger);
-        color: var(--ion-color-danger);
-      }
-      ion-badge.normal {
-        background: rgba(var(--ion-color-success-rgb), 0.18);
-        border: 1px solid var(--ion-color-success);
-        color: var(--ion-color-success);
-      }
-      ion-badge.eleve {
-        background: rgba(var(--ion-color-warning-rgb), 0.18);
-        border: 1px solid var(--ion-color-warning);
-        color: var(--ion-color-warning);
       }
     }
     ion-card-content {

@@ -6,9 +6,10 @@ import {
   addOutline,
   arrowDownOutline,
   filterOutline,
-  home,
-  informationCircleOutline,
+  homeOutline,
+  homeSharp,
   newspaperOutline,
+  newspaperSharp,
   notificationsOutline,
   settingsOutline,
   shareSharp,
@@ -32,8 +33,9 @@ registerLocaleData(localeFr);
 export class AppComponent {
   constructor() {
     addIcons({
-      home,
+      homeOutline,
       newspaperOutline,
+      newspaperSharp,
       addOutline,
       settingsOutline,
       notificationsOutline,
@@ -41,6 +43,7 @@ export class AppComponent {
       shareSharp,
       shareSocial,
       arrowDownOutline,
+      homeSharp,
     });
   }
 }

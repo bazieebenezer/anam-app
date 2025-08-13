@@ -1,16 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonButton,
   IonIcon,
   IonTabBar,
   IonTabs,
-  IonTab,
   IonTabButton,
 } from '@ionic/angular/standalone';
 
@@ -29,7 +23,13 @@ import {
   ],
 })
 export class TabsPage implements OnInit {
+  tabs = viewChild<IonTabs>('tabs');
+  selectedTab = signal<string | null>(null);
   constructor() {}
 
   ngOnInit() {}
+
+  setCurrentTab() {
+    this.selectedTab.set(this.tabs()?.getSelected()!);
+  }
 }

@@ -15,6 +15,18 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/home/home.page').then((m) => m.HomePage),
       },
+      {
+        path: 'bulletin-details/:id',
+        loadComponent: () =>
+          import('./pages/bulletin-details/bulletin-details.page').then(
+            (m) => m.BulletinDetailsPage
+          ),
+      },
+      {
+        path: 'events',
+        loadComponent: () =>
+          import('./pages/events/events.page').then((m) => m.EventsPage),
+      },
     ],
   },
 ];

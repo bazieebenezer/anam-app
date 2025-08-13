@@ -1,0 +1,26 @@
+<ion-content [fullscreen]="true">
+  <ion-header class="ion-no-border">
+    <ion-back-button defaultHref="home"></ion-back-button>
+  </ion-header>
+  <div class="details-content">
+    <div class="header">
+      <div class="text">
+        <h2>{{ bulletin?.title }}</h2>
+        <span>Valable jusqu'au {{ bulletin?.date | date: 'fullDate' }}</span>
+      </div>
+      <app-badge [severity]="bulletin?.severity">/</app-badge>
+    </div>
+
+    <p>
+      ℹ️ Météo du 24 juillet 2025 (valable jusqu'au 25 juillet à 12h)
+      <br /><br />
+      🌧️ Retour d'un temps instable sur une bonne partie du pays ! Au cours des
+      prochaines 24 heures, le ciel restera très nuageux à couvert sur
+      l'ensemble du territoire. <br /><br />
+      🌦️ À partir de cet après-midi, des orages accompagnés de pluies pourraient
+      intéresser la majeure partie du pays. <br /><br />
+      🌡️ Températures : Les minimales et maximales seront quasi-stationnaires ou
+      en baisse, par rapport à la période précédente.
+    </p>
+  </div>
+</ion-content>

@@ -20,6 +20,9 @@ import {
 } from '@ionic/angular/standalone';
 import { PublicationService } from 'src/app/services/publication/publication.service';
 import { WeatherBulletin } from 'src/app/model/bulletin.model';
+import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
+import { BadgeComponent } from 'src/app/components/badge/badge/badge.component';
 
 @Component({
   selector: 'app-home',
@@ -44,9 +47,13 @@ import { WeatherBulletin } from 'src/app/model/bulletin.model';
     CommonModule,
     FormsModule,
     IonImg,
+    BadgeComponent,
+    BadgeComponent,
   ],
 })
 export class HomePage implements OnInit {
+  constructor(private router: Router, private navCtrl: NavController) {}
+
   @ViewChild('modal') modal!: IonModal;
   searchTerm: string = '';
   selectedFilter: string = 'tous';
@@ -54,7 +61,6 @@ export class HomePage implements OnInit {
   bulletinService = inject(PublicationService);
   bulletins: WeatherBulletin[] = [];
   filteredBulletins: WeatherBulletin[] = [];
-  constructor() {}
 
   ngOnInit() {
     this.bulletins = this.bulletinService.getPublications();
@@ -86,6 +92,11 @@ export class HomePage implements OnInit {
   }
 
   openNotifications() {}
+
+  goToDetails(bulletin: WeatherBulletin, event: MouseEvent) {
+    if ((event.target as HTMLElement).closest('ion-button')) return;
+    this.router.navigate(['/bulletin-details', bulletin.id]);
+  }
 
   openShareModal(bulletin: WeatherBulletin) {
     this.selectedBulletin = bulletin;

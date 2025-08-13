@@ -1,16 +1,35 @@
-<ion-tabs>
+<ion-tabs #tabs (ionTabsDidChange)="setCurrentTab()">
   <ion-tab-bar>
     <ion-tab-button tab="home">
-      <ion-icon name="home" color="secondary-contrast"></ion-icon>
+      @if(selectedTab() === "home" || selectedTab() === "bulletin-details") {
+      <ion-icon name="home-sharp" color="primary"></ion-icon>
+      } @else {
+      <ion-icon name="home-outline" color="secondary-contrast"></ion-icon>
+      }
     </ion-tab-button>
-    <ion-tab-button tab="news">
-      <ion-icon name="newspaper-outline"></ion-icon>
+
+    <ion-tab-button tab="events">
+      @if (selectedTab() === "events") {
+      <ion-icon name="newspaper-outline" color="primary"></ion-icon>
+      } @else {
+      <ion-icon name="newspaper-outline" color="secondary-contrast"></ion-icon>
+      }
     </ion-tab-button>
+
     <ion-tab-button tab="add">
-      <ion-icon name="add-outline"></ion-icon>
+      @if (selectedTab() === "add") {
+      <ion-icon name="add-outline" color="primary"></ion-icon>
+      } @else {
+      <ion-icon name="add-outline" color="secondary-contrast"></ion-icon>
+      }
     </ion-tab-button>
+
     <ion-tab-button tab="settings">
-      <ion-icon name="settings-outline"></ion-icon>
+      @if (selectedTab() === "settings") {
+      <ion-icon name="settings-outline" color="primary"></ion-icon>
+      } @else {
+      <ion-icon name="settings-outline" color="secondary-contrast"></ion-icon>
+      }
     </ion-tab-button>
   </ion-tab-bar>
 </ion-tabs>
