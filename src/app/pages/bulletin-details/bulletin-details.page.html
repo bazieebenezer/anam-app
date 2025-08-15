@@ -1,5 +1,6 @@
 <ion-content [fullscreen]="true">
   <ion-header class="ion-no-border">
+    <ion-img [src]="bulletin?.imageUrl"></ion-img>
     <ion-back-button defaultHref="home"></ion-back-button>
   </ion-header>
   <div class="details-content">
@@ -22,5 +23,19 @@
       🌡️ Températures : Les minimales et maximales seront quasi-stationnaires ou
       en baisse, par rapport à la période précédente.
     </p>
+
+    <swiper-container
+      [modules]="swiperModule"
+      [slidesPerView]="1"
+      [spaceBetween]="8"
+      [pagination]="{ clickable: true }"
+      [centeredSlides]="true"
+    >
+      @for (item of [1, 2, 3]; track $index) {
+      <swiper-slide>
+        <img [src]="bulletin?.imageUrl" />
+      </swiper-slide>
+      },
+    </swiper-container>
   </div>
 </ion-content>

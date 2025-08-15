@@ -1,16 +1,19 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
 import {
   IonContent,
   IonHeader,
   IonBackButton,
   IonImg,
 } from '@ionic/angular/standalone';
+
 import { ActivatedRoute } from '@angular/router';
 import { PublicationService } from 'src/app/services/publication/publication.service';
 import { WeatherBulletin } from 'src/app/model/bulletin.model';
 import { BadgeComponent } from 'src/app/components/badge/badge/badge.component';
+import { IonicSlides } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-bulletin-details',
@@ -24,10 +27,15 @@ import { BadgeComponent } from 'src/app/components/badge/badge/badge.component';
     CommonModule,
     FormsModule,
     BadgeComponent,
+    IonImg,
   ],
+
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class BulletinDetailsPage implements OnInit {
   constructor() {}
+
+  swiperModule = [IonicSlides];
 
   bulletin!: WeatherBulletin | undefined;
   route = inject(ActivatedRoute);

@@ -2,6 +2,7 @@ import { Component, LOCALE_ID } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import localeFr from '@angular/common/locales/fr';
+
 import {
   addOutline,
   arrowDownOutline,
@@ -15,7 +16,11 @@ import {
   shareSharp,
   shareSocial,
 } from 'ionicons/icons';
+
 import { registerLocaleData } from '@angular/common';
+import { register } from 'swiper/element/bundle';
+
+register();
 
 registerLocaleData(localeFr);
 
