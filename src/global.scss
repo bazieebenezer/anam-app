@@ -36,69 +36,48 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 // @import "@ionic/angular/css/palettes/dark.system.css";
 
-// Police Inter Regular
 @font-face {
-  font-family: "Inter";
-  src: url("/assets/fonts/Inter-Regular.otf") format("opentype");
-  font-weight: 400;
+  font-family: Inter;
   font-style: normal;
-  font-display: swap;
-}
-
-// Police Inter Thin
-@font-face {
-  font-family: "Inter";
-  src: url("/assets/fonts/Inter-Thin.otf") format("opentype");
-  font-weight: 100;
-  font-style: normal;
-  font-display: swap;
-}
-
-// Police Inter ExtraLight
-@font-face {
-  font-family: "Inter";
-  src: url("/assets/fonts/Inter-ExtraLight.otf") format("opentype");
-  font-weight: 200;
-  font-style: normal;
-  font-display: swap;
-}
-
-// Police Inter Light
-@font-face {
-  font-family: "Inter";
-  src: url("/assets/fonts/Inter-Light.otf") format("opentype");
   font-weight: 300;
-  font-style: normal;
   font-display: swap;
+  src: url("assets/fonts/Inter-Light.woff2?v={{font_v}}") format("woff2");
 }
-
-// Police Inter Medium
 @font-face {
-  font-family: "Inter";
-  src: url("/assets/fonts/Inter-Medium.otf") format("opentype");
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("assets/fonts/Inter-Regular.woff2?v={{font_v}}") format("woff2");
+}
+@font-face {
+  font-family: Inter;
+  font-style: normal;
   font-weight: 500;
-  font-style: normal;
   font-display: swap;
+  src: url("assets/fonts/Inter-Medium.woff2?v={{font_v}}") format("woff2");
 }
-
-// Police Inter SemiBold
 @font-face {
-  font-family: "Inter";
-  src: url("/assets/fonts/Inter-SemiBold.otf") format("opentype");
+  font-family: Inter;
+  font-style: normal;
   font-weight: 600;
-  font-style: normal;
   font-display: swap;
+  src: url("assets/fonts/Inter-SemiBold.woff2?v={{font_v}}") format("woff2");
 }
-
-// Police Inter Bold
 @font-face {
-  font-family: "Inter";
-  src: url("/assets/fonts/Inter-Bold.otf") format("opentype");
-  font-weight: 700;
+  font-family: Inter;
   font-style: normal;
+  font-weight: 700;
   font-display: swap;
+  src: url("assets/fonts/Inter-Bold.woff2?v={{font_v}}") format("woff2");
 }
-
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("assets/fonts/Inter-Black.woff2?v={{font_v}}") format("woff2");
+}
 
 :root {
   --ion-font-family: "Inter", system-ui, sans-serif;
@@ -106,4 +85,15 @@
 
 body {
   font-family: var(--ion-font-family);
+}
+
+h1,
+h2 {
+  letter-spacing: -1px;
+}
+
+p,
+span {
+  font-size: 16px;
+  color: var(--ion-color-gray);
 }

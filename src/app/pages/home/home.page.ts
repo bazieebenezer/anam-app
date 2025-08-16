@@ -20,9 +20,9 @@ import {
 } from '@ionic/angular/standalone';
 import { PublicationService } from 'src/app/services/publication/publication.service';
 import { WeatherBulletin } from 'src/app/model/bulletin.model';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { BadgeComponent } from 'src/app/components/badge/badge/badge.component';
+import { BadgeComponent } from 'src/app/components/badge/badge.component';
 
 @Component({
   selector: 'app-home',
@@ -49,6 +49,7 @@ import { BadgeComponent } from 'src/app/components/badge/badge/badge.component';
     IonImg,
     BadgeComponent,
     BadgeComponent,
+    RouterLink,
   ],
 })
 export class HomePage implements OnInit {

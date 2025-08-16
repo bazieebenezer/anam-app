@@ -1,6 +1,10 @@
 <ion-content [fullscreen]="true">
   <ion-header class="ion-no-border">
-    <ion-img [src]="bulletin?.imageUrl"></ion-img>
+    <ion-img
+      [src]="bulletin?.imageUrl"
+      (click)="openImageViewer(bulletin?.imageUrl || '')"
+      style="cursor: pointer"
+    ></ion-img>
     <ion-back-button defaultHref="home"></ion-back-button>
   </ion-header>
   <div class="details-content">
@@ -12,17 +16,7 @@
       <app-badge [severity]="bulletin?.severity">/</app-badge>
     </div>
 
-    <p>
-      ℹ️ Météo du 24 juillet 2025 (valable jusqu'au 25 juillet à 12h)
-      <br /><br />
-      🌧️ Retour d'un temps instable sur une bonne partie du pays ! Au cours des
-      prochaines 24 heures, le ciel restera très nuageux à couvert sur
-      l'ensemble du territoire. <br /><br />
-      🌦️ À partir de cet après-midi, des orages accompagnés de pluies pourraient
-      intéresser la majeure partie du pays. <br /><br />
-      🌡️ Températures : Les minimales et maximales seront quasi-stationnaires ou
-      en baisse, par rapport à la période précédente.
-    </p>
+    <p>{{ bulletin?.descriptionDetails }}</p>
 
     <swiper-container
       [modules]="swiperModule"
@@ -31,11 +25,35 @@
       [pagination]="{ clickable: true }"
       [centeredSlides]="true"
     >
-      @for (item of [1, 2, 3]; track $index) {
+      @for (image of bulletin?.imagesUrls; track $index) {
       <swiper-slide>
-        <img [src]="bulletin?.imageUrl" />
+        <img
+          [src]="image"
+          (click)="openImageViewer(image || '')"
+          style="cursor: pointer"
+        />
       </swiper-slide>
       },
     </swiper-container>
+
+    <h3>Conseils pratiques</h3>
+
+    @for (conseil of bulletin?.conseils; track $index) {
+    <li><span>{{ conseil }}</span></li>
+    }
   </div>
+
+  <ion-button expand="block" color="primary">
+    <ion-icon name="arrow-down-outline"></ion-icon>
+    <ion-text>Télécharger le PDF</ion-text>
+  </ion-button>
 </ion-content>
+
+<!-- Image Viewer Modal -->
+<app-image-viewer-modal
+  [isOpen]="isImageViewerOpen"
+  [imageUrl]="currentImageUrl"
+  (didDismiss)="onModalDismiss()"
+  [title]="bulletin?.title"
+>
+</app-image-viewer-modal>

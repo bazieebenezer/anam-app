@@ -1,0 +1,63 @@
+<ion-modal [isOpen]="isOpen" (didDismiss)="closeModal()">
+  <ng-template>
+    <ion-header class="ion-no-border">
+      <ion-toolbar>
+        <ion-title>{{ title }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button
+            (click)="downloadImage()"
+            [disabled]="isDownloading"
+            [fill]="isDownloading ? 'clear' : 'clear'"
+          >
+            <ion-icon
+              [name]="
+                isDownloading ? 'hourglass-outline' : 'arrow-down-outline'
+              "
+              [class.spinning]="isDownloading"
+            ></ion-icon>
+          </ion-button>
+          <ion-button (click)="closeModal()">
+            <ion-icon name="close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="image-viewer-content">
+      <div
+        class="image-container"
+        (touchstart)="onTouchStart($event)"
+        (touchmove)="onTouchMove($event)"
+        (touchend)="onTouchEnd()"
+      >
+        <img
+          [src]="imageUrl"
+          [style.transform]="
+            'scale(' +
+            scale +
+            ') translate(' +
+            translateX +
+            'px, ' +
+            translateY +
+            'px)'
+          "
+          [style.transition]="isTransitioning ? 'transform 0.3s ease' : 'none'"
+          class="zoomable-image"
+          alt="Bulletin météo"
+        />
+      </div>
+
+      <div class="zoom-controls">
+        <ion-button fill="clear" (click)="zoomIn()">
+          <ion-icon name="add"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="zoomOut()">
+          <ion-icon name="remove"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="resetZoom()">
+          <ion-icon name="refresh"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-content>
+  </ng-template>
+</ion-modal>

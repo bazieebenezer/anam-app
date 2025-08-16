@@ -3,7 +3,7 @@
     <ion-img src="./assets/logo/anam_logo.png"></ion-img>
     <ion-button class="notifications" slot="end" (click)="openNotifications()">
       <ion-icon name="notifications-outline"></ion-icon>
-      <ion-badge color="danger"><span>2</span></ion-badge>
+      <ion-badge color="danger"><span></span></ion-badge>
     </ion-button>
   </ion-item>
 
@@ -51,7 +51,12 @@
       <app-badge [severity]="bulletin.severity" />
     </div>
     <ion-card-content>
-      <p>{{bulletin.description}} <a href="#">En savoir plus</a></p>
+      <p>
+        {{bulletin.description}}
+        <a href="#" [routerLink]="['bulletin-details', bulletin.id]"
+          >En savoir plus</a
+        >
+      </p>
     </ion-card-content>
     <ion-buttons>
       <ion-button class="share" (click)="openShareModal(bulletin)">

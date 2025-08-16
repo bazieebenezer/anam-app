@@ -9,4 +9,7 @@ export interface WeatherBulletin {
   imageUrl: string;
   downloadUrl?: string;
   shareUrl?: string;
+  descriptionDetails?: string;
+  conseils?: string[];
+  imagesUrls?: string[];
 }

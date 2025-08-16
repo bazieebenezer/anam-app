@@ -4,14 +4,19 @@ import { addIcons } from 'ionicons';
 import localeFr from '@angular/common/locales/fr';
 
 import {
+  add,
   addOutline,
   arrowDownOutline,
+  close,
+  downloadOutline,
   filterOutline,
   homeOutline,
   homeSharp,
   newspaperOutline,
   newspaperSharp,
   notificationsOutline,
+  refresh,
+  remove,
   settingsOutline,
   shareSharp,
   shareSocial,
@@ -49,6 +54,11 @@ export class AppComponent {
       shareSocial,
       arrowDownOutline,
       homeSharp,
+      downloadOutline,
+      close,
+      add,
+      remove,
+      refresh
     });
   }
 }

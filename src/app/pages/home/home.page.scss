@@ -62,13 +62,16 @@ ion-content {
       }
       ion-badge {
         position: absolute;
-        transform: translate(7px, -6px);
-        height: 18px;
-        width: 18px;
+        transform: translate(4px, -8px);
+        height: 12px;
+        width: 12px;
         padding: 4px;
         border-radius: 50%;
         font-size: 10px;
         span {
+          display: flex;
+          justify-content: center;
+          font-size: 11px;
           color: white;
         }
       }
@@ -192,7 +195,8 @@ ion-modal#share-modal {
   --box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
   h1 {
     margin: 20px 20px 10px 20px;
-    font-size: 18px;
+    font-size: 24px;
+    letter-spacing: normal;
   }
   ion-list {
     ion-item {
