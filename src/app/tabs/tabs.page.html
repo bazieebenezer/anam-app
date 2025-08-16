@@ -9,8 +9,8 @@
     </ion-tab-button>
 
     <ion-tab-button tab="events">
-      @if (selectedTab() === "events") {
-      <ion-icon name="newspaper-outline" color="primary"></ion-icon>
+      @if (selectedTab() === "events" || selectedTab() === "event-details") {
+      <ion-icon name="newspaper" color="primary"></ion-icon>
       } @else {
       <ion-icon name="newspaper-outline" color="secondary-contrast"></ion-icon>
       }

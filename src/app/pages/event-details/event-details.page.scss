@@ -1,9 +1,9 @@
 ion-content {
   ion-img {
     position: relative;
-    object-fit: fill;
+    object-fit: cover;
     transition: transform 0.2s ease;
-
+    height: 400px;
     &:hover {
       transform: scale(1.02);
     }
@@ -21,15 +21,14 @@ ion-content {
     div.header {
       display: flex;
       align-items: center;
-      app-badge {
-        margin-right: -16px;
-      }
       div.text {
         h2 {
+          width: 100%;
+          text-align: left;
           font-size: 32px;
         }
         span {
-          font-size: 15px;
+          font-size: 14px;
         }
       }
     }
@@ -37,6 +36,7 @@ ion-content {
     p {
       margin-top: 32px;
       margin-bottom: 42px;
+      font-size: 16px;
       line-height: 1.6rem;
     }
 
@@ -62,21 +62,6 @@ ion-content {
     }
     li {
       margin: 18px 0px;
-    }
-  }
-  ion-button {
-    margin: 42px 16px;
-    text-transform: none;
-    --box-shadow: none;
-    --border-radius: 8px;
-    height: 50px;
-    ion-icon {
-      width: 24px;
-      height: 24px;
-    }
-    ion-text {
-      font-weight: 300;
-      font-size: 16px;
     }
   }
 }

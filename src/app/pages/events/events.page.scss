@@ -1,0 +1,196 @@
+ion-header {
+  box-shadow: none;
+  border: 1px solid rgba(var(--ion-color-secondary-contrast-rgb), 0.1);
+  height: 80px;
+  ion-toolbar {
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    ion-title {
+      font-size: 21px;
+    }
+  }
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  margin-bottom: 18px;
+  .count {
+    font-weight: 500;
+    margin-left: 8px;
+    color: var(--ion-color-primary);
+  }
+  ion-button {
+    --box-shadow: none;
+    text-transform: none;
+    font-weight: 400;
+    --border-radius: 8px;
+    min-width: max-content;
+    --background: transparent;
+    color: var(--ion-color-secondary-contrast);
+  }
+  ion-button.selected {
+    --background: var(--ion-color-primary);
+    color: var(--ion-color-primary-contrast);
+    font-weight: 500;
+  }
+  ion-button.unselect {
+    border-radius: 8px;
+    width: 74px;
+    border: 2px solid var(--ion-color-very-light-gray);
+    font-weight: 400;
+  }
+}
+ion-content {
+  div.search-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    margin: 16px 8px 26px;
+    ion-searchbar ::ng-deep input.searchbar-input {
+      height: 48px !important;
+      font-size: 16px !important;
+      background-color: transparent;
+      border-radius: 8px;
+      --box-shadow: none;
+      border: 1px solid rgba(var(--ion-color-gray-rgb), 0.38);
+    }
+    ion-searchbar::ng-deep .searchbar-search-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--ion-color-secondary-contrast);
+    }
+
+    ion-button {
+      --box-shadow: none;
+      --border-radius: 8px;
+      ion-icon {
+        width: 26px;
+        height: 26px;
+        color: white;
+      }
+    }
+  }
+  ion-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100% !important;
+    margin: 0 !important;
+    border-radius: 0;
+    border: 1px solid var(--ion-color-very-light-gray);
+    border-bottom: none;
+    margin-bottom: 18px !important;
+    box-shadow: none;
+    img {
+      width: 100%;
+      border: none;
+      object-fit: fill;
+    }
+    div.header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      ion-card-header {
+        display: flex;
+        align-items: start;
+        span {
+          font-weight: 300;
+          font-size: 14px;
+        }
+        h3.title {
+          font-size: 21px;
+          font-weight: 500;
+          color: var(--ion-color-secondary-contrast);
+          width: 377px;
+        }
+      }
+    }
+    ion-card-content {
+      p {
+        font-size: 16px;
+        font-weight: 400;
+        margin-top: -12px;
+        color: var(--ion-color-secondary-contrast);
+        line-height: 1.4rem;
+      }
+    }
+    ion-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 8px;
+      margin-bottom: 16px;
+      ion-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 180px;
+        height: 40px;
+        border-radius: 8px;
+        font-size: 14px;
+        text-transform: none;
+        font-weight: 400;
+      }
+      ion-button.share {
+        background: var(--ion-color-very-light-gray);
+        color: var(--ion-color-secondary-contrast);
+      }
+
+      ion-button.learn_more {
+        background: var(--ion-color-primary);
+        color: var(--ion-color-primary-contrast);
+      }
+    }
+  }
+  div.no-results {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 16px;
+    margin: 42px 16px;
+    border-radius: 8px;
+    background: var(--ion-color-extra-light-gray);
+    ion-icon {
+      height: 42px;
+      width: 42px;
+      color: var(--ion-color-warning);
+    }
+    p {
+      text-align: center;
+    }
+  }
+}
+
+ion-modal#share-modal {
+  --width: fit-content;
+  --min-width: 330px;
+  --height: fit-content;
+  --border-radius: 8px;
+  --box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+  h1 {
+    margin: 20px 20px 10px 20px;
+    font-size: 24px;
+    letter-spacing: normal;
+  }
+  ion-list {
+    ion-item {
+      margin-bottom: 16px;
+    }
+    ion-img {
+      height: 46px;
+      width: 46px;
+      margin-inline-end: 12px;
+      margin-bottom: 8px;
+    }
+  }
+  .wrapper {
+    margin-bottom: 10px;
+  }
+}

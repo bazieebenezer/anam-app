@@ -7,11 +7,13 @@ import {
   add,
   addOutline,
   arrowDownOutline,
+  calendarOutline,
   close,
   downloadOutline,
   filterOutline,
   homeOutline,
   homeSharp,
+  newspaper,
   newspaperOutline,
   newspaperSharp,
   notificationsOutline,
@@ -58,7 +60,9 @@ export class AppComponent {
       close,
       add,
       remove,
-      refresh
+      refresh,
+      calendarOutline,
+      newspaper,
     });
   }
 }

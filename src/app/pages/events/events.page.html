@@ -1,13 +1,93 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" mode="ios">
   <ion-toolbar>
-    <ion-title>events</ion-title>
+    <ion-title>Événements</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">events</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content fullscreen="true">
+  <div class="search-content">
+    <ion-searchbar
+      placeholder="Rechercher un événement..."
+      (ionInput)="onSearchChange($event)"
+    ></ion-searchbar>
+  </div>
+
+  <div class="filter-group">
+    <ion-button
+      [ngClass]="selectedFilter === 'tous' ? 'selected' : 'unselect'"
+      (click)="onFilterChange('tous')"
+      >Tous</ion-button
+    >
+    <ion-button
+      [ngClass]="selectedFilter === 'recents' ? 'selected' : 'unselect'"
+      (click)="onFilterChange('recents')"
+      >Récents</ion-button
+    >
+    <ion-button
+      [ngClass]="selectedFilter === '2jours' ? 'selected' : 'unselect'"
+      (click)="onFilterChange('2jours')"
+      >2 jours</ion-button
+    >
+    <ion-button
+      [ngClass]="selectedFilter === 'plus_anciens' ? 'selected' : 'unselect'"
+      (click)="onFilterChange('plus_anciens')"
+      >Anciens</ion-button
+    >
+    <span class="count">({{filteredEvents.length}})</span>
+  </div>
+
+  @for (event of filteredEvents; track event.id) {
+  <ion-card (click)="goToDetails(event, $event)">
+    <img [src]="event.imageUrl" />
+    <div class="header">
+      <ion-card-header>
+        <h3 class="title">{{event.title}}</h3>
+        <div class="event-meta">
+          <span class="date">{{event.date | date: 'mediumDate' }}</span>
+        </div>
+        <div class="event-details"></div>
+      </ion-card-header>
+    </div>
+    <ion-card-content>
+      <p>{{event.description}}</p>
+    </ion-card-content>
+    <ion-buttons>
+      <ion-button class="share" (click)="openShareModal(event)">
+        <ion-icon slot="start" name="share-social"></ion-icon>
+        <ion-text>Partager</ion-text>
+      </ion-button>
+
+      <ion-button
+        class="learn_more"
+        [routerLink]="['/event-details', event.id]"
+      >
+        <ion-text>En savoir plus</ion-text>
+      </ion-button>
+    </ion-buttons>
+  </ion-card>
+  } @if (filteredEvents.length === 0) {
+  <div class="no-results">
+    <ion-icon name="calendar-outline"></ion-icon>
+    <h3>Aucun événement trouvé</h3>
+    <p>Essayez de modifier vos critères de recherche ou de filtre</p>
+  </div>
+  }
 </ion-content>
+
+<ion-modal id="share-modal" #modal>
+  <ng-template>
+    <div class="wrapper">
+      <h1>Partager via</h1>
+      <ion-list>
+        <ion-item button="true" detail="false" (click)="modal.dismiss()">
+          <ion-img src="assets/logo/facebook.png"></ion-img>
+          <ion-label>Facebook</ion-label>
+        </ion-item>
+        <ion-item button="true" detail="false" (click)="modal.dismiss()">
+          <ion-img src="assets/logo/whatsapp.png"></ion-img>
+          <ion-label>Whatsapp</ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+  </ng-template>
+</ion-modal>
