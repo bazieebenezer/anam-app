@@ -11,7 +11,7 @@ export class PublicationService {
       id: 1,
       title: 'Bulletin météo du 26 Juillet 2025',
       date: new Date('2025-07-26'),
-      severity: 'urgent',
+      severity: 'normal',
       description:
         "Ciel très nuageux à couvert sur l'ensemble du territoire avec des orages...",
       imageUrl: './assets/img/publication/bulletin_1.jpg',
@@ -123,7 +123,7 @@ export class PublicationService {
       id: 4,
       title: 'Bulletin météo du 23 Juillet 2025',
       date: new Date('2025-07-23'),
-      severity: 'urgent',
+      severity: 'normal',
       description:
         'Orages violents attendus dans la région du Sahel, avec des vents forts...',
       imageUrl: './assets/img/publication/bulletin_4.jpg',

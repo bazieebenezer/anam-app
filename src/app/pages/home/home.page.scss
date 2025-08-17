@@ -186,6 +186,25 @@ ion-content {
       }
     }
   }
+
+  div.no-results {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 16px;
+    margin: 42px 16px;
+    border-radius: 8px;
+    background: var(--ion-color-extra-light-gray);
+    ion-icon {
+      height: 42px;
+      width: 42px;
+      color: var(--ion-color-warning);
+    }
+    p {
+      text-align: center;
+    }
+  }
 }
 
 ion-modal#share-modal {
