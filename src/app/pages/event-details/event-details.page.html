@@ -37,9 +37,9 @@
 
     <h3>Liens utiles</h3>
 
-    <!-- @for (conseil of event?.conseils; track $index) {
-    <li><span>{{ conseil }}</span></li>
-    } -->
+    @for (link of event?.utilsLinks; track $index) {
+    <li><a [href]="link.link">{{ link.title }}</a></li>
+    }
   </div>
 
   <!-- Image Viewer Modal -->

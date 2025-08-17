@@ -9,6 +9,7 @@ export interface Event {
   severity?: 'normal' | 'eleve' | 'urgent';
   imagesUrls?: string[];
   descriptionDetails?: string;
+  utilsLinks?: { title: string; link: string }[];
 }
 
 export interface ImportantLink {

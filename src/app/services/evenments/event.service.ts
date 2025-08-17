@@ -29,6 +29,13 @@ La formation se conclura par l'élaboration de plans d'action concrets que les p
         './assets/img/event/event_4.jpg',
         './assets/img/event/event_5.jpg',
       ],
+      utilsLinks: [
+        {
+          title: 'Guide de préparation',
+          link: 'https://example.com/guide-preparation',
+        },
+        { title: "Plan d'urgence", link: 'https://example.com/plan-urgence' },
+      ],
     },
     {
       id: 2,
@@ -52,6 +59,13 @@ Les participants auront l'opportunité de réseauter et de partager leurs expér
         './assets/img/event/event_4.jpg',
         './assets/img/event/event_5.jpg',
         './assets/img/event/event_1.jpg',
+      ],
+      utilsLinks: [
+        {
+          title: 'Guide de préparation',
+          link: 'https://example.com/guide-preparation',
+        },
+        { title: "Plan d'urgence", link: 'https://example.com/plan-urgence' },
       ],
     },
     {
@@ -77,6 +91,13 @@ Les participants repartiront avec un plan d'action personnalisé pour améliorer
         './assets/img/event/event_1.jpg',
         './assets/img/event/event_2.jpg',
       ],
+      utilsLinks: [
+        {
+          title: 'Guide de préparation',
+          link: 'https://example.com/guide-preparation',
+        },
+        { title: "Plan d'urgence", link: 'https://example.com/plan-urgence' },
+      ],
     },
     {
       id: 4,
@@ -100,6 +121,13 @@ L'accent sera mis sur l'utilisation des prévisions numériques pour la gestion 
         './assets/img/event/event_1.jpg',
         './assets/img/event/event_2.jpg',
         './assets/img/event/event_3.jpg',
+      ],
+      utilsLinks: [
+        {
+          title: 'Guide de préparation',
+          link: 'https://example.com/guide-preparation',
+        },
+        { title: "Plan d'urgence", link: 'https://example.com/plan-urgence' },
       ],
     },
     {
@@ -125,6 +153,13 @@ La réunion se conclura par l'adoption d'un plan d'action régional pour l'anné
         './assets/img/event/event_3.jpg',
         './assets/img/event/event_4.jpg',
       ],
+      utilsLinks: [
+        {
+          title: 'Guide de préparation',
+          link: 'https://example.com/guide-preparation',
+        },
+        { title: "Plan d'urgence", link: 'https://example.com/plan-urgence' },
+      ],
     },
     {
       id: 6,
@@ -148,6 +183,13 @@ La formation se terminera par un projet pratique où les participants devront an
         './assets/img/event/event_3.jpg',
         './assets/img/event/event_4.jpg',
         './assets/img/event/event_5.jpg',
+      ],
+      utilsLinks: [
+        {
+          title: 'Guide de préparation',
+          link: 'https://example.com/guide-preparation',
+        },
+        { title: "Plan d'urgence", link: 'https://example.com/plan-urgence' },
       ],
     },
     {
@@ -173,6 +215,13 @@ Les participants contribueront à l'élaboration de recommandations pour amélio
         './assets/img/event/event_5.jpg',
         './assets/img/event/event_1.jpg',
       ],
+      utilsLinks: [
+        {
+          title: 'Guide de préparation',
+          link: 'https://example.com/guide-preparation',
+        },
+        { title: "Plan d'urgence", link: 'https://example.com/plan-urgence' },
+      ],
     },
     {
       id: 8,
@@ -196,6 +245,13 @@ L'accent sera mis sur l'utilisation des données climatiques pour l'identificati
         './assets/img/event/event_5.jpg',
         './assets/img/event/event_1.jpg',
         './assets/img/event/event_2.jpg',
+      ],
+      utilsLinks: [
+        {
+          title: 'Guide de préparation',
+          link: 'https://example.com/guide-preparation',
+        },
+        { title: "Plan d'urgence", link: 'https://example.com/plan-urgence' },
       ],
     },
   ];
