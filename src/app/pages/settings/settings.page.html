@@ -21,7 +21,7 @@
 
   <div class="appearence">
     <h3>Thème</h3>
-    <ion-radio-group value="light">
+    <ion-radio-group [value]="currentTheme" (ionChange)="themeChanged($event)">
       <ion-item class="ion-no-padding">
         <ion-radio value="light" labelPlacement="start">Clair</ion-radio><br />
       </ion-item>

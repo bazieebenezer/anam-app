@@ -97,3 +97,151 @@ span {
   font-size: 16px;
   color: var(--ion-color-gray);
 }
+
+// Styles pour le mode sombre
+.dark {
+  --ion-background-color: var(--ion-color-dark);
+  --ion-background-color-rgb: var(--ion-color-dark-rgb);
+
+  --ion-text-color: var(--ion-color-light);
+  --ion-text-color-rgb: var(--ion-color-light-rgb);
+
+  ion-content {
+    --background: var(--ion-background-color);
+  }
+
+  ion-list {
+    --background: var(--ion-color-very-light-gray) !important;
+  }
+
+  // Ajustement des couleurs de texte pour le mode sombre
+  p,
+  span,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  li,
+  ion-label,
+  ion-text,
+  ion-title,
+  ion-item,
+  ion-button,
+  ion-select,
+  ion-select-option,
+  ion-textarea,
+  ion-input {
+    --color: var(--ion-color-light-contrast) !important;
+    color: var(--ion-color-light-contrast) !important;
+  }
+
+  // Style spécifique pour les éléments qui nécessitent un contraste différent
+  p.secondary-text,
+  span.secondary-text {
+    color: var(--ion-color-light-contrast) !important;
+  }
+
+  // S'assurer que les icônes sont également en blanc
+  ion-icon {
+    color: var(--ion-color-light-contrast) !important;
+  }
+
+  // Ajuster la couleur des placeholders
+  ion-input::placeholder,
+  ion-textarea::placeholder {
+    color: var(--ion-color-light-contrast) !important;
+  }
+
+  ion-searchbar {
+    --color: var(--ion-color-light-contrast) !important;
+    --placeholder-color: var(--ion-color-light-contrast) !important;
+  }
+
+  ion-tab-bar {
+    --background: var(--ion-color-very-light-gray) !important;
+  }
+
+  ion-modal#share-modal {
+    --background: var(--ion-color-very-light-gray) !important;
+    ion-list {
+      background: transparent;
+      ion-item {
+        --background: inherit;
+      }
+    }
+  }
+
+  ion-header {
+    --background: var(--ion-color-very-light-gray) !important;
+    ion-toolbar {
+      --background: transparent !important;
+    }
+  }
+
+  div.no-results {
+    background: var(--ion-color-very-light-gray) !important;
+    ion-icon {
+      color: var(--ion-color-warning) !important;
+    }
+  }
+
+  ion-back-button {
+    --background: var(--ion-color-very-light-gray) !important;
+    --color: var(--ion-color-light-contrast) !important;
+  }
+
+  .zoom-controls {
+    background: rgba(var(--ion-color-very-light-gray-rgb), 0.4) !important;
+    ion-icon {
+      color: var(--ion-color-secondary-contrast);
+    }
+  }
+
+  // Style pour les éléments de formulaire
+  ion-item {
+    --placeholder-color: var(--ion-color-light-contrast) !important;
+    --highlight-color: var(--ion-color-light-contrast) !important;
+    &.item-has-focus {
+      --highlight-background: var(--ion-color-primary-tint) !important;
+    }
+  }
+
+  ion-toggle {
+    --handle-background: var(--ion-color-primary) !important;
+    --track-background: var(--ion-color-very-light-gray) !important;
+  }
+
+  ion-radio {
+    --color: var(--ion-color-light-contrast) !important;
+  }
+
+  ion-alert {
+    --background: var(--ion-color-very-light-gray) !important;
+    --backdrop-opacity: 0.4;
+
+    .alert-wrapper {
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .alert-radio-label {
+      font-size: 15px;
+      color: var(--ion-color-light-contrast) !important;
+    }
+
+    .alert-radio-label {
+      color: #333;
+    }
+
+    .alert-button {
+      color: #3880ff;
+      font-weight: 600;
+    }
+  }
+
+  .count {
+    color: var(--ion-color-warning) !important;
+  }
+}

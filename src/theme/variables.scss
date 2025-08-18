@@ -83,3 +83,101 @@
   --ion-color-dark-shade: #292929;
   --ion-color-dark-tint: #444444;
 }
+
+.dark {
+  // Primary : Version plus claire et plus saturée du bleu
+  --ion-color-primary: #2196f3;
+  --ion-color-primary-rgb: 33, 150, 243;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #1d84d6;
+  --ion-color-primary-tint: #37a1f4;
+
+  // Secondary : Version plus foncée du jaune pour réduire l'éblouissement
+  --ion-color-secondary: #ffd740;
+  --ion-color-secondary-rgb: 255, 215, 64;
+  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast-rgb: 0, 0, 0;
+  --ion-color-secondary-shade: #e0bd38;
+  --ion-color-secondary-tint: #ffdb53;
+
+  // Gray : Version plus claire pour meilleure lisibilité
+  --ion-color-gray: #9e9e9e;
+  --ion-color-gray-rgb: 158, 158, 158;
+  --ion-color-gray-contrast: #000000;
+  --ion-color-gray-contrast-rgb: 0, 0, 0;
+  --ion-color-gray-shade: #8b8b8b;
+  --ion-color-gray-tint: #a8a8a8;
+
+  // Light Gray : Version plus claire
+  --ion-color-light-gray: #b0b0b0;
+  --ion-color-light-gray-rgb: 176, 176, 176;
+  --ion-color-light-gray-contrast: #000000;
+  --ion-color-light-gray-contrast-rgb: 0, 0, 0;
+  --ion-color-light-gray-shade: #9b9b9b;
+  --ion-color-light-gray-tint: #b8b8b8;
+
+  // Very Light Gray : Version plus foncée pour le dark mode
+  --ion-color-very-light-gray: #383838;
+  --ion-color-very-light-gray-rgb: 56, 56, 56;
+  --ion-color-very-light-gray-contrast: #ffffff;
+  --ion-color-very-light-gray-contrast-rgb: 255, 255, 255;
+  --ion-color-very-light-gray-shade: #313131;
+  --ion-color-very-light-gray-tint: #4c4c4c;
+
+  // Extra Light Gray : Version très foncée pour le dark mode
+  --ion-color-extra-light-gray: #1e1e1e;
+  --ion-color-extra-light-gray-rgb: 30, 30, 30;
+  --ion-color-extra-light-gray-contrast: #ffffff;
+  --ion-color-extra-light-gray-contrast-rgb: 255, 255, 255;
+  --ion-color-extra-light-gray-shade: #1a1a1a;
+  --ion-color-extra-light-gray-tint: #353535;
+
+  // Success : Version plus vive pour meilleure visibilité
+  --ion-color-success: #4caf50;
+  --ion-color-success-rgb: 76, 175, 80;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #439a46;
+  --ion-color-success-tint: #5eb762;
+
+  // Warning : Version plus foncée pour réduire l'éblouissement
+  --ion-color-warning: #ffc107;
+  --ion-color-warning-rgb: 255, 193, 7;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #e0a806;
+  --ion-color-warning-tint: #ffc720;
+
+  // Danger : Version plus douce pour le dark mode
+  --ion-color-danger: #f44336;
+  --ion-color-danger-rgb: 244, 67, 54;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #d73930;
+  --ion-color-danger-tint: #f5564a;
+
+  // Light : Version très foncée pour le dark mode
+  --ion-color-light: #121212;
+  --ion-color-light-rgb: 18, 18, 18;
+  --ion-color-light-contrast: #ffffff;
+  --ion-color-light-contrast-rgb: 255, 255, 255;
+  --ion-color-light-shade: #101010;
+  --ion-color-light-tint: #2a2a2a;
+
+  // Medium : Version plus claire pour meilleure lisibilité
+  --ion-color-medium: #757575;
+  --ion-color-medium-rgb: 117, 117, 117;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #676767;
+  --ion-color-medium-tint: #838383;
+
+  // Dark : Version encore plus foncée pour le dark mode
+  --ion-color-dark: #1e1e1e;
+  --ion-color-dark-rgb: 30, 30, 30;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #1a1a1a;
+  --ion-color-dark-tint: #353535;
+}
