@@ -22,6 +22,7 @@ import {
   settingsOutline,
   shareSharp,
   shareSocial,
+  settings,
 } from 'ionicons/icons';
 
 import { registerLocaleData } from '@angular/common';
@@ -63,6 +64,7 @@ export class AppComponent {
       refresh,
       calendarOutline,
       newspaper,
+      settings,
     });
   }
 }

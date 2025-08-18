@@ -6,6 +6,7 @@ ion-header {
     height: 80px;
     display: flex;
     justify-content: center;
+    background: var(--ion-color-primary-contrast);
     ion-title {
       font-size: 21px;
     }

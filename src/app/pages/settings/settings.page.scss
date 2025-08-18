@@ -1,0 +1,17 @@
+ion-header {
+  box-shadow: none;
+  border: 1px solid rgba(var(--ion-color-secondary-contrast-rgb), 0.1);
+  height: 80px;
+  ion-toolbar {
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    ion-title {
+      font-size: 21px;
+    }
+  }
+}
+
+ion-content {
+    padding: 16px;
+}

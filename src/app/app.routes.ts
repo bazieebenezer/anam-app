@@ -34,6 +34,16 @@ export const routes: Routes = [
             (m) => m.EventDetailsPage
           ),
       },
+      {
+        path: 'add',
+        loadComponent: () =>
+          import('./pages/add/add.page').then((m) => m.AddPage),
+      },
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./pages/settings/settings.page').then((m) => m.SettingsPage),
+      },
     ],
   },
 ];
