@@ -40,59 +40,75 @@ ion-content {
   }
 }
 
-form#alert {
+form {
   padding: 16px;
   ion-input,
   ion-select,
   ion-textarea {
     height: 50px;
-    border-radius: 8px;
-    border: 1px solid rgba(var(--ion-color-light-gray-rgb), 0.4);
-    --padding-start: 8px;
-    --padding-end: 8px;
-    margin-bottom: 24px;
-    &:focus {
-      border: 1px solid var(--ion-color-primary);
-    }
-  }
-  ion-textarea {
-    height: 150px;
-  }
-  div.datetime-chooser {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 24px;
-  }
-  ion-button[type="submit"] {
-    margin-bottom: 110px;
-    text-transform: none;
-    --box-shadow: none;
     --border-radius: 8px;
-    height: 50px;
-    font-weight: 300;
-    font-size: 16px;
-  }
-}
-
-form#event {
-  padding: 16px;
-  ion-input,
-  ion-select,
-  ion-textarea {
-    height: 50px;
-    border-radius: 8px;
-    border: 1px solid rgba(var(--ion-color-light-gray-rgb), 0.4);
-    --padding-start: 8px;
-    --padding-end: 8px;
     margin-bottom: 24px;
-    &:focus {
-      border: 1px solid var(--ion-color-primary);
+
+    &.ion-invalid {
+      --border-color: var(--ion-color-danger);
+    }
+
+    &.ion-focused {
+      --border-color: var(--ion-color-primary);
+    }
+
+    &::part(native) {
+      padding: 0;
+      min-height: 50px;
+    }
+  }
+
+  ion-textarea {
+    height: 80px;
+  }
+
+  .image-upload {
+    margin-bottom: 24px;
+
+    .selected-images {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+
+      .image-preview {
+        position: relative;
+        width: 100px;
+        height: 100px;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 8px;
+        }
+
+        ion-icon {
+          position: absolute;
+          top: -8px;
+          right: -8px;
+          font-size: 24px;
+          color: var(--ion-color-danger);
+          background: white;
+          border-radius: 50%;
+          cursor: pointer;
+        }
+      }
     }
   }
   ion-textarea {
-    height: 150px;
+    --height: 150px;
+
+    &::part(native) {
+      min-height: 150px;
+    }
   }
-  div.datetime-chooser {
+  .datetime-chooser {
     display: flex;
     justify-content: space-between;
     margin-bottom: 24px;

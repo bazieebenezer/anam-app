@@ -21,21 +21,40 @@
   </div>
 
   @if (activeForm === 'alert') {
-  <form id="alert" (ngSubmit)="submitAlert()">
+  <form [formGroup]="alertForm" (ngSubmit)="submitAlert()">
+    <p>Titre</p>
     <ion-input
       type="text"
-      [(ngModel)]="alertForm.title"
-      name="title"
+      formControlName="title"
       fill="outline"
       placeholder="Entrez le titre"
+      [class.ion-invalid]="alertForm.get('title')?.invalid && alertForm.get('title')?.touched"
     ></ion-input>
+
+    <div class="image-upload">
+      <p>Images</p>
+      <ion-button expand="block" (click)="onImagesSelected()" fill="outline">
+        <ion-icon slot="start" name="image"></ion-icon>
+        Sélectionner des images
+      </ion-button>
+      @if (selectedImages.length > 0) {
+      <div class="selected-images">
+        @for (image of selectedImages; track $index) {
+        <div class="image-preview">
+          <img [src]="image.preview" alt="Preview" />
+          <ion-icon name="close-circle" (click)="removeImage(image)"></ion-icon>
+        </div>
+        }
+      </div>
+      }
+    </div>
 
     <ion-select
       label="Niveau de criticité"
       labelPlacement="start"
       fill="outline"
-      [(ngModel)]="alertForm.criticality"
-      name="criticality"
+      formControlName="criticality"
+      [class.ion-invalid]="alertForm.get('criticality')?.invalid && alertForm.get('criticality')?.touched"
     >
       <ion-select-option value="normal">Normal</ion-select-option>
       <ion-select-option value="eleve">Élevé</ion-select-option>
@@ -46,48 +65,46 @@
       label="Envoyer à"
       labelPlacement="start"
       fill="outline"
-      [(ngModel)]="alertForm.target"
-      name="target"
+      formControlName="target"
+      [class.ion-invalid]="alertForm.get('target')?.invalid && alertForm.get('target')?.touched"
     >
       <ion-select-option value="all">Tout le monde</ion-select-option>
       @for (startup of sendStartup; track $index) {
-      <ion-select-option value="all">{{ startup }}</ion-select-option>
+      <ion-select-option [value]="startup">{{ startup }}</ion-select-option>
       }
     </ion-select>
 
     <ion-textarea
+      label="Description"
       labelPlacement="start"
       fill="outline"
       placeholder="Entrez la description"
+      formControlName="description"
+      [autoGrow]="true"
+      [class.ion-invalid]="alertForm.get('description')?.invalid && alertForm.get('description')?.touched"
     ></ion-textarea>
 
     <div class="datetime-chooser">
       <p>Date de fin</p>
-      <ion-datetime-button
-        name="endDate"
-        [(ngModel)]="alertForm.endDate"
-        datetime="datetime"
-      ></ion-datetime-button>
+      <ion-datetime-button datetime="datetime"></ion-datetime-button>
     </div>
 
-    <p>Fichier</p>
+    <p>Fichier PDF</p>
     <ion-input
       type="file"
       accept="application/pdf"
-      [(ngModel)]="alertForm.pdfFile"
-      name="pdfFile"
+      formControlName="pdfFile"
       fill="outline"
       placeholder="Choisissez un fichier PDF"
     ></ion-input>
 
-    <div class="practical-tips">
+    <div class="practical-tips" formArrayName="tips">
       <p>Conseils</p>
-      @for (tip of alertForm.tips; track $index) {
+      @for (tip of tipsFormArray.controls; track $index) {
       <ion-input
+        [formControlName]="$index"
         placeholder="Ecrivez un conseil"
         type="text"
-        [(ngModel)]="alertForm.tips[$index]"
-        name="tip-{{ $index }}"
         fill="outline"
       ></ion-input>
       }
@@ -98,93 +115,21 @@
       </ion-button>
     </div>
 
-    <ion-button expand="block" type="submit">Publier</ion-button>
-  </form>
-  } @if (activeForm === 'event') {
-  <form id="event" (ngSubmit)="submitAlert()">
-    <ion-input
-      type="text"
-      [(ngModel)]="alertForm.title"
-      name="title"
-      fill="outline"
-      placeholder="Entrez le titre"
-    ></ion-input>
-
-    <ion-select
-      label="Niveau de criticité"
-      labelPlacement="start"
-      fill="outline"
-      [(ngModel)]="alertForm.criticality"
-      name="criticality"
+    <ion-button expand="block" type="submit" [disabled]="alertForm.invalid"
+      >Publier</ion-button
     >
-      <ion-select-option value="normal">Normal</ion-select-option>
-      <ion-select-option value="eleve">Élevé</ion-select-option>
-      <ion-select-option value="urgent">Urgent</ion-select-option>
-    </ion-select>
-
-    <ion-select
-      label="Envoyer à"
-      labelPlacement="start"
-      fill="outline"
-      [(ngModel)]="alertForm.target"
-      name="target"
-    >
-      <ion-select-option value="all">Tout le monde</ion-select-option>
-      @for (startup of sendStartup; track $index) {
-      <ion-select-option value="all">{{ startup }}</ion-select-option>
-      }
-    </ion-select>
-
-    <ion-textarea
-      labelPlacement="start"
-      fill="outline"
-      placeholder="Entrez la description"
-    ></ion-textarea>
-
-    <div class="datetime-chooser">
-      <p>Date de fin</p>
-      <ion-datetime-button
-        name="endDate"
-        [(ngModel)]="alertForm.endDate"
-        datetime="datetime"
-      ></ion-datetime-button>
-    </div>
-
-    <p>Fichier</p>
-    <ion-input
-      type="file"
-      accept="application/pdf"
-      [(ngModel)]="alertForm.pdfFile"
-      name="pdfFile"
-      fill="outline"
-      placeholder="Choisissez un fichier PDF"
-    ></ion-input>
-
-    <div class="practical-tips">
-      <p>Conseils</p>
-      @for (tip of alertForm.tips; track $index) {
-      <ion-input
-        placeholder="Ecrivez un conseil"
-        type="text"
-        [(ngModel)]="alertForm.tips[$index]"
-        name="tip-{{ $index }}"
-        fill="outline"
-      ></ion-input>
-      }
-
-      <ion-button (click)="addTip()">
-        <ion-icon slot="start" name="add"></ion-icon>
-        Ajouter un conseil
-      </ion-button>
-    </div>
-
-    <ion-button expand="block" type="submit">Publier</ion-button>
   </form>
-  }
+  } @if (activeForm === 'event') { }
+
+  <ion-modal [keepContentsMounted]="true">
+    <ng-template>
+      <ion-datetime
+        id="datetime"
+        [value]="alertForm.get('endDate')?.value"
+        (ionChange)="onDateChange($event)"
+        presentation="date"
+        locale="fr-FR"
+      ></ion-datetime>
+    </ng-template>
+  </ion-modal>
 </ion-content>
-
-<ion-modal [keepContentsMounted]="true">
-  <ng-template>
-    <ion-datetime id="datetime"></ion-datetime>
-  </ng-template>
-</ion-modal>
