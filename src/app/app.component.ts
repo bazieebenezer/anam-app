@@ -25,6 +25,8 @@ import {
   settings,
   closeCircle,
   image,
+  arrowDownRightBox,
+  chevronForwardOutline,
 } from 'ionicons/icons';
 
 import { registerLocaleData } from '@angular/common';
@@ -68,7 +70,8 @@ export class AppComponent {
       newspaper,
       settings,
       closeCircle,
-      image
+      image,
+      chevronForwardOutline
     });
   }
 }

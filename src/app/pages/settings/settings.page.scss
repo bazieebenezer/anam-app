@@ -13,5 +13,19 @@ ion-header {
 }
 
 ion-content {
+  padding: 16px;
+  div {
     padding: 16px;
+    .content {
+      display: flex;
+      justify-content: space-between;
+      padding: 0;
+    }
+    h3 {
+      margin-bottom: 16px;
+    }
+    ion-item {
+      --margin-inline-start: 0;
+    }
+  }
 }

@@ -5,5 +5,55 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  
+  <div class="notifications">
+    <h3>Notifications</h3>
+    <ion-list>
+      <ion-item class="ion-no-padding">
+        <ion-toggle justify="spaceBetween"
+          >Recevoir les notifications push</ion-toggle
+        >
+      </ion-item>
+      <ion-item class="ion-no-padding">
+        <ion-toggle justify="spaceBetween">Recevoir par email</ion-toggle>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div class="appearence">
+    <h3>Thème</h3>
+    <ion-radio-group value="light">
+      <ion-item class="ion-no-padding">
+        <ion-radio value="light" labelPlacement="start">Clair</ion-radio><br />
+      </ion-item>
+      <ion-item class="ion-no-padding">
+        <ion-radio value="dark" labelPlacement="start">Sombre</ion-radio><br />
+      </ion-item>
+    </ion-radio-group>
+  </div>
+
+  <div class="institution">
+    <h3>Institution</h3>
+    <ion-item class="ion-no-padding">
+      Accéder aux annonces personnalisées
+      <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+    </ion-item>
+  </div>
+
+  <div class="institution">
+    <h3>Compte</h3>
+    <ion-list>
+      <ion-item class="ion-no-padding">
+        Créer un compte
+        <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+      </ion-item>
+      <ion-item class="ion-no-padding">
+        Changer de mot de passe
+        <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+      </ion-item>
+      <ion-item class="ion-no-padding">
+        Se déconnecter
+        <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>
