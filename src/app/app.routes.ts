@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
+// import { onboardingGuard } from './guards/onboarding.guard';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'tabs',
     loadComponent: () => import('./tabs/tabs.page').then((m) => m.TabsPage),
+    // canActivate: [onboardingGuard],
     children: [
       {
         path: '',
@@ -46,4 +48,19 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: '',
+    loadComponent: () =>
+      import('./pages/onboarding/onboarding.page').then(
+        (m) => m.OnboardingPage
+      ),
+  },  {
+    path: 'signup',
+    loadComponent: () => import('./pages/auth/signup/signup.page').then( m => m.SignupPage)
+  },
+  {
+    path: 'signin',
+    loadComponent: () => import('./pages/auth/signin/signin.page').then( m => m.SigninPage)
+  },
+
 ];
