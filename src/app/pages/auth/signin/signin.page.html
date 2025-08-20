@@ -1,13 +1,80 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>signin</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">signin</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-img src="assets/img/bg/auth_bg.png"></ion-img>
+
+  <h2>Rejoignez la communauté météo du Burkina</h2>
+  <h3>METEO BURKINA</h3>
+
+  <form [formGroup]="signinForm" (ngSubmit)="submitSignin()">
+    <p>Email</p>
+    <ion-input
+      type="email"
+      formControlName="email"
+      fill="outline"
+      placeholder="exemple@gmail.com"
+      [class.ion-invalid]="signinForm.get('email')?.invalid && signinForm.get('email')?.touched"
+    ></ion-input>
+    @if (signinForm.get('email')?.invalid && (signinForm.get('email')?.dirty ||
+    signinForm.get('email')?.touched)) {
+    <div
+      style="
+        color: var(--ion-color-danger);
+        font-size: 0.8em;
+        padding-left: 16px;
+        margin-top: -12px;
+      "
+    >
+      @if (signinForm.get('email')?.errors?.['required']) {
+      <div>L'email est requis.</div>
+      } @if (signinForm.get('email')?.errors?.['email']) {
+      <div>L'email n'est pas valide.</div>
+      }
+    </div>
+    }
+
+    <p>Mot de passe</p>
+    <ion-input
+      type="password"
+      formControlName="password"
+      fill="outline"
+      placeholder="Entrez un mot de passe"
+      [class.ion-invalid]="signinForm.get('password')?.invalid && signinForm.get('password')?.touched"
+    ></ion-input>
+    @if (signinForm.get('password')?.invalid &&
+    (signinForm.get('password')?.dirty || signinForm.get('password')?.touched))
+    {
+    <div
+      style="
+        color: var(--ion-color-danger);
+        font-size: 0.8em;
+        padding-left: 16px;
+        margin-top: -12px;
+      "
+    >
+      @if (signinForm.get('password')?.errors?.['required']) {
+      <div>Le mot de passe est requis.</div>
+      } @if (signinForm.get('password')?.errors?.['minlength']) {
+      <div>Le mot de passe doit contenir au moins 8 caractères.</div>
+      }
+    </div>
+    }
+
+    <ion-button type="submit" [disabled]="signinForm.invalid"
+      >S'inscrire</ion-button
+    >
+  </form>
+  <div class="oAuth">
+    <span>Ou continuez avec</span>
+    <ion-buttons>
+      <ion-button slot="start">
+        <img src="assets/logo/google.png" />
+      </ion-button>
+      <ion-button slot="end">
+        <img src="assets/logo/apple.png" />
+      </ion-button>
+    </ion-buttons>
+  </div>
+  <p class="signin-link">
+    Vous avez déjà un compte ? <a href="#">Se connecter</a>
+  </p>
+  <p class="continue" routerLink="/signin">Continuez sans m'inscrire</p>
 </ion-content>

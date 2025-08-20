@@ -1,20 +1,58 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import {
+  IonContent,
+  IonImg,
+  IonButton,
+  IonButtons,
+  IonInput,
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-signin',
   templateUrl: './signin.page.html',
   styleUrls: ['./signin.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [
+    IonButtons,
+    IonButton,
+    IonImg,
+    IonContent,
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    IonInput,
+  ],
 })
 export class SigninPage implements OnInit {
+  signinForm!: FormGroup;
 
-  constructor() { }
+  constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
+    this.initSignInForm();
   }
 
+  private initSignInForm() {
+    this.signinForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+    });
+  }
+
+  submitSignin() {
+    this.signinForm.markAllAsTouched();
+    if (this.signinForm.valid) {
+      console.log(this.signinForm.value);
+    } else {
+      console.log('Formulaire invalide');
+    }
+  }
 }

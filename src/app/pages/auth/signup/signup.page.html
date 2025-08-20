@@ -7,28 +7,112 @@
   <form [formGroup]="signupForm" (ngSubmit)="submitSignup()">
     <p>Email</p>
     <ion-input
-      type="text"
+      type="email"
       formControlName="email"
       fill="outline"
       placeholder="exemple@gmail.com"
       [class.ion-invalid]="signupForm.get('email')?.invalid && signupForm.get('email')?.touched"
     ></ion-input>
+    @if (signupForm.get('email')?.invalid && (signupForm.get('email')?.dirty ||
+    signupForm.get('email')?.touched)) {
+    <div
+      style="
+        color: var(--ion-color-danger);
+        font-size: 0.8em;
+        padding-left: 16px;
+        margin-top: -12px;
+      "
+    >
+      @if (signupForm.get('email')?.errors?.['required']) {
+      <div>L'email est requis.</div>
+      } @if (signupForm.get('email')?.errors?.['email']) {
+      <div>L'email n'est pas valide.</div>
+      }
+    </div>
+    }
+
     <p>Mot de passe</p>
     <ion-input
-      type="text"
+      type="password"
       formControlName="password"
       fill="outline"
       placeholder="Entrez un mot de passe"
       [class.ion-invalid]="signupForm.get('password')?.invalid && signupForm.get('password')?.touched"
     ></ion-input>
+    @if (signupForm.get('password')?.invalid &&
+    (signupForm.get('password')?.dirty || signupForm.get('password')?.touched))
+    {
+    <div
+      style="
+        color: var(--ion-color-danger);
+        font-size: 0.8em;
+        padding-left: 16px;
+        margin-top: -12px;
+      "
+    >
+      @if (signupForm.get('password')?.errors?.['required']) {
+      <div>Le mot de passe est requis.</div>
+      } @if (signupForm.get('password')?.errors?.['minlength']) {
+      <div>Le mot de passe doit contenir au moins 8 caractères.</div>
+      }
+    </div>
+    }
+
     <p>Confirmation du mot de passe</p>
     <ion-input
-      type="text"
+      type="password"
       formControlName="passwordConfirm"
       fill="outline"
       placeholder="Confirmez le mot de passe"
-      [class.ion-invalid]="signupForm.get('passwordConfirm')?.invalid && signupForm.get('passwordConfirm')?.touched"
+      [class.ion-invalid]="(signupForm.get('passwordConfirm')?.invalid && signupForm.get('passwordConfirm')?.touched) || (signupForm.errors?.['passwordsMismatch'] && signupForm.get('passwordConfirm')?.touched)"
     ></ion-input>
-    <ion-button type="submit">S'inscrire</ion-button>
+    @if (signupForm.get('passwordConfirm')?.invalid &&
+    (signupForm.get('passwordConfirm')?.dirty ||
+    signupForm.get('passwordConfirm')?.touched)) {
+    <div
+      style="
+        color: var(--ion-color-danger);
+        font-size: 0.8em;
+        padding-left: 16px;
+        margin-top: -12px;
+      "
+    >
+      @if (signupForm.get('passwordConfirm')?.errors?.['required']) {
+      <div>La confirmation est requise.</div>
+      }
+    </div>
+    @if (signupForm.errors?.['passwordsMismatch'] &&
+    (signupForm.get('passwordConfirm')?.dirty ||
+    signupForm.get('passwordConfirm')?.touched)) {
+    <div
+      style="
+        color: var(--ion-color-danger);
+        font-size: 0.8em;
+        padding-left: 16px;
+        margin-top: -12px;
+      "
+    >
+      <div>Les mots de passe ne correspondent pas.</div>
+    </div>
+    } }
+
+    <ion-button type="submit" [disabled]="signupForm.invalid"
+      >S'inscrire</ion-button
+    >
   </form>
+  <div class="oAuth">
+    <span>Ou continuez avec</span>
+    <ion-buttons>
+      <ion-button slot="start">
+        <img src="assets/logo/google.png" />
+      </ion-button>
+      <ion-button slot="end">
+        <img src="assets/logo/apple.png" />
+      </ion-button>
+    </ion-buttons>
+  </div>
+  <p class="signin-link">
+    Vous avez déjà un compte ? <a href="#">Se connecter</a>
+  </p>
+  <p class="continue" routerLink="/signin">Continuez sans m'inscrire</p>
 </ion-content>
