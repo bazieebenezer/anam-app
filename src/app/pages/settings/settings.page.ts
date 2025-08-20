@@ -16,6 +16,7 @@ import {
 import { ThemeService } from '../../services/theme.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-settings',
@@ -35,6 +36,7 @@ import { Subject } from 'rxjs';
     IonToolbar,
     CommonModule,
     FormsModule,
+    RouterLink,
   ],
 })
 export class SettingsPage implements OnInit {
