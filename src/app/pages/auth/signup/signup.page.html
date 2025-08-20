@@ -1,13 +1,34 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>signup</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">signup</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <ion-img src="assets/img/bg/auth_bg.png"></ion-img>
+
+  <h2>Rejoignez la communauté météo du Burkina</h2>
+  <h3>METEO BURKINA</h3>
+
+  <form [formGroup]="signupForm" (ngSubmit)="submitSignup()">
+    <p>Email</p>
+    <ion-input
+      type="text"
+      formControlName="email"
+      fill="outline"
+      placeholder="exemple@gmail.com"
+      [class.ion-invalid]="signupForm.get('email')?.invalid && signupForm.get('email')?.touched"
+    ></ion-input>
+    <p>Mot de passe</p>
+    <ion-input
+      type="text"
+      formControlName="password"
+      fill="outline"
+      placeholder="Entrez un mot de passe"
+      [class.ion-invalid]="signupForm.get('password')?.invalid && signupForm.get('password')?.touched"
+    ></ion-input>
+    <p>Confirmation du mot de passe</p>
+    <ion-input
+      type="text"
+      formControlName="passwordConfirm"
+      fill="outline"
+      placeholder="Confirmez le mot de passe"
+      [class.ion-invalid]="signupForm.get('passwordConfirm')?.invalid && signupForm.get('passwordConfirm')?.touched"
+    ></ion-input>
+    <ion-button type="submit">S'inscrire</ion-button>
+  </form>
 </ion-content>

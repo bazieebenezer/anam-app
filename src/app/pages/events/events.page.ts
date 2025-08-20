@@ -98,7 +98,7 @@ export class EventsPage implements OnInit {
 
   goToDetails(event: Event, eventClick: MouseEvent) {
     if ((eventClick.target as HTMLElement).closest('ion-button')) return;
-    this.router.navigate(['/event-details', event.id]);
+    this.router.navigate(['tabs/event-details', event.id]);
   }
 
   openShareModal(event: Event) {

@@ -96,7 +96,7 @@ export class HomePage implements OnInit {
 
   goToDetails(bulletin: WeatherBulletin, event: MouseEvent) {
     if ((event.target as HTMLElement).closest('ion-button')) return;
-    this.router.navigate(['/bulletin-details', bulletin.id]);
+    this.router.navigate(['/tabs/bulletin-details', bulletin.id]);
   }
 
   openShareModal(bulletin: WeatherBulletin) {
