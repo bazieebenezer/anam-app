@@ -102,14 +102,9 @@
   </form>
   <div class="oAuth">
     <span>Ou continuez avec</span>
-    <ion-buttons>
-      <ion-button slot="start">
-        <img src="assets/logo/google.png" />
-      </ion-button>
-      <ion-button slot="end">
-        <img src="assets/logo/apple.png" />
-      </ion-button>
-    </ion-buttons>
+    <ion-button (click)="signUpWithGoogle()">
+      <img src="assets/logo/google.png" />
+    </ion-button>
   </div>
   <p class="signin-link">
     Vous avez déjà un compte ? <span routerLink="/signin">Se connecter</span>

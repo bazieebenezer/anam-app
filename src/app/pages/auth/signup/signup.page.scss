@@ -60,6 +60,9 @@ ion-content {
     color: var(--ion-color-secondary-contrast);
     font-weight: normal;
     text-align: center;
+    span {
+      color: var(--ion-color-primary);
+    }
   }
   div.oAuth {
     display: flex;
@@ -72,8 +75,10 @@ ion-content {
     }
     ion-button {
       border: 2px solid var(--ion-color-very-light-gray);
-      height: 48px;
+      height: 50px;
       width: 150px;
+      --background: none;
+      --box-shadow: none;
       border-radius: 8px;
     }
   }

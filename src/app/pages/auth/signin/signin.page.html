@@ -59,23 +59,18 @@
     }
 
     <ion-button type="submit" [disabled]="signinForm.invalid"
-      >S'inscrire</ion-button
+      >Se connecter</ion-button
     >
   </form>
   <div class="oAuth">
     <span>Ou continuez avec</span>
-    <ion-buttons>
-      <ion-button slot="start">
-        <img src="assets/logo/google.png" />
-      </ion-button>
-      <ion-button slot="end">
-        <img src="assets/logo/apple.png" />
-      </ion-button>
-    </ion-buttons>
+    <ion-button (click)="signInWithGoogle()">
+      <img src="assets/logo/google.png" />
+    </ion-button>
   </div>
-  <p class="signin-link">
+  <p class="signup-link">
     Vous n'avez pas de compte ?
-    <span routerLink="/signup">Créer un compte</span>
+    <span routerLink="/signup">S'inscrire</span>
   </p>
-  <p class="continue" routerLink="/tabs/home">Continuez sans m'inscrire</p>
+  <p class="continue" routerLink="/tabs/home">Continuez sans me connecter</p>
 </ion-content>

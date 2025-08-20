@@ -13,8 +13,10 @@ import {
   IonButton,
   IonButtons,
   IonInput,
+  ToastController,
 } from '@ionic/angular/standalone';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-signin',
@@ -22,7 +24,6 @@ import { RouterLink } from '@angular/router';
   styleUrls: ['./signin.page.scss'],
   standalone: true,
   imports: [
-    IonButtons,
     IonButton,
     IonImg,
     IonContent,
@@ -36,7 +37,12 @@ import { RouterLink } from '@angular/router';
 export class SigninPage implements OnInit {
   signinForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private toastController: ToastController
+  ) {}
 
   ngOnInit() {
     this.initSignInForm();
@@ -49,12 +55,59 @@ export class SigninPage implements OnInit {
     });
   }
 
-  submitSignin() {
+  async submitSignin() {
     this.signinForm.markAllAsTouched();
     if (this.signinForm.valid) {
-      console.log(this.signinForm.value);
+      const { email, password } = this.signinForm.value;
+      this.authService.loginWithEmailAndPassword(email, password).subscribe({
+        next: async () => {
+          const toast = await this.toastController.create({
+            message: 'Connexion réussie.',
+            duration: 2000,
+            color: 'success',
+          });
+          toast.present();
+          this.router.navigate(['/tabs/home']);
+        },
+        error: async (err) => {
+          const toast = await this.toastController.create({
+            message: err.message,
+            duration: 2000,
+            color: 'danger',
+          });
+          toast.present();
+        },
+      });
     } else {
-      console.log('Formulaire invalide');
+      const toast = await this.toastController.create({
+        message: 'Formulaire invalide.',
+        duration: 2000,
+        color: 'warning',
+      });
+      toast.present();
     }
   }
+
+  async signInWithGoogle() {
+    this.authService.loginWithGoogle().subscribe({
+      next: async () => {
+        const toast = await this.toastController.create({
+          message: 'Connexion réussie.',
+          duration: 2000,
+          color: 'success',
+        });
+        toast.present();
+        this.router.navigate(['/tabs/home']);
+      },
+      error: async (err) => {
+        const toast = await this.toastController.create({
+          message: err.message,
+          duration: 2000,
+          color: 'danger',
+        });
+        toast.present();
+      },
+    });
+  }
 }
+

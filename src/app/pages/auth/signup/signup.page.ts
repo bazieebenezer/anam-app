@@ -16,8 +16,10 @@ import {
   IonInput,
   IonButtons,
   IonTabButton,
+  ToastController,
 } from '@ionic/angular/standalone';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../../services/auth/auth.service';
 
 // Custom validator to check if passwords match
 export function passwordsMatchValidator(
@@ -38,7 +40,6 @@ export function passwordsMatchValidator(
   styleUrls: ['./signup.page.scss'],
   standalone: true,
   imports: [
-    IonButtons,
     IonButton,
     IonImg,
     IonContent,
@@ -46,13 +47,18 @@ export function passwordsMatchValidator(
     FormsModule,
     ReactiveFormsModule,
     IonInput,
-    RouterLink
+    RouterLink,
   ],
 })
 export class SignupPage implements OnInit {
   signupForm!: FormGroup;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private toastController: ToastController
+  ) {}
 
   ngOnInit() {
     this.initSignUpForm();
@@ -69,12 +75,66 @@ export class SignupPage implements OnInit {
     );
   }
 
-  submitSignup() {
-    this.signupForm.markAllAsTouched(); // Mark all fields as touched to show errors on submit
+  async submitSignup() {
+    this.signupForm.markAllAsTouched();
     if (this.signupForm.valid) {
-      console.log(this.signupForm.value);
+      const { email, password } = this.signupForm.value;
+      this.authService
+        .createUserWithEmailAndPassword(email, password)
+        .subscribe({
+          next: async () => {
+            const toast = await this.toastController.create({
+              message: 'Inscription réussie.',
+              duration: 2000,
+              color: 'success',
+            });
+            toast.present();
+            this.router.navigate(['/tabs/home']);
+          },
+          error: async (err) => {
+            let message = 'Une erreur est survenue.';
+            let color = 'danger';
+            if (err.code === 'auth/email-already-in-use') {
+              message = 'Cet email existe déjà.';
+              color = 'warning';
+            }
+            const toast = await this.toastController.create({
+              message,
+              duration: 2000,
+              color,
+            });
+            toast.present();
+          },
+        });
     } else {
-      console.log('Formulaire invalide');
+      const toast = await this.toastController.create({
+        message: 'Formulaire invalide.',
+        duration: 2000,
+        color: 'warning',
+      });
+      toast.present();
     }
+  }
+
+  async signUpWithGoogle() {
+    this.authService.loginWithGoogle().subscribe({
+      next: async () => {
+        const toast = await this.toastController.create({
+          message: 'Connexion réussie.',
+          duration: 2000,
+          color: 'success',
+        });
+        toast.present();
+        this.router.navigate(['/tabs/home']);
+      },
+      error: async (err) => {
+        const toast = await this.toastController.create({
+          message: err.message,
+          duration: 2000,
+          color: 'danger',
+        });
+        toast.present();
+      },
+    });
   }
 }

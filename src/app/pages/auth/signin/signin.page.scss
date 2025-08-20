@@ -22,7 +22,7 @@ ion-content {
   }
 
   form {
-    margin-top: 10%;
+    margin-top: 20%;
     margin-inline-start: 16px;
     margin-inline-end: 16px;
     p {
@@ -56,10 +56,13 @@ ion-content {
       transform: translateX(-50%);
     }
   }
-  p.signin-link {
+  p.signup-link {
     color: var(--ion-color-secondary-contrast);
     font-weight: normal;
     text-align: center;
+    span {
+      color: var(--ion-color-primary);
+    }
   }
   div.oAuth {
     display: flex;
@@ -67,13 +70,16 @@ ion-content {
     align-items: center;
     flex-direction: column;
     gap: 16px;
+    width: 100%;
     span {
       color: var(--ion-color-secondary-contrast);
     }
     ion-button {
       border: 2px solid var(--ion-color-very-light-gray);
-      height: 48px;
+      height: 50px;
       width: 150px;
+      --background: none;
+      --box-shadow: none;
       border-radius: 8px;
     }
   }

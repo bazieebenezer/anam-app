@@ -42,18 +42,20 @@
   <div class="institution">
     <h3>Compte</h3>
     <ion-list>
-      <ion-item class="ion-no-padding" routerLink="/signup">
+      <ion-item
+        class="ion-no-padding"
+        *ngIf="!(isAuthenticated$ | async)"
+        routerLink="/signup"
+      >
         Créer un compte
         <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
       </ion-item>
-      <ion-item class="ion-no-padding">
-        Changer de mot de passe
-        <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
-      </ion-item>
-      <ion-item class="ion-no-padding">
+      @if (isAuthenticated$ | async) {
+      <ion-item class="ion-no-padding" (click)="logout()">
         Se déconnecter
         <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
       </ion-item>
+      }
     </ion-list>
   </div>
 </ion-content>

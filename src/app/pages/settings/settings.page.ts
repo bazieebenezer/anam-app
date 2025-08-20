@@ -12,18 +12,19 @@ import {
   IonRadio,
   IonIcon,
   IonList,
-} from '@ionic/angular/standalone';
+  ToastController, IonGrid, IonFab } from '@ionic/angular/standalone';
 import { ThemeService } from '../../services/theme.service';
 import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { RouterLink } from '@angular/router';
+import { Observable, Subject } from 'rxjs';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.page.html',
   styleUrls: ['./settings.page.scss'],
   standalone: true,
-  imports: [
+  imports: [IonFab, IonGrid, 
     IonList,
     IonIcon,
     IonRadio,
@@ -42,8 +43,15 @@ import { RouterLink } from '@angular/router';
 export class SettingsPage implements OnInit {
   currentTheme: 'light' | 'dark' = 'light';
   private destroy$ = new Subject<void>();
+  public isAuthenticated$: Observable<any>;
 
-  constructor(private themeService: ThemeService) {
+  constructor(
+    private themeService: ThemeService,
+    private authService: AuthService,
+    private router: Router,
+    private toastController: ToastController
+  ) {
+    this.isAuthenticated$ = this.authService.isAuthenticated$;
     // S'abonner aux changements de thème
     this.themeService.isDarkMode
       .pipe(takeUntil(this.destroy$))
@@ -69,5 +77,16 @@ export class SettingsPage implements OnInit {
   themeChanged(event: any) {
     const isDark = event.detail.value === 'dark';
     this.themeService.setDarkMode(isDark);
+  }
+
+  async logout() {
+    await this.authService.logout();
+    this.router.navigate(['/signin']);
+    const toast = await this.toastController.create({
+      message: 'Vous avez été déconnecté.',
+      duration: 2000,
+      color: 'success',
+    });
+    toast.present();
   }
 }
