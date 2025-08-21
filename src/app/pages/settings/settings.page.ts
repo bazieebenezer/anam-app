@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -12,19 +12,23 @@ import {
   IonRadio,
   IonIcon,
   IonList,
-  ToastController, IonGrid, IonFab } from '@ionic/angular/standalone';
+  ToastController,
+  AlertController,
+  IonGrid,
+} from '@ionic/angular/standalone';
 import { ThemeService } from '../../services/theme.service';
 import { takeUntil } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth/auth.service';
+import { AuthService, AppUser } from '../../services/auth/auth.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.page.html',
   styleUrls: ['./settings.page.scss'],
   standalone: true,
-  imports: [IonFab, IonGrid, 
+  imports: [
     IonList,
     IonIcon,
     IonRadio,
@@ -43,25 +47,20 @@ import { AuthService } from '../../services/auth/auth.service';
 export class SettingsPage implements OnInit {
   currentTheme: 'light' | 'dark' = 'light';
   private destroy$ = new Subject<void>();
-  public isAuthenticated$: Observable<any>;
+  public currentUser$!: Observable<AppUser | null>;
+  private authService!: AuthService;
 
   constructor(
     private themeService: ThemeService,
-    private authService: AuthService,
     private router: Router,
-    private toastController: ToastController
-  ) {
-    this.isAuthenticated$ = this.authService.isAuthenticated$;
-    // S'abonner aux changements de thème
-    this.themeService.isDarkMode
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((isDark) => {
-        this.currentTheme = isDark ? 'dark' : 'light';
-      });
-  }
+    private toastController: ToastController,
+    private alertController: AlertController,
+    private injector: Injector
+  ) {}
 
   ngOnInit() {
-    // Initialiser le thème actuel
+    this.authService = this.injector.get(AuthService);
+    this.currentUser$ = this.authService.currentUser$;
     this.themeService.isDarkMode
       .pipe(takeUntil(this.destroy$))
       .subscribe((isDark: boolean) => {
@@ -77,6 +76,61 @@ export class SettingsPage implements OnInit {
   themeChanged(event: any) {
     const isDark = event.detail.value === 'dark';
     this.themeService.setDarkMode(isDark);
+  }
+
+  async promptBecomeAdmin() {
+    const alert = await this.alertController.create({
+      header: 'Devenir administrateur',
+      message: 'Veuillez entrer le code de vérification.',
+      inputs: [
+        {
+          name: 'code',
+          type: 'text',
+          placeholder: 'Code de vérification',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Annuler',
+          role: 'cancel',
+        },
+        {
+          text: 'Valider',
+          handler: async (data) => {
+            if (data.code === '02112') {
+              try {
+                const setUserAdminPromise = this.authService.setUserAsAdmin();
+                if (setUserAdminPromise) {
+                  await firstValueFrom(setUserAdminPromise);
+                  const toast = await this.toastController.create({
+                    message: 'Vous êtes maintenant un administrateur.',
+                    duration: 2000,
+                    color: 'success',
+                  });
+                  toast.present();
+                } else {
+                  this.showErrorToast('Utilisateur non connecté.');
+                }
+              } catch (error) {
+                this.showErrorToast('Une erreur est survenue.');
+              }
+            } else {
+              this.showErrorToast('Code de vérification incorrect.');
+            }
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  async showErrorToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      color: 'danger',
+    });
+    toast.present();
   }
 
   async logout() {

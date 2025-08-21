@@ -16,6 +16,7 @@
       }
     </ion-tab-button>
 
+    @if ((currentUser$ | async)?.isAdmin) {
     <ion-tab-button tab="add">
       @if (selectedTab() === "add") {
       <ion-icon name="add-outline" color="primary"></ion-icon>
@@ -23,6 +24,7 @@
       <ion-icon name="add-outline"></ion-icon>
       }
     </ion-tab-button>
+    }
 
     <ion-tab-button tab="settings">
       @if (selectedTab() === "settings") {

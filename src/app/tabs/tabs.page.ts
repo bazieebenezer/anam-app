@@ -7,6 +7,8 @@ import {
   IonTabs,
   IonTabButton,
 } from '@ionic/angular/standalone';
+import { AuthService, AppUser } from '../services/auth/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-tabs',
@@ -25,7 +27,11 @@ import {
 export class TabsPage implements OnInit {
   tabs = viewChild<IonTabs>('tabs');
   selectedTab = signal<string | null>(null);
-  constructor() {}
+  public currentUser$: Observable<AppUser | null>;
+
+  constructor(private authService: AuthService) {
+    this.currentUser$ = this.authService.currentUser$;
+  }
 
   ngOnInit() {}
 
@@ -33,3 +39,4 @@ export class TabsPage implements OnInit {
     this.selectedTab.set(this.tabs()?.getSelected()!);
   }
 }
+
