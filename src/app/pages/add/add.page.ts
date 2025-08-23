@@ -21,11 +21,14 @@ import {
   IonDatetimeButton,
   IonDatetime,
   IonModal,
+  ToastController, // Added ToastController
 } from '@ionic/angular/standalone';
 import { Camera } from '@capacitor/camera';
 import { Capacitor } from '@capacitor/core';
 import { PublicationService } from '../../services/publication/publication.service';
+import { EventService } from '../../services/evenments/event.service';
 import { WeatherBulletin } from '../../model/bulletin.model';
+import { AnamEvent } from '../../model/event.model';
 import { Device } from '@capacitor/device';
 import { Filesystem } from '@capacitor/filesystem';
 
@@ -62,16 +65,30 @@ export class AddPage implements OnInit {
 
   activeForm: 'alert' | 'event' = 'alert';
   alertForm!: FormGroup;
+  eventForm!: FormGroup;
   sendStartup = ['Sotraco', 'Orange', 'IBM'];
   selectedImages: ImagePreview[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private publicationService: PublicationService
+    private publicationService: PublicationService,
+    private eventService: EventService,
+    private toastController: ToastController // Injected ToastController
   ) {}
+
+  async presentToast(message: string, color: 'success' | 'warning' | 'danger') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      color: color,
+      position: 'bottom',
+    });
+    toast.present();
+  }
 
   ngOnInit() {
     this.initAlertForm();
+    this.initEventForm();
   }
 
   private initAlertForm() {
@@ -83,12 +100,48 @@ export class AddPage implements OnInit {
       description: ['', [Validators.required]],
       endDate: [new Date().toISOString(), [Validators.required]],
       pdfFile: [null],
-      tips: this.fb.array([['']]),
+      tips: this.fb.array([this.fb.control('')]),
+    });
+  }
+
+  private initEventForm() {
+    this.eventForm = this.fb.group({
+      title: ['', [Validators.required]],
+      images: this.fb.array([]),
+      description: ['', [Validators.required]],
+      usefulLinks: this.fb.array([this.createLink()]),
+    });
+  }
+
+  createLink(): FormGroup {
+    return this.fb.group({
+      title: ['', Validators.required],
+      url: ['', Validators.required],
     });
   }
 
   get tipsFormArray() {
     return this.alertForm.get('tips') as FormArray;
+  }
+
+  get usefulLinksFormArray() {
+    return this.eventForm.get('usefulLinks') as FormArray;
+  }
+
+  addTip() {
+    this.tipsFormArray.push(this.fb.control(''));
+  }
+
+  addLink() {
+    this.usefulLinksFormArray.push(this.createLink());
+  }
+
+  removeLink(index: number) {
+    this.usefulLinksFormArray.removeAt(index);
+  }
+
+  removeTip(index: number) {
+    this.tipsFormArray.removeAt(index);
   }
 
   async onImagesSelected() {
@@ -134,40 +187,77 @@ export class AddPage implements OnInit {
 
   setActiveForm(form: 'alert' | 'event') {
     this.activeForm = form;
+    this.selectedImages = [];
     if (form === 'alert') {
       this.initAlertForm();
+    } else {
+      this.initEventForm();
     }
-  }
-
-  addTip() {
-    this.tipsFormArray.push(this.fb.control(''));
   }
 
   async submitAlert() {
     if (this.alertForm.invalid) {
-      console.log('Formulaire invalide');
-      Object.values(this.alertForm.controls).forEach(control => {
+      Object.values(this.alertForm.controls).forEach((control) => {
         control.markAsTouched();
       });
+      await this.presentToast(
+        "Veuillez remplir tous les champs requis pour l'alerte.",
+        'warning'
+      );
       return;
     }
 
     try {
-      // Extraire les chaînes Base64 de l'aperçu
-      const imageUrls = this.selectedImages.map(img => img.preview);
-
+      const imageUrls = this.selectedImages.map((img) => img.preview);
       const alertData = {
         ...this.alertForm.value,
-        images: imageUrls, // Remplacer par les URLs
-        createdAt: new Date(), // Ajouter la date de création
+        images: imageUrls,
+        createdAt: new Date(), // Sera remplacé par le timestamp Firebase
       };
-
       await this.publicationService.addAlert(alertData as WeatherBulletin);
-      console.log('Alerte publiée avec succès !');
+      await this.presentToast('Alerte publiée avec succès !', 'success');
       this.alertForm.reset();
       this.selectedImages = [];
     } catch (error) {
       console.error("Erreur lors de la publication de l'alerte :", error);
+      await this.presentToast(
+        "Erreur lors de la publication de l'alerte.",
+        'danger'
+      );
+    }
+  }
+
+  async submitEvent() {
+    if (this.eventForm.invalid) {
+      Object.values(this.eventForm.controls).forEach((control) => {
+        control.markAsTouched();
+      });
+      await this.presentToast(
+        "Veuillez remplir tous les champs requis pour l'événement.",
+        'warning'
+      );
+      return;
+    }
+
+    try {
+      const imageUrls = this.selectedImages.map((img) => img.preview);
+      const eventData: AnamEvent = {
+        title: this.eventForm.value.title,
+        description: this.eventForm.value.description,
+        images: imageUrls,
+        usefulLinks: this.eventForm.value.usefulLinks,
+        createdAt: new Date(), // Sera remplacé par le timestamp Firebase
+      };
+      await this.eventService.addEvent(eventData);
+      await this.presentToast('Événement publié avec succès !', 'success');
+      this.eventForm.reset();
+      this.selectedImages = [];
+    } catch (error) {
+      console.error("Erreur lors de la publication de l'événement :", error);
+      await this.presentToast(
+        "Erreur lors de la publication de l'événement.",
+        'danger'
+      );
     }
   }
 
@@ -179,8 +269,8 @@ export class AddPage implements OnInit {
     }
   }
 
-  isFieldInvalid(fieldName: string): boolean {
-    const field = this.alertForm.get(fieldName);
+  isFieldInvalid(form: FormGroup, fieldName: string): boolean {
+    const field = form.get(fieldName);
     return field ? field.invalid && (field.dirty || field.touched) : false;
   }
 

@@ -21,7 +21,7 @@ import {
   IonLabel,
 } from '@ionic/angular/standalone';
 import { EventService } from '../../services/evenments/event.service';
-import { Event } from '../../model/event.model';
+import { AnamEvent } from '../../model/event.model';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
@@ -57,15 +57,17 @@ export class EventsPage implements OnInit {
 
   searchTerm: string = '';
   selectedFilter: string = 'tous';
-  selectedEvent: Event | null = null;
-  events: Event[] = [];
-  filteredEvents: Event[] = [];
+  selectedEvent: AnamEvent | null = null;
+  events: AnamEvent[] = [];
+  filteredEvents: AnamEvent[] = [];
 
   constructor(private eventService: EventService, private router: Router) {}
 
   ngOnInit() {
-    this.events = this.eventService.getEvents();
-    this.applyFilters();
+    this.eventService.getEventsFromFirebase().subscribe((events) => {
+      this.events = events;
+      this.applyFilters();
+    });
   }
 
   onSearchChange(event: any) {
@@ -79,12 +81,35 @@ export class EventsPage implements OnInit {
   }
 
   applyFilters() {
+    const today = new Date();
+    const twoDaysAgo = new Date(today);
+    twoDaysAgo.setDate(today.getDate() - 2);
+    const oneWeekAgo = new Date(today);
+    oneWeekAgo.setDate(today.getDate() - 7);
+
     let filteredByDate = this.events;
 
     if (this.selectedFilter !== 'tous') {
-      filteredByDate = this.eventService.getEventsByDateFilter(
-        this.selectedFilter
-      );
+      switch (this.selectedFilter) {
+        case 'recents':
+          filteredByDate = this.events.filter((event) => {
+            const eventDate = (event.createdAt as any).toDate();
+            return eventDate >= twoDaysAgo;
+          });
+          break;
+        case '2jours':
+          filteredByDate = this.events.filter((event) => {
+            const eventDate = (event.createdAt as any).toDate();
+            return eventDate >= oneWeekAgo && eventDate < twoDaysAgo;
+          });
+          break;
+        case 'plus_anciens':
+          filteredByDate = this.events.filter((event) => {
+            const eventDate = (event.createdAt as any).toDate();
+            return eventDate < oneWeekAgo;
+          });
+          break;
+      }
     }
 
     this.filteredEvents = filteredByDate.filter((event) => {
@@ -96,12 +121,12 @@ export class EventsPage implements OnInit {
     });
   }
 
-  goToDetails(event: Event, eventClick: MouseEvent) {
+  goToDetails(event: AnamEvent, eventClick: MouseEvent) {
     if ((eventClick.target as HTMLElement).closest('ion-button')) return;
     this.router.navigate(['tabs/event-details', event.id]);
   }
 
-  openShareModal(event: Event) {
+  openShareModal(event: AnamEvent) {
     this.selectedEvent = event;
     this.modal.present();
   }

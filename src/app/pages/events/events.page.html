@@ -38,12 +38,14 @@
 
   @for (event of filteredEvents; track event.id) {
   <ion-card (click)="goToDetails(event, $event)">
-    <img [src]="event.imageUrl" />
+    @if (event.images && event.images.length > 0) {
+      <img [src]="event.images[0]" />
+    }
     <div class="header">
       <ion-card-header>
         <h3 class="title">{{event.title}}</h3>
         <div class="event-meta">
-          <span class="date">{{event.date | date: 'mediumDate' }}</span>
+          <span class="date">{{event.createdAt.toDate() | date: 'mediumDate' }}</span>
         </div>
         <div class="event-details"></div>
       </ion-card-header>
@@ -59,7 +61,7 @@
 
       <ion-button
         class="learn_more"
-        [routerLink]="['/event-details', event.id]"
+        [routerLink]="['/tabs/event-details', event.id]"
       >
         <ion-text>En savoir plus</ion-text>
       </ion-button>

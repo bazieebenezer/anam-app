@@ -1,7 +1,7 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../../services/evenments/event.service';
-import { Event } from '../../model/event.model';
+import { AnamEvent } from '../../model/event.model';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -30,7 +30,7 @@ import { ImageViewerModalComponent } from 'src/app/components/image-viewer-modal
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class EventDetailsPage implements OnInit {
-  event: Event | undefined;
+  event: AnamEvent | undefined;
 
   swiperModule = [IonicSlides];
 
@@ -47,8 +47,12 @@ export class EventDetailsPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.event = this.eventService.getEventById(id);
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.eventService.getEventById(id).subscribe(event => {
+        this.event = event;
+      });
+    }
   }
 
   openImageViewer(imageUrl: string) {

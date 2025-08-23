@@ -1,53 +1,59 @@
 <ion-content [fullscreen]="true">
-  <ion-header class="ion-no-border">
-    <ion-img
-      [src]="event?.imageUrl"
-      (click)="openImageViewer(event?.imageUrl || '')"
-      style="cursor: pointer"
-    ></ion-img>
-    <ion-back-button text="" defaultHref="tabs/events"></ion-back-button>
-  </ion-header>
-  <div class="details-content">
-    <div class="header">
-      <div class="text">
-        <h2>{{ event?.title }}</h2>
-        <span>Le {{ event?.date | date: 'fullDate' }}</span>
+  @if(event){
+    <ion-header class="ion-no-border">
+      @if(event.images && event.images.length > 0){
+        <ion-img
+          [src]="event.images[0]"
+          (click)="openImageViewer(event.images[0] || '')"
+          style="cursor: pointer"
+        ></ion-img>
+      }
+      <ion-back-button text="" defaultHref="tabs/events"></ion-back-button>
+    </ion-header>
+    <div class="details-content">
+      <div class="header">
+        <div class="text">
+          <h2>{{ event.title }}</h2>
+          @if(event.createdAt){
+            <span>Le {{ event.createdAt.toDate() | date: 'fullDate' }}</span>
+          }
+        </div>
       </div>
+
+      <p>{{ event.description }}</p>
+
+      <swiper-container
+        [modules]="swiperModule"
+        [slidesPerView]="1"
+        [spaceBetween]="8"
+        [pagination]="{ clickable: true }"
+        [centeredSlides]="true"
+      >
+        @for (image of event.images; track $index) {
+        <swiper-slide>
+          <img
+            [src]="image"
+            (click)="openImageViewer(image || '')"
+            style="cursor: pointer"
+          />
+        </swiper-slide>
+        }
+      </swiper-container>
+
+      <h3>Liens utiles</h3>
+
+      @for (link of event.usefulLinks; track $index) {
+      <li><a [href]="link.url">{{ link.title }}</a></li>
+      }
     </div>
 
-    <p>{{ event?.descriptionDetails }}</p>
-
-    <swiper-container
-      [modules]="swiperModule"
-      [slidesPerView]="1"
-      [spaceBetween]="8"
-      [pagination]="{ clickable: true }"
-      [centeredSlides]="true"
+    <!-- Image Viewer Modal -->
+    <app-image-viewer-modal
+      [isOpen]="isImageViewerOpen"
+      [imageUrl]="currentImageUrl"
+      (didDismiss)="onModalDismiss()"
+      [title]="event.title"
     >
-      @for (image of event?.imagesUrls; track $index) {
-      <swiper-slide>
-        <img
-          [src]="image"
-          (click)="openImageViewer(image || '')"
-          style="cursor: pointer"
-        />
-      </swiper-slide>
-      },
-    </swiper-container>
-
-    <h3>Liens utiles</h3>
-
-    @for (link of event?.utilsLinks; track $index) {
-    <li><a [href]="link.link">{{ link.title }}</a></li>
-    }
-  </div>
-
-  <!-- Image Viewer Modal -->
-  <app-image-viewer-modal
-    [isOpen]="isImageViewerOpen"
-    [imageUrl]="currentImageUrl"
-    (didDismiss)="onModalDismiss()"
-    [title]="event?.title"
-  >
-  </app-image-viewer-modal>
+    </app-image-viewer-modal>
+  }
 </ion-content>

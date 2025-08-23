@@ -37,7 +37,14 @@
         <ion-icon slot="start" name="image"></ion-icon>
         Sélectionner des images
       </ion-button>
-      <input type="file" #fileInput style="display: none" multiple accept="image/*" (change)="onFileSelected($event)" />
+      <input
+        type="file"
+        #fileInput
+        style="display: none"
+        multiple
+        accept="image/*"
+        (change)="onFileSelected($event)"
+      />
       @if (selectedImages.length > 0) {
       <div class="selected-images">
         @for (image of selectedImages; track $index) {
@@ -108,6 +115,10 @@
         type="text"
         fill="outline"
       ></ion-input>
+      <ion-button class="removeBtn" color="danger" (click)="removeTip($index)">
+        <ion-icon slot="start" name="trash"></ion-icon>
+        <span>Retirer</span>
+      </ion-button>
       }
 
       <ion-button (click)="addTip()">
@@ -120,7 +131,88 @@
       >Publier</ion-button
     >
   </form>
-  } @if (activeForm === 'event') { }
+  } @if (activeForm === 'event') {
+  <form [formGroup]="eventForm" (ngSubmit)="submitEvent()">
+    <p>Titre</p>
+    <ion-input
+      type="text"
+      formControlName="title"
+      fill="outline"
+      placeholder="Entrez le titre"
+      [class.ion-invalid]="isFieldInvalid(eventForm, 'title')"
+    ></ion-input>
+
+    <div class="image-upload">
+      <p>Images</p>
+      <ion-button expand="block" (click)="onImagesSelected()" fill="outline">
+        <ion-icon slot="start" name="image"></ion-icon>
+        Sélectionner des images
+      </ion-button>
+      <input
+        type="file"
+        #fileInput
+        style="display: none"
+        multiple
+        accept="image/*"
+        (change)="onFileSelected($event)"
+      />
+      @if (selectedImages.length > 0) {
+      <div class="selected-images">
+        @for (image of selectedImages; track $index) {
+        <div class="image-preview">
+          <img [src]="image.preview" alt="Preview" />
+          <ion-icon name="close-circle" (click)="removeImage(image)"></ion-icon>
+        </div>
+        }
+      </div>
+      }
+    </div>
+
+    <ion-textarea
+      label="Description"
+      labelPlacement="start"
+      fill="outline"
+      placeholder="Entrez la description"
+      formControlName="description"
+      [autoGrow]="true"
+      [class.ion-invalid]="isFieldInvalid(eventForm, 'description')"
+    ></ion-textarea>
+
+    <div class="practical-tips" formArrayName="usefulLinks">
+      <p>Liens Utiles</p>
+      @for (link of usefulLinksFormArray.controls; track $index) {
+      <div [formGroupName]="$index" class="link-group">
+        <ion-input
+          type="text"
+          formControlName="title"
+          fill="outline"
+          placeholder="Titre du lien"
+          [class.ion-invalid]="link.get('title')?.invalid && link.get('title')?.touched"
+        ></ion-input>
+        <ion-input
+          type="url"
+          formControlName="url"
+          fill="outline"
+          placeholder="URL du lien"
+          [class.ion-invalid]="link.get('url')?.invalid && link.get('url')?.touched"
+        ></ion-input>
+        <ion-button color="danger" (click)="removeLink($index)">
+          <ion-icon slot="start" name="trash"></ion-icon>
+          <span>Retirer</span>
+        </ion-button>
+      </div>
+      }
+      <ion-button (click)="addLink()">
+        <ion-icon slot="start" name="add"></ion-icon>
+        Ajouter un lien
+      </ion-button>
+    </div>
+
+    <ion-button expand="block" type="submit" [disabled]="eventForm.invalid"
+      >Publier l'événement</ion-button
+    >
+  </form>
+  }
 
   <ion-modal [keepContentsMounted]="true">
     <ng-template>

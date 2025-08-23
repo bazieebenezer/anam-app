@@ -27,6 +27,7 @@ import {
   image,
   arrowDownRightBox,
   chevronForwardOutline,
+  trash,
 } from 'ionicons/icons';
 
 import { registerLocaleData } from '@angular/common';
@@ -71,7 +72,8 @@ export class AppComponent {
       settings,
       closeCircle,
       image,
-      chevronForwardOutline
+      chevronForwardOutline,
+      trash
     });
   }
 }

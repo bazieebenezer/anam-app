@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Firestore, collection, addDoc, collectionData, doc, docData, query } from '@angular/fire/firestore';
 import { WeatherBulletin } from '../../model/bulletin.model';
+
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -14,6 +15,8 @@ export class PublicationService {
     const alertsCollection = collection(this.firestore, 'bulletins');
     return addDoc(alertsCollection, alertData);
   }
+
+  
 
   getPublications(): Observable<WeatherBulletin[]> {
     const alertsCollection = collection(this.firestore, 'bulletins');

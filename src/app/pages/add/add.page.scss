@@ -63,6 +63,26 @@ form {
     }
   }
 
+  .link-group {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid var(--ion-color-light-gray);
+    margin-bottom: 16px;
+    ion-button {
+      width: 150px;
+      height: 48px;
+      span {
+        color: var(--ion-color-primary-contrast);
+        font-size: 16px;
+      }
+      ion-icon {
+        width: 18px;
+        height: 18px;
+        color: var(--ion-color-primary-contrast);
+      }
+    }
+  }
+
   ion-textarea {
     height: 80px;
   }
@@ -129,7 +149,35 @@ p {
 }
 
 .practical-tips {
+  display: flex;
+  flex-direction: column;
   margin-top: 50px;
+  .removeBtn {
+    width: 150px;
+    height: 48px;
+    span {
+      font-size: 16px;
+      color: var(--ion-color-primary-contrast);
+    }
+    ion-icon {
+      width: 18px;
+      height: 18px;
+      color: var(--ion-color-primary-contrast);
+    }
+  }
+  ion-button {
+    --box-shadow: none;
+    text-transform: none;
+    float: right;
+    margin-bottom: 32px;
+    --background: var(--ion-color-very-light-gray);
+    color: var(--ion-color-secondary-contrast);
+    --border-radius: 8px;
+    height: 42px;
+  }
+}
+
+.usefulLinks {
   ion-button {
     --box-shadow: none;
     text-transform: none;
