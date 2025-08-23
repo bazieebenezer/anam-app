@@ -1,14 +1,9 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'com.example.app',
   appName: 'anam-app',
-  webDir: 'www',
-  plugins: {
-    Media: {
-      androidGalleryMode: false,
-    },
-  },
+  webDir: 'www'
 };
 
 export default config;

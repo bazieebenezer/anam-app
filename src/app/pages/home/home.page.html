@@ -37,26 +37,29 @@
     >
     <span class="count">({{filteredBulletins.length}})</span>
   </div>
-  @for (bulletin of filteredBulletins; track $index) {
-  <ion-card (click)="goToDetails(bulletin, $event)">
-    <img [src]="bulletin.imageUrl" />
-    <div class="header">
+  @for (bulletin of filteredBulletins; track bulletin.id) {
+  <ion-card>
+    <!-- Conteneur pour les images -->
+    @if (bulletin.images && bulletin.images.length > 0) {
+    <div (click)="goToDetails(bulletin, $event)">
+      <img [src]="bulletin.images[0]" alt="Image du bulletin" />
+    </div>
+    }
+
+    <div class="header" (click)="goToDetails(bulletin, $event)">
       <ion-card-header>
-        <span>{{bulletin.date | date: 'mediumDate' }}</span>
-        <h3 class="title">{{bulletin.title}}</h3>
+        <!-- Utilisation de createdAt pour la date de publication -->
+        <span>{{ bulletin.createdAt.toDate() | date: 'mediumDate' }}</span>
+        <h3 class="title">{{ bulletin.title }}</h3>
         <span class="subtitle">
-          Valable jusqu'au {{ bulletin.date | date: 'fullDate' }}
+          <!-- Utilisation de endDate pour la date de validité -->
+          Valable jusqu'au {{ bulletin.endDate | date: 'fullDate' }}
         </span>
       </ion-card-header>
       <app-badge [severity]="bulletin.severity" />
     </div>
-    <ion-card-content>
-      <p>
-        {{bulletin.description}}
-        <a href="#" [routerLink]="['bulletin-details', bulletin.id]"
-          >En savoir plus</a
-        >
-      </p>
+    <ion-card-content (click)="goToDetails(bulletin, $event)">
+      <p>{{ bulletin.description }}</p>
     </ion-card-content>
     <ion-buttons>
       <ion-button class="share" (click)="openShareModal(bulletin)">
@@ -67,8 +70,8 @@
       <ion-button class="download">
         <ion-icon name="arrow-down-outline"></ion-icon>
         <ion-text>Télécharger</ion-text>
-      </ion-button></ion-buttons
-    >
+      </ion-button>
+    </ion-buttons>
   </ion-card>
   } @if (filteredBulletins.length === 0) {
   <div class="no-results">

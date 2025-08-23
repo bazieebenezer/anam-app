@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -24,10 +24,13 @@ import {
 } from '@ionic/angular/standalone';
 import { Camera } from '@capacitor/camera';
 import { Capacitor } from '@capacitor/core';
+import { PublicationService } from '../../services/publication/publication.service';
+import { WeatherBulletin } from '../../model/bulletin.model';
+import { Device } from '@capacitor/device';
+import { Filesystem } from '@capacitor/filesystem';
 
+// L'interface ne contient plus que la preview, qui sera notre DataURL Base64
 interface ImagePreview {
-  path?: string;
-  file?: File;
   preview: string;
 }
 
@@ -55,12 +58,17 @@ interface ImagePreview {
   ],
 })
 export class AddPage implements OnInit {
+  @ViewChild('fileInput') fileInput!: ElementRef;
+
   activeForm: 'alert' | 'event' = 'alert';
   alertForm!: FormGroup;
   sendStartup = ['Sotraco', 'Orange', 'IBM'];
   selectedImages: ImagePreview[] = [];
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private publicationService: PublicationService
+  ) {}
 
   ngOnInit() {
     this.initAlertForm();
@@ -69,8 +77,8 @@ export class AddPage implements OnInit {
   private initAlertForm() {
     this.alertForm = this.fb.group({
       title: ['', [Validators.required]],
-      images: this.fb.array([['', Validators.required]]),
-      criticality: ['', [Validators.required]],
+      images: this.fb.array([]),
+      severity: ['', [Validators.required]],
       target: ['', [Validators.required]],
       description: ['', [Validators.required]],
       endDate: [new Date().toISOString(), [Validators.required]],
@@ -84,28 +92,43 @@ export class AddPage implements OnInit {
   }
 
   async onImagesSelected() {
+    const info = await Device.getInfo();
+    if (info.platform === 'web') {
+      this.fileInput.nativeElement.click();
+      return;
+    }
     try {
-      // Demande de permission
       await Camera.requestPermissions();
-
-      // Sélection des images
       const images = await Camera.pickImages({
         quality: 90,
-        limit: 10, // Limite le nombre d'images à 10
+        limit: 10,
       });
 
-      // Traitement des images sélectionnées
       for (const image of images.photos) {
-        const imageUrl = Capacitor.convertFileSrc(image.webPath);
-        this.selectedImages.push({
-          path: image.path,
-          preview: imageUrl,
-        });
+        if (image.path) {
+          const file = await Filesystem.readFile({ path: image.path });
+          const dataUrl = 'data:image/jpeg;base64,' + file.data;
+          this.selectedImages.push({ preview: dataUrl });
+        }
       }
-
-      this.updateImagesFormArray();
     } catch (error) {
       console.error('Erreur lors de la sélection des images:', error);
+    }
+  }
+
+  onFileSelected(event: Event) {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      const files = Array.from(input.files);
+      files.forEach((file) => {
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            this.selectedImages.push({ preview: reader.result as string });
+          };
+          reader.readAsDataURL(file);
+        }
+      });
     }
   }
 
@@ -120,17 +143,31 @@ export class AddPage implements OnInit {
     this.tipsFormArray.push(this.fb.control(''));
   }
 
-  submitAlert() {
-    if (this.alertForm.valid) {
-      console.log('Alerte publiée :', this.alertForm.value);
-    } else {
+  async submitAlert() {
+    if (this.alertForm.invalid) {
       console.log('Formulaire invalide');
-      Object.keys(this.alertForm.controls).forEach((key) => {
-        const control = this.alertForm.get(key);
-        if (control?.invalid) {
-          control.markAsTouched();
-        }
+      Object.values(this.alertForm.controls).forEach(control => {
+        control.markAsTouched();
       });
+      return;
+    }
+
+    try {
+      // Extraire les chaînes Base64 de l'aperçu
+      const imageUrls = this.selectedImages.map(img => img.preview);
+
+      const alertData = {
+        ...this.alertForm.value,
+        images: imageUrls, // Remplacer par les URLs
+        createdAt: new Date(), // Ajouter la date de création
+      };
+
+      await this.publicationService.addAlert(alertData as WeatherBulletin);
+      console.log('Alerte publiée avec succès !');
+      this.alertForm.reset();
+      this.selectedImages = [];
+    } catch (error) {
+      console.error("Erreur lors de la publication de l'alerte :", error);
     }
   }
 
@@ -147,41 +184,10 @@ export class AddPage implements OnInit {
     return field ? field.invalid && (field.dirty || field.touched) : false;
   }
 
-  // Selection des images pour le web
-  // onImagesSelected(event: Event) {
-  //   const input = event.target as HTMLInputElement;
-  //   if (input.files) {
-  //     const files = Array.from(input.files);
-
-  //     files.forEach((file) => {
-  //       if (file.type.startsWith('image/')) {
-  //         const reader = new FileReader();
-  //         reader.onload = () => {
-  //           this.selectedImages.push({
-  //             file: file,
-  //             preview: reader.result as string,
-  //           });
-  //           this.updateImagesFormArray();
-  //         };
-  //         reader.readAsDataURL(file);
-  //       }
-  //     });
-  //   }
-  // }
-
   removeImage(image: ImagePreview) {
     const index = this.selectedImages.indexOf(image);
     if (index > -1) {
       this.selectedImages.splice(index, 1);
-      this.updateImagesFormArray();
     }
-  }
-
-  private updateImagesFormArray() {
-    const imagesFormArray = this.alertForm.get('images') as FormArray;
-    imagesFormArray.clear();
-    this.selectedImages.forEach((image) => {
-      imagesFormArray.push(this.fb.control(image.path || image.file));
-    });
   }
 }

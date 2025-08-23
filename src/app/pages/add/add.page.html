@@ -37,6 +37,7 @@
         <ion-icon slot="start" name="image"></ion-icon>
         Sélectionner des images
       </ion-button>
+      <input type="file" #fileInput style="display: none" multiple accept="image/*" (change)="onFileSelected($event)" />
       @if (selectedImages.length > 0) {
       <div class="selected-images">
         @for (image of selectedImages; track $index) {
@@ -53,8 +54,8 @@
       label="Niveau de criticité"
       labelPlacement="start"
       fill="outline"
-      formControlName="criticality"
-      [class.ion-invalid]="alertForm.get('criticality')?.invalid && alertForm.get('criticality')?.touched"
+      formControlName="severity"
+      [class.ion-invalid]="alertForm.get('severity')?.invalid && alertForm.get('severity')?.touched"
     >
       <ion-select-option value="normal">Normal</ion-select-option>
       <ion-select-option value="eleve">Elevé</ion-select-option>

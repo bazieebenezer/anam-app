@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -48,24 +48,27 @@ import { BadgeComponent } from 'src/app/components/badge/badge.component';
     FormsModule,
     IonImg,
     BadgeComponent,
-    BadgeComponent,
-    RouterLink,
   ],
 })
 export class HomePage implements OnInit {
-  constructor(private router: Router, private navCtrl: NavController) {}
-
   @ViewChild('modal') modal!: IonModal;
   searchTerm: string = '';
   selectedFilter: string = 'tous';
   selectedBulletin: WeatherBulletin | null = null;
-  bulletinService = inject(PublicationService);
   bulletins: WeatherBulletin[] = [];
   filteredBulletins: WeatherBulletin[] = [];
 
+  constructor(
+    private router: Router,
+    private navCtrl: NavController,
+    private bulletinService: PublicationService
+  ) {}
+
   ngOnInit() {
-    this.bulletins = this.bulletinService.getPublications();
-    this.applyFilters();
+    this.bulletinService.getPublications().subscribe((bulletins) => {
+      this.bulletins = bulletins;
+      this.applyFilters();
+    });
   }
 
   onSearchChange(event: any) {

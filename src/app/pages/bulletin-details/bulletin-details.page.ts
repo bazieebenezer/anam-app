@@ -1,10 +1,9 @@
 import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
-  inject,
   OnInit,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { DatePipe, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import {
@@ -33,7 +32,7 @@ import { ImageViewerModalComponent } from 'src/app/components/image-viewer-modal
     IonBackButton,
     IonHeader,
     IonContent,
-    CommonModule,
+    NgIf,
     FormsModule,
     BadgeComponent,
     IonImg,
@@ -41,30 +40,30 @@ import { ImageViewerModalComponent } from 'src/app/components/image-viewer-modal
     IonIcon,
     IonText,
     ImageViewerModalComponent,
-    ImageViewerModalComponent,
+    DatePipe,
   ],
-
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class BulletinDetailsPage implements OnInit {
-  constructor() {}
-
   swiperModule = [IonicSlides];
-
-  bulletin!: WeatherBulletin | undefined;
-  route = inject(ActivatedRoute);
-  bulletinService = inject(PublicationService);
-
+  bulletin: WeatherBulletin | undefined;
   images: string[] = [];
   selectedImage: string | null = null;
-
-  // Modal properties
   isImageViewerOpen = false;
   currentImageUrl = '';
 
+  constructor(
+    private route: ActivatedRoute,
+    private bulletinService: PublicationService
+  ) {}
+
   ngOnInit() {
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.bulletin = this.bulletinService.getPublicationById(id);
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.bulletinService.getPublicationById(id).subscribe((bulletin) => {
+        this.bulletin = bulletin;
+      });
+    }
   }
 
   openImageViewer(imageUrl: string) {
@@ -83,3 +82,4 @@ export class BulletinDetailsPage implements OnInit {
     this.closeImageViewer();
   }
 }
+

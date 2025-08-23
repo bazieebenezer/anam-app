@@ -45,9 +45,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Cette application nécessite l'accès à votre galerie photos pour sauvegarder les images téléchargées.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Cette application nécessite l'accès à votre galerie photos pour sauvegarder les images téléchargées.</string>
 </dict>
 </plist>
