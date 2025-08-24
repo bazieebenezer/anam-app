@@ -31,13 +31,17 @@
     </ion-radio-group>
   </div>
 
-  <div class="institution">
-    <h3>Institution</h3>
-    <ion-item class="ion-no-padding" (click)="promptBecomeInstitution()">
-      Accéder aux annonces personnalisées
-      <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
-    </ion-item>
-  </div>
+  @if(currentUser$ | async; as user) {
+    @if(!user.isInstitution) {
+      <div class="institution">
+        <h3>Institution</h3>
+        <ion-item class="ion-no-padding" (click)="promptBecomeInstitution()">
+          Accéder aux annonces personnalisées
+          <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+        </ion-item>
+      </div>
+    }
+  }
 
   <div class="institution">
     <h3>Compte</h3>

@@ -36,16 +36,55 @@
     <span class="count">({{filteredEvents.length}})</span>
   </div>
 
-  @for (event of filteredEvents; track event.id) {
+  <!-- Squelettes de chargement -->
+  @if (isLoading) { @for (item of [1, 2, 3]; track item) {
+  <ion-card class="skeleton-card">
+    <div class="skeleton-image-wrapper">
+      <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+    </div>
+    <div class="header">
+      <ion-card-header>
+        <h3 class="title">
+          <div class="skeleton-title-wrapper">
+            <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+          </div>
+        </h3>
+
+        <span class="subtitle">
+          <div class="skeleton-subtitle-wrapper">
+            <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+          </div>
+        </span>
+      </ion-card-header>
+    </div>
+
+    <ion-card-content>
+      <div class="skeleton-line-wrapper">
+        <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+      </div>
+      <div class="skeleton-line-wrapper short">
+        <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+      </div>
+      <div class="skeleton-line-wrapper shortest">
+        <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+      </div>
+    </ion-card-content>
+  </ion-card>
+  } }
+
+  <!-- Contenu réel -->
+  @if (!isLoading) { @for (event of filteredEvents; track event.id) {
   <ion-card (click)="goToDetails(event, $event)">
     @if (event.images && event.images.length > 0) {
-      <img [src]="event.images[0]" />
+    <img [src]="event.images[0]" />
     }
     <div class="header">
       <ion-card-header>
         <h3 class="title">{{event.title}}</h3>
         <div class="event-meta">
-          <span class="date">{{event.createdAt.toDate() | date: 'mediumDate' }}</span>
+          <span class="date"
+            >{{event.createdAt.toDate() | date: 'mediumDate' }}</span
+          >
         </div>
         <div class="event-details"></div>
       </ion-card-header>
@@ -73,7 +112,7 @@
     <h3>Aucun événement trouvé</h3>
     <p>Essayez de modifier vos critères de recherche ou de filtre</p>
   </div>
-  }
+  } }
 </ion-content>
 
 <ion-modal id="share-modal" #modal>

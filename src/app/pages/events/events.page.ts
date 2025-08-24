@@ -19,6 +19,7 @@ import {
   IonModal,
   IonList,
   IonLabel,
+  IonSkeletonText,
 } from '@ionic/angular/standalone';
 import { EventService } from '../../services/evenments/event.service';
 import { AnamEvent } from '../../model/event.model';
@@ -50,6 +51,7 @@ import { Router, RouterLink } from '@angular/router';
     CommonModule,
     FormsModule,
     RouterLink,
+    IonSkeletonText,
   ],
 })
 export class EventsPage implements OnInit {
@@ -60,13 +62,16 @@ export class EventsPage implements OnInit {
   selectedEvent: AnamEvent | null = null;
   events: AnamEvent[] = [];
   filteredEvents: AnamEvent[] = [];
+  isLoading: boolean = true;
 
   constructor(private eventService: EventService, private router: Router) {}
 
   ngOnInit() {
+    this.isLoading = true;
     this.eventService.getEventsFromFirebase().subscribe((events) => {
       this.events = events;
       this.applyFilters();
+      this.isLoading = false;
     });
   }
 

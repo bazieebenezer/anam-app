@@ -37,7 +37,46 @@
     >
     <span class="count">({{filteredBulletins.length}})</span>
   </div>
-  @for (bulletin of filteredBulletins; track bulletin.id) {
+
+  <!-- Squelettes de chargement -->
+  @if (isLoading) { @for (item of [1, 2, 3]; track item) {
+  <ion-card class="skeleton-card">
+    <div class="skeleton-image-wrapper">
+      <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+    </div>
+    <div class="header">
+      <ion-card-header>
+        <h3 class="title">
+          <div class="skeleton-title-wrapper">
+            <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+          </div>
+        </h3>
+
+        <span class="subtitle">
+          <div class="skeleton-subtitle-wrapper">
+            <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+          </div>
+        </span>
+      </ion-card-header>
+    </div>
+
+    <ion-card-content>
+      <div class="skeleton-line-wrapper">
+        <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+      </div>
+      <div class="skeleton-line-wrapper short">
+        <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+      </div>
+      <div class="skeleton-line-wrapper shortest">
+        <ion-skeleton-text [animated]="true"></ion-skeleton-text>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  } }
+
+  <!-- Contenu réel -->
+  @if (!isLoading) { @for (bulletin of filteredBulletins; track bulletin.id) {
   <ion-card>
     <!-- Conteneur pour les images -->
     @if (bulletin.images && bulletin.images.length > 0) {
@@ -58,7 +97,9 @@
       </ion-card-header>
       <div class="badges">
         <app-badge [severity]="bulletin.severity" />
-        <ion-badge *ngIf="bulletin.targetInstitutionId" color="secondary">Spécifique</ion-badge>
+        <ion-badge *ngIf="bulletin.targetInstitutionId" color="secondary"
+          >Spécifique</ion-badge
+        >
       </div>
     </div>
     <ion-card-content (click)="goToDetails(bulletin, $event)">
@@ -82,7 +123,7 @@
     <h3>Aucun bulletin trouvé</h3>
     <p>Essayez de modifier vos critères de recherche ou de filtre</p>
   </div>
-  }
+  } }
 </ion-content>
 
 <ion-modal id="share-modal" #modal>

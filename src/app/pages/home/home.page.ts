@@ -17,6 +17,7 @@ import {
   IonModal,
   IonList,
   IonLabel,
+  IonSkeletonText,
 } from '@ionic/angular/standalone';
 import { PublicationService } from 'src/app/services/publication/publication.service';
 import { WeatherBulletin } from 'src/app/model/bulletin.model';
@@ -50,6 +51,7 @@ import { firstValueFrom } from 'rxjs';
     FormsModule,
     IonImg,
     BadgeComponent,
+    IonSkeletonText
   ],
 })
 export class HomePage implements OnInit {
@@ -59,6 +61,7 @@ export class HomePage implements OnInit {
   selectedBulletin: WeatherBulletin | null = null;
   bulletins: WeatherBulletin[] = [];
   filteredBulletins: WeatherBulletin[] = [];
+  isLoading: boolean = true;
 
   constructor(
     private router: Router,
@@ -68,6 +71,7 @@ export class HomePage implements OnInit {
   ) {}
 
   async ngOnInit() {
+    this.isLoading = true;
     const user = await firstValueFrom(this.authService.currentUser$);
     this.bulletinService.getPublications().subscribe((bulletins) => {
       if (user && user.isInstitution) {
@@ -76,6 +80,7 @@ export class HomePage implements OnInit {
         this.bulletins = bulletins.filter(b => !b.targetInstitutionId);
       }
       this.applyFilters();
+      this.isLoading = false;
     });
   }
 

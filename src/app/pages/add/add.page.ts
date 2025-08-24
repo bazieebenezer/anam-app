@@ -21,7 +21,7 @@ import {
   IonDatetimeButton,
   IonDatetime,
   IonModal,
-  ToastController, // Added ToastController
+  ToastController,
 } from '@ionic/angular/standalone';
 import { Camera } from '@capacitor/camera';
 import { Capacitor } from '@capacitor/core';
@@ -34,7 +34,6 @@ import { Filesystem } from '@capacitor/filesystem';
 
 import { AuthService, AppUser } from '../../services/auth/auth.service';
 
-// L'interface ne contient plus que la preview, qui sera notre DataURL Base64
 interface ImagePreview {
   preview: string;
 }
@@ -76,7 +75,7 @@ export class AddPage implements OnInit {
     private publicationService: PublicationService,
     private eventService: EventService,
     private authService: AuthService,
-    private toastController: ToastController // Injected ToastController
+    private toastController: ToastController
   ) {}
 
   async presentToast(message: string, color: 'success' | 'warning' | 'danger') {
@@ -96,7 +95,7 @@ export class AddPage implements OnInit {
   }
 
   loadInstitutions() {
-    this.authService.getInstitutionUsers().subscribe(users => {
+    this.authService.getInstitutionUsers().subscribe((users) => {
       this.institutions = users;
     });
   }
@@ -222,8 +221,11 @@ export class AddPage implements OnInit {
       const alertData = {
         ...this.alertForm.value,
         images: imageUrls,
-        createdAt: new Date(), // Sera remplacé par le timestamp Firebase
-        targetInstitutionId: this.alertForm.value.target === 'all' ? null : this.alertForm.value.target,
+        createdAt: new Date(),
+        targetInstitutionId:
+          this.alertForm.value.target === 'all'
+            ? null
+            : this.alertForm.value.target,
       };
       await this.publicationService.addAlert(alertData as WeatherBulletin);
       await this.presentToast('Alerte publiée avec succès !', 'success');
@@ -257,7 +259,7 @@ export class AddPage implements OnInit {
         description: this.eventForm.value.description,
         images: imageUrls,
         usefulLinks: this.eventForm.value.usefulLinks,
-        createdAt: new Date(), // Sera remplacé par le timestamp Firebase
+        createdAt: new Date(),
       };
       await this.eventService.addEvent(eventData);
       await this.presentToast('Événement publié avec succès !', 'success');

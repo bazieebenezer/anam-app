@@ -78,7 +78,9 @@
     >
       <ion-select-option value="all">Tout le monde</ion-select-option>
       @for (institution of institutions; track $index) {
-      <ion-select-option [value]="institution.uid">{{ institution.displayName || institution.email }}</ion-select-option>
+      <ion-select-option [value]="institution.uid"
+        >{{ institution.displayName || institution.email }}</ion-select-option
+      >
       }
     </ion-select>
 
@@ -128,7 +130,7 @@
     </div>
 
     <ion-button expand="block" type="submit" [disabled]="alertForm.invalid"
-      >Publier</ion-button
+      >Publier le bulletin</ion-button
     >
   </form>
   } @if (activeForm === 'event') {
