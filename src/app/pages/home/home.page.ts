@@ -23,6 +23,8 @@ import { WeatherBulletin } from 'src/app/model/bulletin.model';
 import { Router, RouterLink } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { BadgeComponent } from 'src/app/components/badge/badge.component';
+import { AuthService, AppUser } from 'src/app/services/auth/auth.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -61,12 +63,18 @@ export class HomePage implements OnInit {
   constructor(
     private router: Router,
     private navCtrl: NavController,
-    private bulletinService: PublicationService
+    private bulletinService: PublicationService,
+    private authService: AuthService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    const user = await firstValueFrom(this.authService.currentUser$);
     this.bulletinService.getPublications().subscribe((bulletins) => {
-      this.bulletins = bulletins;
+      if (user && user.isInstitution) {
+        this.bulletins = bulletins.filter(b => !b.targetInstitutionId || b.targetInstitutionId === user.uid);
+      } else {
+        this.bulletins = bulletins.filter(b => !b.targetInstitutionId);
+      }
       this.applyFilters();
     });
   }

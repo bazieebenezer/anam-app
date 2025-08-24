@@ -13,4 +13,5 @@ export interface WeatherBulletin {
   pdfFile?: any; // Le fichier PDF (optionnel)
   tips: string[]; // Les conseils pratiques
   createdAt: Timestamp; // La date de création de type Timestamp de Firebase
+  targetInstitutionId?: string; // L'ID de l'institution cible
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, authState, User } from '@angular/fire/auth';
 import { from, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { doc, getDoc, Firestore, setDoc, updateDoc } from '@angular/fire/firestore';
+import { doc, getDoc, Firestore, setDoc, updateDoc, collection, query, where, collectionData } from '@angular/fire/firestore';
 
 export interface AppUser {
   uid: string;
@@ -10,6 +10,7 @@ export interface AppUser {
   displayName?: string;
   photoURL?: string;
   isAdmin?: boolean;
+  isInstitution?: boolean;
 }
 
 @Injectable({
@@ -40,7 +41,11 @@ export class AuthService {
   }
 
   loginWithEmailAndPassword(email: string, password: string) {
-    return from(signInWithEmailAndPassword(this.auth, email, password));
+    return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
+      tap(credential => {
+        this.updateUserData(credential.user);
+      })
+    );
   }
 
   loginWithGoogle() {
@@ -72,6 +77,21 @@ export class AuthService {
     return of(null);
   }
 
+  setUserAsInstitution() {
+    const user = this.auth.currentUser;
+    if (user) {
+      const userDocRef = doc(this.firestore, `users/${user.uid}`);
+      return from(setDoc(userDocRef, { isInstitution: true }, { merge: true }));
+    }
+    return of(null);
+  }
+
+  getInstitutionUsers(): Observable<AppUser[]> {
+    const usersCollection = collection(this.firestore, 'users');
+    const q = query(usersCollection, where('isInstitution', '==', true));
+    return collectionData(q, { idField: 'uid' }) as Observable<AppUser[]>;
+  }
+
   private async updateUserData(user: User, isNewUser: boolean = false) {
     const userDocRef = doc(this.firestore, `users/${user.uid}`);
     if (isNewUser) {
@@ -80,7 +100,8 @@ export class AuthService {
         email: user.email || '',
         displayName: user.displayName || '',
         photoURL: user.photoURL || '',
-        isAdmin: false
+        isAdmin: false,
+        isInstitution: false
       };
       return setDoc(userDocRef, data);
     } else {
@@ -91,7 +112,8 @@ export class AuthService {
           email: user.email || '',
           displayName: user.displayName || '',
           photoURL: user.photoURL || '',
-          isAdmin: false
+          isAdmin: false,
+        isInstitution: false
         };
         return setDoc(userDocRef, data);
       }

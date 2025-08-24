@@ -133,6 +133,59 @@ export class SettingsPage implements OnInit {
     toast.present();
   }
 
+  async promptBecomeInstitution() {
+    const user = await firstValueFrom(this.currentUser$);
+    if (user && user.isInstitution) {
+      this.router.navigate(['/tabs/home']);
+      return;
+    }
+
+    const alert = await this.alertController.create({
+      header: 'Devenir une institution',
+      message: 'Veuillez entrer le code de vérification pour les institutions.',
+      inputs: [
+        {
+          name: 'code',
+          type: 'text',
+          placeholder: 'Code de vérification',
+        },
+      ],
+      buttons: [
+        {
+          text: 'Annuler',
+          role: 'cancel',
+        },
+        {
+          text: 'Valider',
+          handler: async (data) => {
+            if (data.code === '95160') {
+              try {
+                const setUserInstitutionPromise = this.authService.setUserAsInstitution();
+                if (setUserInstitutionPromise) {
+                  await firstValueFrom(setUserInstitutionPromise);
+                  const toast = await this.toastController.create({
+                    message: 'Vous êtes maintenant une institution.',
+                    duration: 2000,
+                    color: 'success',
+                  });
+                  toast.present();
+                  this.router.navigate(['/tabs/home']);
+                } else {
+                  this.showErrorToast('Utilisateur non connecté.');
+                }
+              } catch (error) {
+                this.showErrorToast('Une erreur est survenue.');
+              }
+            } else {
+              this.showErrorToast('Code de vérification incorrect.');
+            }
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
   async logout() {
     await this.authService.logout();
     this.router.navigate(['/signin']);

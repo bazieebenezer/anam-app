@@ -56,7 +56,10 @@
           Valable jusqu'au {{ bulletin.endDate | date: 'fullDate' }}
         </span>
       </ion-card-header>
-      <app-badge [severity]="bulletin.severity" />
+      <div class="badges">
+        <app-badge [severity]="bulletin.severity" />
+        <ion-badge *ngIf="bulletin.targetInstitutionId" color="secondary">Spécifique</ion-badge>
+      </div>
     </div>
     <ion-card-content (click)="goToDetails(bulletin, $event)">
       <p>{{ bulletin.description }}</p>

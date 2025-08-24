@@ -32,6 +32,8 @@ import { AnamEvent } from '../../model/event.model';
 import { Device } from '@capacitor/device';
 import { Filesystem } from '@capacitor/filesystem';
 
+import { AuthService, AppUser } from '../../services/auth/auth.service';
+
 // L'interface ne contient plus que la preview, qui sera notre DataURL Base64
 interface ImagePreview {
   preview: string;
@@ -66,13 +68,14 @@ export class AddPage implements OnInit {
   activeForm: 'alert' | 'event' = 'alert';
   alertForm!: FormGroup;
   eventForm!: FormGroup;
-  sendStartup = ['Sotraco', 'Orange', 'IBM'];
+  institutions: AppUser[] = [];
   selectedImages: ImagePreview[] = [];
 
   constructor(
     private fb: FormBuilder,
     private publicationService: PublicationService,
     private eventService: EventService,
+    private authService: AuthService,
     private toastController: ToastController // Injected ToastController
   ) {}
 
@@ -89,6 +92,13 @@ export class AddPage implements OnInit {
   ngOnInit() {
     this.initAlertForm();
     this.initEventForm();
+    this.loadInstitutions();
+  }
+
+  loadInstitutions() {
+    this.authService.getInstitutionUsers().subscribe(users => {
+      this.institutions = users;
+    });
   }
 
   private initAlertForm() {
@@ -213,6 +223,7 @@ export class AddPage implements OnInit {
         ...this.alertForm.value,
         images: imageUrls,
         createdAt: new Date(), // Sera remplacé par le timestamp Firebase
+        targetInstitutionId: this.alertForm.value.target === 'all' ? null : this.alertForm.value.target,
       };
       await this.publicationService.addAlert(alertData as WeatherBulletin);
       await this.presentToast('Alerte publiée avec succès !', 'success');
