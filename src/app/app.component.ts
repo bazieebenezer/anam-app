@@ -1,4 +1,4 @@
-import { Component, LOCALE_ID } from '@angular/core';
+import { Component, LOCALE_ID, OnInit } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import localeFr from '@angular/common/locales/fr';
@@ -32,6 +32,7 @@ import {
 
 import { registerLocaleData } from '@angular/common';
 import { register } from 'swiper/element/bundle';
+import { PublicationService } from './services/publication/publication.service';
 
 register();
 
@@ -48,8 +49,8 @@ registerLocaleData(localeFr);
     },
   ],
 })
-export class AppComponent {
-  constructor() {
+export class AppComponent implements OnInit {
+  constructor(private publicationService: PublicationService) {
     addIcons({
       homeOutline,
       newspaperOutline,
@@ -76,4 +77,9 @@ export class AppComponent {
       trash
     });
   }
+
+  ngOnInit() {
+    this.publicationService.deleteExpiredBulletins();
+  }
 }
+
