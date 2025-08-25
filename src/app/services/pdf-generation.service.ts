@@ -30,6 +30,7 @@ export class PdfGenerationService {
     const loadingToast = await this.toastController.create({
       message: 'Téléchargement...',
       duration: 0,
+      color: 'primary',
     });
     await loadingToast.present();
 
@@ -49,6 +50,8 @@ export class PdfGenerationService {
               bulletin.images[0]
             }" style="width: 80%; margin: 0 auto; display: block;">
           </div>
+          <p>Publié le <p/><span>${bulletin.createdAt}<span/>
+          <p>Valable jusqu'au <p/><span>${bulletin.endDate}<span/>
           <div style="margin-top: 10mm;">
             <p>${bulletin.description}</p>
           </div>

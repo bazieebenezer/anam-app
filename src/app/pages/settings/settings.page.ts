@@ -23,6 +23,8 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService, AppUser } from '../../services/auth/auth.service';
 import { firstValueFrom } from 'rxjs';
 
+type Theme = 'light' | 'dark' | 'system';
+
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.page.html',
@@ -45,7 +47,7 @@ import { firstValueFrom } from 'rxjs';
   ],
 })
 export class SettingsPage implements OnInit {
-  currentTheme: 'light' | 'dark' = 'light';
+  currentTheme: Theme = 'system';
   private destroy$ = new Subject<void>();
   public currentUser$!: Observable<AppUser | null>;
   private authService!: AuthService;
@@ -61,11 +63,7 @@ export class SettingsPage implements OnInit {
   ngOnInit() {
     this.authService = this.injector.get(AuthService);
     this.currentUser$ = this.authService.currentUser$;
-    this.themeService.isDarkMode
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((isDark: boolean) => {
-        this.currentTheme = isDark ? 'dark' : 'light';
-      });
+    this.currentTheme = this.themeService.getTheme();
   }
 
   ngOnDestroy() {
@@ -74,8 +72,8 @@ export class SettingsPage implements OnInit {
   }
 
   themeChanged(event: any) {
-    const isDark = event.detail.value === 'dark';
-    this.themeService.setDarkMode(isDark);
+    const selectedTheme = event.detail.value as Theme;
+    this.themeService.setTheme(selectedTheme);
   }
 
   async promptBecomeAdmin() {
