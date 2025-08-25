@@ -29,6 +29,7 @@ import { AuthService, AppUser } from 'src/app/services/auth/auth.service';
 import { firstValueFrom, Observable } from 'rxjs';
 import { NewPostService, Post } from 'src/app/services/new-post.service';
 import { NewPostsSheetComponent } from 'src/app/components/new-posts-sheet/new-posts-sheet.component';
+import { PdfGenerationService } from 'src/app/services/pdf-generation.service';
 
 @Component({
   selector: 'app-home',
@@ -73,7 +74,8 @@ export class HomePage implements OnInit {
     private bulletinService: PublicationService,
     private authService: AuthService,
     private newPostService: NewPostService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private pdfGenerationService: PdfGenerationService
   ) {}
 
   async ngOnInit() {
@@ -144,5 +146,9 @@ export class HomePage implements OnInit {
   openShareModal(bulletin: WeatherBulletin) {
     this.selectedBulletin = bulletin;
     this.modal.present();
+  }
+
+  downloadBulletin(bulletin: WeatherBulletin) {
+    this.pdfGenerationService.generateBulletinPdf(bulletin);
   }
 }

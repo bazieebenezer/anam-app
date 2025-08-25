@@ -48,7 +48,7 @@
       </ul>
     </div>
 
-    <ion-button expand="block" color="primary">
+    <ion-button expand="block" color="primary" (click)="downloadBulletin()">
       <ion-icon name="arrow-down-outline"></ion-icon>
       <ion-text>Télécharger le PDF</ion-text>
     </ion-button>
@@ -63,3 +63,4 @@
   [title]="bulletin?.title"
 >
 </app-image-viewer-modal>
+

@@ -22,6 +22,7 @@ import { WeatherBulletin } from 'src/app/model/bulletin.model';
 import { BadgeComponent } from 'src/app/components/badge/badge.component';
 import { IonicSlides } from '@ionic/angular/standalone';
 import { ImageViewerModalComponent } from 'src/app/components/image-viewer-modal/image-viewer-modal.component';
+import { PdfGenerationService } from 'src/app/services/pdf-generation.service';
 
 @Component({
   selector: 'app-bulletin-details',
@@ -54,7 +55,8 @@ export class BulletinDetailsPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private bulletinService: PublicationService
+    private bulletinService: PublicationService,
+    private pdfGenerationService: PdfGenerationService
   ) {}
 
   ngOnInit() {
@@ -80,6 +82,12 @@ export class BulletinDetailsPage implements OnInit {
 
   onModalDismiss() {
     this.closeImageViewer();
+  }
+
+  downloadBulletin() {
+    if (this.bulletin) {
+      this.pdfGenerationService.generateBulletinPdf(this.bulletin);
+    }
   }
 }
 
