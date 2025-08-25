@@ -29,6 +29,7 @@ import {
   chevronForwardOutline,
   trash,
   arrowForward,
+  appsOutline,
 } from 'ionicons/icons';
 
 import { registerLocaleData } from '@angular/common';
@@ -76,7 +77,8 @@ export class AppComponent implements OnInit {
       image,
       chevronForwardOutline,
       trash,
-      arrowForward
+      arrowForward,
+      appsOutline
     });
   }
 

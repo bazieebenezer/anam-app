@@ -6,8 +6,6 @@ import {
   IonHeader,
   IonTitle,
   IonToolbar,
-  IonItem,
-  IonImg,
   IonButton,
   IonIcon,
   IonSearchbar,
@@ -17,13 +15,12 @@ import {
   IonButtons,
   IonText,
   IonModal,
-  IonList,
-  IonLabel,
   IonSkeletonText,
 } from '@ionic/angular/standalone';
 import { EventService } from '../../services/evenments/event.service';
 import { AnamEvent } from '../../model/event.model';
 import { Router, RouterLink } from '@angular/router';
+import { ShareService } from 'src/app/services/share.service';
 
 @Component({
   selector: 'app-events',
@@ -31,8 +28,6 @@ import { Router, RouterLink } from '@angular/router';
   styleUrls: ['./events.page.scss'],
   standalone: true,
   imports: [
-    IonLabel,
-    IonList,
     IonModal,
     IonText,
     IonButtons,
@@ -42,8 +37,6 @@ import { Router, RouterLink } from '@angular/router';
     IonSearchbar,
     IonIcon,
     IonButton,
-    IonImg,
-    IonItem,
     IonContent,
     IonHeader,
     IonTitle,
@@ -64,7 +57,11 @@ export class EventsPage implements OnInit {
   filteredEvents: AnamEvent[] = [];
   isLoading: boolean = true;
 
-  constructor(private eventService: EventService, private router: Router) {}
+  constructor(
+    private eventService: EventService,
+    private router: Router,
+    private shareService: ShareService
+  ) {}
 
   ngOnInit() {
     this.isLoading = true;
@@ -134,5 +131,16 @@ export class EventsPage implements OnInit {
   openShareModal(event: AnamEvent) {
     this.selectedEvent = event;
     this.modal.present();
+  }
+
+  async shareEvent() {
+    if (this.selectedEvent) {
+      await this.shareService.shareItem({
+        title: this.selectedEvent.title,
+        description: this.selectedEvent.description,
+        images: this.selectedEvent.images,
+      });
+      this.modal.dismiss();
+    }
   }
 }

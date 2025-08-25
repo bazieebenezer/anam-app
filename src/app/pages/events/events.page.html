@@ -118,17 +118,14 @@
 <ion-modal id="share-modal" #modal>
   <ng-template>
     <div class="wrapper">
-      <h1>Partager via</h1>
-      <ion-list>
-        <ion-item button="true" detail="false" (click)="modal.dismiss()">
-          <ion-img src="assets/logo/facebook.png"></ion-img>
-          <ion-label>Facebook</ion-label>
-        </ion-item>
-        <ion-item button="true" detail="false" (click)="modal.dismiss()">
-          <ion-img src="assets/logo/whatsapp.png"></ion-img>
-          <ion-label>Whatsapp</ion-label>
-        </ion-item>
-      </ion-list>
+      <h1>Partager le bulletin</h1>
+      <p>
+        Choisissez une application pour partager les détails de ce bulletin.
+      </p>
+      <ion-button expand="block" (click)="shareEvent()">
+        <ion-icon slot="start" name="apps-outline"></ion-icon>
+        Choisir une application
+      </ion-button>
     </div>
   </ng-template>
 </ion-modal>

@@ -176,7 +176,7 @@ ion-content {
 
 ion-modal#share-modal {
   --width: fit-content;
-  --min-width: 330px;
+  --max-width: 330px;
   --height: fit-content;
   --border-radius: 8px;
   --box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
@@ -185,19 +185,21 @@ ion-modal#share-modal {
     font-size: 24px;
     letter-spacing: normal;
   }
-  ion-list {
-    ion-item {
-      margin-bottom: 16px;
-    }
-    ion-img {
-      height: 46px;
-      width: 46px;
-      margin-inline-end: 12px;
-      margin-bottom: 8px;
-    }
+  p {
+    margin: 20px 20px 10px 20px;
   }
   .wrapper {
     margin-bottom: 10px;
+  }
+  ion-button {
+    --border-radius: 8px;
+    margin-inline-start: 16px;
+    margin-inline-end: 16px;
+    margin-top: 32px;
+    margin-bottom: 16px;
+    text-transform: none;
+    height: 48px;
+    --box-shadow: none;
   }
 }
 

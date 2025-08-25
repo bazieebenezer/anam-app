@@ -15,8 +15,6 @@ import {
   IonText,
   IonItem,
   IonModal,
-  IonList,
-  IonLabel,
   IonSkeletonText,
   ModalController,
 } from '@ionic/angular/standalone';
@@ -30,6 +28,7 @@ import { firstValueFrom, Observable } from 'rxjs';
 import { NewPostService, Post } from 'src/app/services/new-post.service';
 import { NewPostsSheetComponent } from 'src/app/components/new-posts-sheet/new-posts-sheet.component';
 import { PdfGenerationService } from 'src/app/services/pdf-generation.service';
+import { ShareService } from 'src/app/services/share.service';
 
 @Component({
   selector: 'app-home',
@@ -37,8 +36,6 @@ import { PdfGenerationService } from 'src/app/services/pdf-generation.service';
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
-    IonLabel,
-    IonList,
     IonModal,
     IonItem,
     IonText,
@@ -75,7 +72,8 @@ export class HomePage implements OnInit {
     private authService: AuthService,
     private newPostService: NewPostService,
     private modalCtrl: ModalController,
-    private pdfGenerationService: PdfGenerationService
+    private pdfGenerationService: PdfGenerationService,
+    private shareService: ShareService
   ) {}
 
   async ngOnInit() {
@@ -84,9 +82,11 @@ export class HomePage implements OnInit {
     const user = await firstValueFrom(this.authService.currentUser$);
     this.bulletinService.getPublications().subscribe((bulletins) => {
       if (user && user.isInstitution) {
-        this.bulletins = bulletins.filter(b => !b.targetInstitutionId || b.targetInstitutionId === user.uid);
+        this.bulletins = bulletins.filter(
+          (b) => !b.targetInstitutionId || b.targetInstitutionId === user.uid
+        );
       } else {
-        this.bulletins = bulletins.filter(b => !b.targetInstitutionId);
+        this.bulletins = bulletins.filter((b) => !b.targetInstitutionId);
       }
       this.applyFilters();
       this.isLoading = false;
@@ -132,7 +132,10 @@ export class HomePage implements OnInit {
     if (data && data.post) {
       const post: Post = data.post;
       this.newPostService.markPostAsSeen(post.id!).subscribe(() => {
-        const route = post.type === 'bulletin' ? '/tabs/bulletin-details/' : '/tabs/event-details/';
+        const route =
+          post.type === 'bulletin'
+            ? '/tabs/bulletin-details/'
+            : '/tabs/event-details/';
         this.router.navigate([route, post.id]);
       });
     }
@@ -150,5 +153,16 @@ export class HomePage implements OnInit {
 
   downloadBulletin(bulletin: WeatherBulletin) {
     this.pdfGenerationService.generateBulletinPdf(bulletin);
+  }
+
+  async shareBulletin() {
+    if (this.selectedBulletin) {
+      await this.shareService.shareItem({
+        title: this.selectedBulletin.title,
+        description: this.selectedBulletin.description,
+        images: this.selectedBulletin.images,
+      });
+      this.modal.dismiss();
+    }
   }
 }
