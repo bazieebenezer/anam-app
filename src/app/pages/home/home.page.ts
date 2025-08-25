@@ -18,6 +18,7 @@ import {
   IonList,
   IonLabel,
   IonSkeletonText,
+  ModalController,
 } from '@ionic/angular/standalone';
 import { PublicationService } from 'src/app/services/publication/publication.service';
 import { WeatherBulletin } from 'src/app/model/bulletin.model';
@@ -25,7 +26,9 @@ import { Router, RouterLink } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { BadgeComponent } from 'src/app/components/badge/badge.component';
 import { AuthService, AppUser } from 'src/app/services/auth/auth.service';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
+import { NewPostService, Post } from 'src/app/services/new-post.service';
+import { NewPostsSheetComponent } from 'src/app/components/new-posts-sheet/new-posts-sheet.component';
 
 @Component({
   selector: 'app-home',
@@ -51,7 +54,7 @@ import { firstValueFrom } from 'rxjs';
     FormsModule,
     IonImg,
     BadgeComponent,
-    IonSkeletonText
+    IonSkeletonText,
   ],
 })
 export class HomePage implements OnInit {
@@ -62,16 +65,20 @@ export class HomePage implements OnInit {
   bulletins: WeatherBulletin[] = [];
   filteredBulletins: WeatherBulletin[] = [];
   isLoading: boolean = true;
+  newPostsCount$!: Observable<number>;
 
   constructor(
     private router: Router,
     private navCtrl: NavController,
     private bulletinService: PublicationService,
-    private authService: AuthService
+    private authService: AuthService,
+    private newPostService: NewPostService,
+    private modalCtrl: ModalController
   ) {}
 
   async ngOnInit() {
     this.isLoading = true;
+    this.newPostsCount$ = this.newPostService.getNewPostsCount();
     const user = await firstValueFrom(this.authService.currentUser$);
     this.bulletinService.getPublications().subscribe((bulletins) => {
       if (user && user.isInstitution) {
@@ -108,7 +115,26 @@ export class HomePage implements OnInit {
     });
   }
 
-  openNotifications() {}
+  async openNewPostsSheet() {
+    const newPosts = await firstValueFrom(this.newPostService.getNewPosts());
+    const modal = await this.modalCtrl.create({
+      component: NewPostsSheetComponent,
+      componentProps: { newPosts },
+      breakpoints: [0, 0.5, 0.8],
+      initialBreakpoint: 0.5,
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data && data.post) {
+      const post: Post = data.post;
+      this.newPostService.markPostAsSeen(post.id!).subscribe(() => {
+        const route = post.type === 'bulletin' ? '/tabs/bulletin-details/' : '/tabs/event-details/';
+        this.router.navigate([route, post.id]);
+      });
+    }
+  }
 
   goToDetails(bulletin: WeatherBulletin, event: MouseEvent) {
     if ((event.target as HTMLElement).closest('ion-button')) return;

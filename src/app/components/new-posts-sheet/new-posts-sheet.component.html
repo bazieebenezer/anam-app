@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Nouveautés</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">Fermer</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="newPosts.length === 0" class="ion-padding ion-text-center">
+    <p>Aucune nouveauté pour le moment.</p>
+  </div>
+
+  <ion-list *ngIf="newPosts.length > 0">
+    <ion-item
+      *ngFor="let post of newPosts"
+      (click)="dismiss(post)"
+      button
+      detail="false"
+    >
+      <ion-thumbnail slot="start">
+        <img [src]="getPostImage(post)" />
+      </ion-thumbnail>
+      <ion-label>
+        <h2>{{ post.title }}</h2>
+        <p class="description">{{ post.description }}</p>
+      </ion-label>
+      <ion-icon name="arrow-forward"></ion-icon>
+    </ion-item>
+  </ion-list>
+</ion-content>

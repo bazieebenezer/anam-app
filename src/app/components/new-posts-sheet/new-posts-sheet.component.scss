@@ -1,0 +1,24 @@
+.description {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+ion-toolbar {
+  box-shadow: none;
+  color: var(--ion-color-secondary-contrast);
+}
+
+ion-header {
+  box-shadow: none;
+  border-bottom: 1px solid var(--ion-color-light-gray);
+}
+
+.new-posts-modal {
+  --border-radius: 8px 8px 0 0;
+}
+
+ion-button {
+  text-transform: none;
+}

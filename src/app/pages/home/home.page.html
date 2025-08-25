@@ -1,9 +1,13 @@
 <ion-content fullscreen="true">
   <ion-item lines="none">
     <ion-img src="./assets/logo/anam_logo.png"></ion-img>
-    <ion-button class="notifications" slot="end" (click)="openNotifications()">
+    <ion-button class="notifications" slot="end" (click)="openNewPostsSheet()">
       <ion-icon name="notifications-outline"></ion-icon>
-      <ion-badge color="danger"><span></span></ion-badge>
+      <ion-badge
+        *ngIf="(newPostsCount$ | async) as count"
+        color="danger"
+        [class.hidden]="count === 0"
+      ><span></span></ion-badge>
     </ion-button>
   </ion-item>
 
