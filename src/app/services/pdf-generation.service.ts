@@ -40,7 +40,7 @@ export class PdfGenerationService {
       pdfContainer.style.left = '-9999px';
       const severityColor = this.getSeverityColor(bulletin.severity);
       pdfContainer.innerHTML = `
-        <div style="width: 210mm; height: 297mm; padding: 10mm; font-family: sans-serif; color: black; background-color: white;">
+        <div style="width: 210mm; padding: 10mm; font-family: sans-serif; color: black; background-color: white;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <img src="assets/logo/anam_logo.png" style="width: 40mm;">
             <h1 style="font-size: 18px;">${bulletin.title}</h1>
@@ -109,7 +109,24 @@ export class PdfGenerationService {
       const pdf = new jsPDF('p', 'mm', 'a4');
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
-      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+      const canvasWidth = canvas.width;
+      const canvasHeight = canvas.height;
+      const ratio = canvasWidth / pdfWidth;
+      const imgHeight = canvasHeight / ratio;
+
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+      heightLeft -= pdfHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+        heightLeft -= pdfHeight;
+      }
 
       const fileName = `bulletin-${bulletin.id}.pdf`;
 

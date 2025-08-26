@@ -70,7 +70,7 @@ form {
     margin-bottom: 16px;
     ion-button {
       width: 150px;
-      height: 48px;
+      height: 42px;
       span {
         color: var(--ion-color-primary-contrast);
         font-size: 16px;
@@ -84,7 +84,8 @@ form {
   }
 
   ion-textarea {
-    height: 80px;
+    height: max-content;
+    overflow-y: auto !important;
   }
 
   .image-upload {
@@ -123,9 +124,15 @@ form {
   }
   ion-textarea {
     --height: 150px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    --padding-start: 12px;
+    --padding-end: 12px;
 
     &::part(native) {
       min-height: 150px;
+      overflow-y: auto !important;
+      resize: none;
     }
   }
   .datetime-chooser {
@@ -154,7 +161,7 @@ p {
   margin-top: 50px;
   .removeBtn {
     width: 150px;
-    height: 48px;
+    height: 42px;
     span {
       font-size: 16px;
       color: var(--ion-color-primary-contrast);

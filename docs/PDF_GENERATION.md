@@ -34,9 +34,15 @@ Ce service expose une méthode principale :
         -   `normal`: vert (`success`)
     -   Les autres styles sont appliqués en ligne pour garantir un rendu cohérent.
 
-3.  **Capture du HTML en Canvas**: `html2canvas` est utilisé pour "photographier" la `div` et la transformer en une image canvas. L'option `useCORS: true` est activée pour permettre le chargement d'images provenant de sources externes (comme Firebase Storage).
+3.  **Capture du HTML en Canvas**: `html2canvas` est utilisé pour "photographier" l'intégralité de la `div` (dont la hauteur s'adapte au contenu) et la transformer en une seule image canvas de grande taille. L'option `useCORS: true` est activée pour permettre le chargement d'images provenant de sources externes (comme Firebase Storage).
 
-4.  **Création du PDF**: Une nouvelle instance de `jsPDF` est créée, et l'image canvas y est ajoutée.
+4.  **Création du PDF et Pagination Manuelle**:
+    -   Une nouvelle instance de `jsPDF` est créée.
+    -   Les dimensions de l'image canvas sont utilisées pour calculer le ratio hauteur/largeur afin de l'adapter à la largeur de la page PDF.
+    -   L'image est ajoutée une première fois à la page 1.
+    -   Une boucle `while` calcule si la hauteur de l'image dépasse la hauteur d'une page.
+    -   Tant que l'image n'est pas entièrement affichée, la boucle continue d'ajouter de nouvelles pages (`pdf.addPage()`) et de repositionner l'image verticalement (`pdf.addImage(...)`) pour afficher la portion suivante du contenu.
+    -   Cette technique de "découpage" manuel garantit que tout le contenu est visible, peu importe sa longueur.
 
 ## Implémentation multiplateforme
 
