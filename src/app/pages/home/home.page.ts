@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonImg,
@@ -53,6 +53,7 @@ import { ShareService } from 'src/app/services/share.service';
     IonImg,
     BadgeComponent,
     IonSkeletonText,
+    DatePipe,
   ],
 })
 export class HomePage implements OnInit {

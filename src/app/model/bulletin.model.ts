@@ -10,7 +10,6 @@ export interface WeatherBulletin {
   images: string[]; // Un tableau de chaînes Base64
   target: string; // La cible de l'alerte
   endDate: string; // La date de fin en format ISO string
-  pdfFile?: any; // Le fichier PDF (optionnel)
   tips: string[]; // Les conseils pratiques
   createdAt: Timestamp; // La date de création de type Timestamp de Firebase
   targetInstitutionId?: string; // L'ID de l'institution cible

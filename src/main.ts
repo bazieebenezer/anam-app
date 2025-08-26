@@ -3,6 +3,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { IonicStorageModule } from '@ionic/storage-angular';
+import { DatePipe } from '@angular/common';
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
@@ -27,5 +28,6 @@ bootstrapApplication(AppComponent, {
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
     importProvidersFrom(IonicStorageModule.forRoot()),
+    DatePipe,
   ],
 });

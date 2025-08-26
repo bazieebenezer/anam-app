@@ -99,15 +99,6 @@
       <ion-datetime-button datetime="datetime"></ion-datetime-button>
     </div>
 
-    <p>Fichier PDF</p>
-    <ion-input
-      type="file"
-      accept="application/pdf"
-      formControlName="pdfFile"
-      fill="outline"
-      placeholder="Choisissez un fichier PDF"
-    ></ion-input>
-
     <div class="practical-tips" formArrayName="tips">
       <p>Conseils</p>
       @for (tip of tipsFormArray.controls; track $index) {

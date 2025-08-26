@@ -108,7 +108,7 @@ export class AddPage implements OnInit {
       target: ['', [Validators.required]],
       description: ['', [Validators.required]],
       endDate: [new Date().toISOString(), [Validators.required]],
-      pdfFile: [null],
+      
       tips: this.fb.array([this.fb.control('')]),
     });
   }
