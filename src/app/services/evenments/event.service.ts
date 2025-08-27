@@ -2,16 +2,19 @@ import { Injectable } from '@angular/core';
 import { Firestore, collection, addDoc, collectionData, query, doc, docData } from '@angular/fire/firestore';
 import { AnamEvent } from '../../model/event.model';
 import { Observable } from 'rxjs';
+import { NotificationService } from '../notification.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EventService {
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore, private notificationService: NotificationService) {}
 
-  addEvent(eventData: AnamEvent) {
+  async addEvent(eventData: AnamEvent) {
     const eventsCollection = collection(this.firestore, 'events');
-    return addDoc(eventsCollection, eventData);
+    const result = await addDoc(eventsCollection, eventData);
+    this.notificationService.notifyUsers(eventData.title, 'événement', eventData.description).subscribe();
+    return result;
   }
 
   getEventsFromFirebase(): Observable<AnamEvent[]> {

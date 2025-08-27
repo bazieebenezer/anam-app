@@ -13,16 +13,19 @@ import {
 import { WeatherBulletin } from '../../model/bulletin.model';
 
 import { Observable } from 'rxjs';
+import { NotificationService } from '../notification.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PublicationService {
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore, private notificationService: NotificationService) {}
 
-  addAlert(alertData: WeatherBulletin) {
+  async addAlert(alertData: WeatherBulletin) {
     const alertsCollection = collection(this.firestore, 'bulletins');
-    return addDoc(alertsCollection, alertData);
+    const result = await addDoc(alertsCollection, alertData);
+    this.notificationService.notifyUsers(alertData.title, 'bulletin', alertData.description).subscribe();
+    return result;
   }
 
   getPublications(): Observable<WeatherBulletin[]> {

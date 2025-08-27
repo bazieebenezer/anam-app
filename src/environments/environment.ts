@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  emailServerUrl: 'http://localhost:3000',
   firebase: {
     apiKey: "AIzaSyAxnleXcb2-PgsdBseFwWU6kXekS6Ftt6E",
     authDomain: "anam-app.firebaseapp.com",
