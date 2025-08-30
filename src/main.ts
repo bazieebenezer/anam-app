@@ -4,6 +4,7 @@ import { RouteReuseStrategy, provideRouter } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { DatePipe } from '@angular/common';
+import { provideHttpClient } from '@angular/common/http'; // Importation ajoutée
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
@@ -23,6 +24,7 @@ bootstrapApplication(AppComponent, {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes),
+    provideHttpClient(), // Fournisseur ajouté
     // Configuration AngularFire corrigée
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),

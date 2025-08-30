@@ -11,18 +11,37 @@ import {
   getDocs,
 } from '@angular/fire/firestore';
 import { WeatherBulletin } from '../../model/bulletin.model';
-
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
+import { catchError, switchMap, tap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PublicationService {
-  constructor(private firestore: Firestore) {}
+  constructor(private firestore: Firestore, private http: HttpClient) {}
 
   addAlert(alertData: WeatherBulletin) {
     const alertsCollection = collection(this.firestore, 'bulletins');
-    return addDoc(alertsCollection, alertData);
+    // Convert the promise returned by addDoc to an observable
+    return from(addDoc(alertsCollection, alertData)).pipe(
+      tap(() => {
+        // This code runs on success. We trigger the notification but don't wait for it.
+        this.sendNotification('bulletin', alertData.description).subscribe();
+      })
+    );
+  }
+
+  private sendNotification(type: 'bulletin' | 'event', description: string) {
+    const payload = { type, description };
+    return this.http.post(environment.apiUrl, payload).pipe(
+      catchError(async (err) => {
+        console.error('Failed to send notification', err);
+        // Return a resolved promise or some default value so the stream doesn't break
+        return from(Promise.resolve());
+      })
+    );
   }
 
   getPublications(): Observable<WeatherBulletin[]> {

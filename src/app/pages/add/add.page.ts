@@ -205,7 +205,9 @@ export class AddPage implements OnInit {
   }
 
   async submitAlert() {
+    console.log('[CLIENT] submitAlert function called.');
     if (this.alertForm.invalid) {
+      console.log('[CLIENT] Alert form is invalid.');
       Object.values(this.alertForm.controls).forEach((control) => {
         control.markAsTouched();
       });
@@ -216,32 +218,39 @@ export class AddPage implements OnInit {
       return;
     }
 
-    try {
-      const imageUrls = this.selectedImages.map((img) => img.preview);
-      const alertData = {
-        ...this.alertForm.value,
-        images: imageUrls,
-        createdAt: new Date(),
-        targetInstitutionId:
-          this.alertForm.value.target === 'all'
-            ? null
-            : this.alertForm.value.target,
-      };
-      await this.publicationService.addAlert(alertData as WeatherBulletin);
-      await this.presentToast('Alerte publiée avec succès !', 'success');
-      this.alertForm.reset();
-      this.selectedImages = [];
-    } catch (error) {
-      console.error("Erreur lors de la publication de l'alerte :", error);
-      await this.presentToast(
-        "Erreur lors de la publication de l'alerte.",
-        'danger'
-      );
-    }
+    const imageUrls = this.selectedImages.map((img) => img.preview);
+    const alertData = {
+      ...this.alertForm.value,
+      images: imageUrls,
+      createdAt: new Date(),
+      targetInstitutionId:
+        this.alertForm.value.target === 'all'
+          ? null
+          : this.alertForm.value.target,
+    };
+    console.log('[CLIENT] Alert data prepared. Calling publicationService.addAlert...', alertData);
+
+    this.publicationService.addAlert(alertData as WeatherBulletin).subscribe({
+      next: async () => {
+        console.log('[CLIENT] addAlert subscription successful (next block).');
+        await this.presentToast('Alerte publiée avec succès !', 'success');
+        this.alertForm.reset();
+        this.selectedImages = [];
+      },
+      error: async (error) => {
+        console.error("[CLIENT] addAlert subscription failed (error block).", error);
+        await this.presentToast(
+          "Erreur lors de la publication de l'alerte.",
+          'danger'
+        );
+      }
+    });
   }
 
   async submitEvent() {
+    console.log('[CLIENT] submitEvent function called.');
     if (this.eventForm.invalid) {
+      console.log('[CLIENT] Event form is invalid.');
       Object.values(this.eventForm.controls).forEach((control) => {
         control.markAsTouched();
       });
@@ -252,26 +261,31 @@ export class AddPage implements OnInit {
       return;
     }
 
-    try {
-      const imageUrls = this.selectedImages.map((img) => img.preview);
-      const eventData: AnamEvent = {
-        title: this.eventForm.value.title,
-        description: this.eventForm.value.description,
-        images: imageUrls,
-        usefulLinks: this.eventForm.value.usefulLinks,
-        createdAt: new Date(),
-      };
-      await this.eventService.addEvent(eventData);
-      await this.presentToast('Événement publié avec succès !', 'success');
-      this.eventForm.reset();
-      this.selectedImages = [];
-    } catch (error) {
-      console.error("Erreur lors de la publication de l'événement :", error);
-      await this.presentToast(
-        "Erreur lors de la publication de l'événement.",
-        'danger'
-      );
-    }
+    const imageUrls = this.selectedImages.map((img) => img.preview);
+    const eventData: AnamEvent = {
+      title: this.eventForm.value.title,
+      description: this.eventForm.value.description,
+      images: imageUrls,
+      usefulLinks: this.eventForm.value.usefulLinks,
+      createdAt: new Date(),
+    };
+    console.log('[CLIENT] Event data prepared. Calling eventService.addEvent...', eventData);
+
+    this.eventService.addEvent(eventData).subscribe({
+      next: async () => {
+        console.log('[CLIENT] addEvent subscription successful (next block).');
+        await this.presentToast('Événement publié avec succès !', 'success');
+        this.eventForm.reset();
+        this.selectedImages = [];
+      },
+      error: async (error) => {
+        console.error("[CLIENT] addEvent subscription failed (error block).", error);
+        await this.presentToast(
+          "Erreur lors de la publication de l'événement.",
+          'danger'
+        );
+      }
+    });
   }
 
   onDateChange(event: any) {
