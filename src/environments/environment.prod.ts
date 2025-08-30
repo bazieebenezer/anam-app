@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
+  emailServerUrl: 'https://anam-email-server.vercel.app/api',
   firebase: {
     apiKey: "AIzaSyAxnleXcb2-PgsdBseFwWU6kXekS6Ftt6E",
     authDomain: "anam-app.firebaseapp.com",

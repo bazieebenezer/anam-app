@@ -12,8 +12,8 @@ export class NotificationService {
 
   constructor(private http: HttpClient) { }
 
-  notifyUsers(title: string, type: 'bulletin' | 'événement', description?: string): Observable<any> {
-    const body: any = { postTitle: title, postType: type };
+    notifyUsers(title: string, type: 'bulletin' | 'événement', description?: string): Observable<any> {
+    const body: any = { title: title, type: type };
     if (description) {
       body.description = description;
     }

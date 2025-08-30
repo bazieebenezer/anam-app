@@ -230,21 +230,19 @@ export class AddPage implements OnInit {
     };
     console.log('[CLIENT] Alert data prepared. Calling publicationService.addAlert...', alertData);
 
-    this.publicationService.addAlert(alertData as WeatherBulletin).subscribe({
-      next: async () => {
-        console.log('[CLIENT] addAlert subscription successful (next block).');
-        await this.presentToast('Alerte publiée avec succès !', 'success');
-        this.alertForm.reset();
-        this.selectedImages = [];
-      },
-      error: async (error) => {
-        console.error("[CLIENT] addAlert subscription failed (error block).", error);
-        await this.presentToast(
-          "Erreur lors de la publication de l'alerte.",
-          'danger'
-        );
-      }
-    });
+        try {
+      await this.publicationService.addAlert(alertData as WeatherBulletin);
+      console.log('[CLIENT] addAlert successful.');
+      await this.presentToast('Alerte publiée avec succès !', 'success');
+      this.alertForm.reset();
+      this.selectedImages = [];
+    } catch (error: any) {
+      console.error('[CLIENT] addAlert failed.', error);
+      await this.presentToast(
+        'Erreur lors de la publication de l\'alerte.',
+        'danger'
+      );
+    }
   }
 
   async submitEvent() {
@@ -271,21 +269,19 @@ export class AddPage implements OnInit {
     };
     console.log('[CLIENT] Event data prepared. Calling eventService.addEvent...', eventData);
 
-    this.eventService.addEvent(eventData).subscribe({
-      next: async () => {
-        console.log('[CLIENT] addEvent subscription successful (next block).');
-        await this.presentToast('Événement publié avec succès !', 'success');
-        this.eventForm.reset();
-        this.selectedImages = [];
-      },
-      error: async (error) => {
-        console.error("[CLIENT] addEvent subscription failed (error block).", error);
-        await this.presentToast(
-          "Erreur lors de la publication de l'événement.",
-          'danger'
-        );
-      }
-    });
+        try {
+      await this.eventService.addEvent(eventData);
+      console.log('[CLIENT] addEvent successful.');
+      await this.presentToast('Événement publié avec succès !', 'success');
+      this.eventForm.reset();
+      this.selectedImages = [];
+    } catch (error: any) {
+      console.error('[CLIENT] addEvent failed.', error);
+      await this.presentToast(
+        'Erreur lors de la publication de l\'événement.',
+        'danger'
+      );
+    }
   }
 
   onDateChange(event: any) {
