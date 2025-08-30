@@ -11,19 +11,30 @@ import {
   getDocs,
 } from '@angular/fire/firestore';
 import { WeatherBulletin } from '../../model/bulletin.model';
+<<<<<<< HEAD
 import { Observable, from } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+=======
+
+import { Observable } from 'rxjs';
+import { NotificationService } from '../notification.service';
+>>>>>>> e013242c9996f7dd6a84b79804b07119f29f84d5
 
 @Injectable({
   providedIn: 'root',
 })
 export class PublicationService {
+<<<<<<< HEAD
   constructor(private firestore: Firestore, private http: HttpClient) {}
+=======
+  constructor(private firestore: Firestore, private notificationService: NotificationService) {}
+>>>>>>> e013242c9996f7dd6a84b79804b07119f29f84d5
 
-  addAlert(alertData: WeatherBulletin) {
+  async addAlert(alertData: WeatherBulletin) {
     const alertsCollection = collection(this.firestore, 'bulletins');
+<<<<<<< HEAD
     // Convert the promise returned by addDoc to an observable
     return from(addDoc(alertsCollection, alertData)).pipe(
       tap(() => {
@@ -42,6 +53,11 @@ export class PublicationService {
         return from(Promise.resolve());
       })
     );
+=======
+    const result = await addDoc(alertsCollection, alertData);
+    this.notificationService.notifyUsers(alertData.title, 'bulletin', alertData.description).subscribe();
+    return result;
+>>>>>>> e013242c9996f7dd6a84b79804b07119f29f84d5
   }
 
   getPublications(): Observable<WeatherBulletin[]> {
