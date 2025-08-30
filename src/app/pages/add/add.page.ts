@@ -108,7 +108,7 @@ export class AddPage implements OnInit {
       target: ['', [Validators.required]],
       description: ['', [Validators.required]],
       endDate: [new Date().toISOString(), [Validators.required]],
-      
+
       tips: this.fb.array([this.fb.control('')]),
     });
   }
@@ -205,9 +205,7 @@ export class AddPage implements OnInit {
   }
 
   async submitAlert() {
-    console.log('[CLIENT] submitAlert function called.');
     if (this.alertForm.invalid) {
-      console.log('[CLIENT] Alert form is invalid.');
       Object.values(this.alertForm.controls).forEach((control) => {
         control.markAsTouched();
       });
@@ -228,27 +226,23 @@ export class AddPage implements OnInit {
           ? null
           : this.alertForm.value.target,
     };
-    console.log('[CLIENT] Alert data prepared. Calling publicationService.addAlert...', alertData);
 
-        try {
+    try {
       await this.publicationService.addAlert(alertData as WeatherBulletin);
-      console.log('[CLIENT] addAlert successful.');
       await this.presentToast('Alerte publiée avec succès !', 'success');
       this.alertForm.reset();
       this.selectedImages = [];
     } catch (error: any) {
       console.error('[CLIENT] addAlert failed.', error);
       await this.presentToast(
-        'Erreur lors de la publication de l\'alerte.',
+        "Erreur lors de la publication de l'alerte.",
         'danger'
       );
     }
   }
 
   async submitEvent() {
-    console.log('[CLIENT] submitEvent function called.');
     if (this.eventForm.invalid) {
-      console.log('[CLIENT] Event form is invalid.');
       Object.values(this.eventForm.controls).forEach((control) => {
         control.markAsTouched();
       });
@@ -267,18 +261,16 @@ export class AddPage implements OnInit {
       usefulLinks: this.eventForm.value.usefulLinks,
       createdAt: new Date(),
     };
-    console.log('[CLIENT] Event data prepared. Calling eventService.addEvent...', eventData);
 
-        try {
+    try {
       await this.eventService.addEvent(eventData);
-      console.log('[CLIENT] addEvent successful.');
       await this.presentToast('Événement publié avec succès !', 'success');
       this.eventForm.reset();
       this.selectedImages = [];
     } catch (error: any) {
       console.error('[CLIENT] addEvent failed.', error);
       await this.presentToast(
-        'Erreur lors de la publication de l\'événement.',
+        "Erreur lors de la publication de l'événement.",
         'danger'
       );
     }
