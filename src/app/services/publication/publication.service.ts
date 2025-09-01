@@ -23,7 +23,12 @@ export class PublicationService {
   async addAlert(alertData: WeatherBulletin) {
     const alertsCollection = collection(this.firestore, 'bulletins');
     const result = await addDoc(alertsCollection, alertData);
-    this.notificationService.notifyUsers(alertData.title, 'bulletin', alertData.description).subscribe();
+    this.notificationService.sendPushNotification({
+      title: alertData.title,
+      description: alertData.description,
+      recipientId: alertData.targetInstitutionId
+    }).subscribe();
+    
     return result;
   }
 

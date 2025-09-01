@@ -1,5 +1,5 @@
 import { Component, LOCALE_ID, OnInit } from '@angular/core';
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet, Platform } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import localeFr from '@angular/common/locales/fr';
 
@@ -35,6 +35,7 @@ import {
 import { registerLocaleData } from '@angular/common';
 import { register } from 'swiper/element/bundle';
 import { PublicationService } from './services/publication/publication.service';
+import { NotificationService } from './services/notification.service';
 
 register();
 
@@ -43,6 +44,8 @@ registerLocaleData(localeFr);
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
+  styleUrls: ['app.component.scss'],
+  standalone: true,
   imports: [IonApp, IonRouterOutlet],
   providers: [
     {
@@ -52,7 +55,11 @@ registerLocaleData(localeFr);
   ],
 })
 export class AppComponent implements OnInit {
-  constructor(private publicationService: PublicationService) {
+  constructor(
+    private publicationService: PublicationService,
+    private notificationService: NotificationService,
+    private platform: Platform
+  ) {
     addIcons({
       homeOutline,
       newspaperOutline,
@@ -78,7 +85,19 @@ export class AppComponent implements OnInit {
       chevronForwardOutline,
       trash,
       arrowForward,
-      appsOutline
+      appsOutline,
+    });
+    this.initializeApp();
+  }
+
+  initializeApp() {
+    this.platform.ready().then(() => {
+      this.notificationService.initOneSignal();
+
+      // For best user experience, it's recommended to prompt for notifications
+      // at a more appropriate time, like after login or from a settings page.
+      // We are calling it here on startup for simplicity of testing.
+      this.notificationService.promptForPushNotifications();
     });
   }
 
@@ -86,4 +105,3 @@ export class AppComponent implements OnInit {
     this.publicationService.deleteExpiredBulletins();
   }
 }
-

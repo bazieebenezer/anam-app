@@ -13,7 +13,12 @@ export class EventService {
   async addEvent(eventData: AnamEvent) {
     const eventsCollection = collection(this.firestore, 'events');
     const result = await addDoc(eventsCollection, eventData);
-    this.notificationService.notifyUsers(eventData.title, 'événement', eventData.description).subscribe();
+    this.notificationService.sendPushNotification({
+      title: eventData.title,
+      description: eventData.description,
+      recipientId: 'all' // Events are sent to everyone
+    }).subscribe();
+    
     return result;
   }
 

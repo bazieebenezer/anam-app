@@ -14,6 +14,7 @@ import { environment } from './environments/environment';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getMessaging, provideMessaging } from '@angular/fire/messaging';
 
 if (environment.production) {
   enableProdMode();
@@ -29,6 +30,7 @@ bootstrapApplication(AppComponent, {
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
+    provideMessaging(() => getMessaging()),
     importProvidersFrom(IonicStorageModule.forRoot()),
     DatePipe,
   ],
