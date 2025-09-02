@@ -137,11 +137,33 @@ export class PdfGenerationService {
       `;
       document.body.appendChild(pdfContainer);
 
+      const images = Array.from(pdfContainer.getElementsByTagName('img'));
+      const imagePromises = images.map(img => {
+        // For already cached images, the 'load' event might not fire.
+        // Setting the src again triggers it.
+        // See: https://html.spec.whatwg.org/multipage/images.html#updating-the-image-data
+        if (img.complete) {
+          return Promise.resolve();
+        }
+        return new Promise<void>((resolve, reject) => {
+          img.onload = () => resolve();
+          img.onerror = () => reject(new Error('Could not load image: ' + img.src));
+          // In case the image is already loaded but not 'complete'
+          if (img.naturalWidth > 0) {
+            resolve();
+          }
+        });
+      });
+
+      await Promise.all(imagePromises);
+
       const canvas = await html2canvas(
         pdfContainer.children[0] as HTMLElement,
         {
           useCORS: true,
           scale: 2,
+          // Allow tainted canvases to capture cross-origin images
+          allowTaint: true,
         }
       );
 
