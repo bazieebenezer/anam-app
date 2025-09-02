@@ -69,6 +69,7 @@ export class AddPage implements OnInit {
   eventForm!: FormGroup;
   institutions: AppUser[] = [];
   selectedImages: ImagePreview[] = [];
+  isSubmitting = false;
 
   constructor(
     private fb: FormBuilder,
@@ -216,6 +217,8 @@ export class AddPage implements OnInit {
       return;
     }
 
+    this.isSubmitting = true;
+
     try {
       const imageUrls = this.selectedImages.map((img) => img.preview);
       const alertData = {
@@ -237,6 +240,8 @@ export class AddPage implements OnInit {
         "Erreur lors de la publication de l'alerte.",
         'danger'
       );
+    } finally {
+      this.isSubmitting = false;
     }
   }
 
@@ -251,6 +256,8 @@ export class AddPage implements OnInit {
       );
       return;
     }
+
+    this.isSubmitting = true;
 
     try {
       const imageUrls = this.selectedImages.map((img) => img.preview);
@@ -271,6 +278,8 @@ export class AddPage implements OnInit {
         "Erreur lors de la publication de l'événement.",
         'danger'
       );
+    } finally {
+      this.isSubmitting = false;
     }
   }
 

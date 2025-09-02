@@ -79,7 +79,7 @@
       <ion-select-option value="all">Tout le monde</ion-select-option>
       @for (institution of institutions; track $index) {
       <ion-select-option [value]="institution.uid"
-        >{{ institution.displayName || institution.email }}</ion-select-option
+        >{{ institution.email }}</ion-select-option
       >
       }
     </ion-select>
@@ -120,9 +120,13 @@
       </ion-button>
     </div>
 
-    <ion-button expand="block" type="submit" [disabled]="alertForm.invalid"
-      >Publier le bulletin</ion-button
+    <ion-button
+      expand="block"
+      type="submit"
+      [disabled]="alertForm.invalid || isSubmitting"
     >
+      {{ isSubmitting ? 'Envoi en cours...' : 'Publier le bulletin' }}
+    </ion-button>
   </form>
   } @if (activeForm === 'event') {
   <form [formGroup]="eventForm" (ngSubmit)="submitEvent()">
@@ -201,9 +205,13 @@
       </ion-button>
     </div>
 
-    <ion-button expand="block" type="submit" [disabled]="eventForm.invalid"
-      >Publier l'événement</ion-button
+    <ion-button
+      expand="block"
+      type="submit"
+      [disabled]="eventForm.invalid || isSubmitting"
     >
+      {{ isSubmitting ? 'Envoi en cours...' : "Publier l'événement" }}
+    </ion-button>
   </form>
   }
 
