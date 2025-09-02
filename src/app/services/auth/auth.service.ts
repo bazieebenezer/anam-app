@@ -92,6 +92,14 @@ export class AuthService {
     return collectionData(q, { idField: 'uid' }) as Observable<AppUser[]>;
   }
 
+  async updateUserPlayerId(playerId: string): Promise<void> {
+    const user = this.auth.currentUser;
+    if (user) {
+      const userDocRef = doc(this.firestore, `users/${user.uid}`);
+      await updateDoc(userDocRef, { oneSignalPlayerId: playerId });
+    }
+  }
+
   private async updateUserData(user: User, isNewUser: boolean = false) {
     const userDocRef = doc(this.firestore, `users/${user.uid}`);
     if (isNewUser) {

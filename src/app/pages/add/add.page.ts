@@ -108,7 +108,7 @@ export class AddPage implements OnInit {
       target: ['', [Validators.required]],
       description: ['', [Validators.required]],
       endDate: [new Date().toISOString(), [Validators.required]],
-      
+
       tips: this.fb.array([this.fb.control('')]),
     });
   }
@@ -216,23 +216,24 @@ export class AddPage implements OnInit {
       return;
     }
 
+    const imageUrls = this.selectedImages.map((img) => img.preview);
+    const alertData = {
+      ...this.alertForm.value,
+      images: imageUrls,
+      createdAt: new Date(),
+      targetInstitutionId:
+        this.alertForm.value.target === 'all'
+          ? null
+          : this.alertForm.value.target,
+    };
+
     try {
-      const imageUrls = this.selectedImages.map((img) => img.preview);
-      const alertData = {
-        ...this.alertForm.value,
-        images: imageUrls,
-        createdAt: new Date(),
-        targetInstitutionId:
-          this.alertForm.value.target === 'all'
-            ? null
-            : this.alertForm.value.target,
-      };
       await this.publicationService.addAlert(alertData as WeatherBulletin);
       await this.presentToast('Alerte publiée avec succès !', 'success');
       this.alertForm.reset();
       this.selectedImages = [];
-    } catch (error) {
-      console.error("Erreur lors de la publication de l'alerte :", error);
+    } catch (error: any) {
+      console.error('[CLIENT] addAlert failed.', error);
       await this.presentToast(
         "Erreur lors de la publication de l'alerte.",
         'danger'
@@ -252,21 +253,22 @@ export class AddPage implements OnInit {
       return;
     }
 
+    const imageUrls = this.selectedImages.map((img) => img.preview);
+    const eventData: AnamEvent = {
+      title: this.eventForm.value.title,
+      description: this.eventForm.value.description,
+      images: imageUrls,
+      usefulLinks: this.eventForm.value.usefulLinks,
+      createdAt: new Date(),
+    };
+
     try {
-      const imageUrls = this.selectedImages.map((img) => img.preview);
-      const eventData: AnamEvent = {
-        title: this.eventForm.value.title,
-        description: this.eventForm.value.description,
-        images: imageUrls,
-        usefulLinks: this.eventForm.value.usefulLinks,
-        createdAt: new Date(),
-      };
       await this.eventService.addEvent(eventData);
       await this.presentToast('Événement publié avec succès !', 'success');
       this.eventForm.reset();
       this.selectedImages = [];
-    } catch (error) {
-      console.error("Erreur lors de la publication de l'événement :", error);
+    } catch (error: any) {
+      console.error('[CLIENT] addEvent failed.', error);
       await this.presentToast(
         "Erreur lors de la publication de l'événement.",
         'danger'

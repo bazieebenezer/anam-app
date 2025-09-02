@@ -79,7 +79,7 @@
       <ion-select-option value="all">Tout le monde</ion-select-option>
       @for (institution of institutions; track $index) {
       <ion-select-option [value]="institution.uid"
-        >{{ institution.displayName || institution.email }}</ion-select-option
+        >{{ institution.email }}</ion-select-option
       >
       }
     </ion-select>
