@@ -1,8 +1,10 @@
+import { Capacitor } from '@capacitor/core';
 import { Injectable } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, authState, User } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, authState, User, signInWithRedirect } from '@angular/fire/auth';
 import { from, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { doc, getDoc, Firestore, setDoc, updateDoc, collection, query, where, collectionData } from '@angular/fire/firestore';
+import { FcmService } from '../fcm/fcm.service'; // Import FcmService
 
 export interface AppUser {
   uid: string;
@@ -19,7 +21,7 @@ export interface AppUser {
 export class AuthService {
   public currentUser$: Observable<AppUser | null>;
 
-  constructor(private auth: Auth, private firestore: Firestore) {
+  constructor(private auth: Auth, private firestore: Firestore, private fcmService: FcmService) {
     this.currentUser$ = authState(this.auth).pipe(
       switchMap(user => {
         if (user) {
@@ -27,7 +29,13 @@ export class AuthService {
           return from(getDoc(userDocRef)).pipe(
             map(docSnap => {
               if (docSnap.exists()) {
-                return { uid: docSnap.id, ...docSnap.data() } as AppUser;
+                const appUser = { uid: docSnap.id, ...docSnap.data() } as AppUser;
+                // If the user is an institution, subscribe to their topic
+                if (appUser.isInstitution) {
+                  console.log(`User is an institution. Subscribing to topic: institution_${appUser.uid}`);
+                  this.fcmService.subscribeToTopic(`institution_${appUser.uid}`);
+                }
+                return appUser;
               } else {
                 return null;
               }
@@ -48,12 +56,20 @@ export class AuthService {
     );
   }
 
-  loginWithGoogle() {
-    return from(signInWithPopup(this.auth, new GoogleAuthProvider())).pipe(
-      tap(credential => {
-        this.updateUserData(credential.user);
-      })
-    );
+    loginWithGoogle() {
+    const platform = Capacitor.getPlatform();
+
+    if (platform === 'web') {
+      // For web, use redirect which is better for mobile browsers and avoids popups
+      return from(signInWithRedirect(this.auth, new GoogleAuthProvider()));
+    } else {
+      // For native, popup is generally fine
+      return from(signInWithPopup(this.auth, new GoogleAuthProvider())).pipe(
+        tap(credential => {
+          this.updateUserData(credential.user);
+        })
+      );
+    }
   }
 
   createUserWithEmailAndPassword(email: string, password: string) {
@@ -64,7 +80,20 @@ export class AuthService {
     );
   }
 
-  logout() {
+  async logout() {
+    const user = this.auth.currentUser;
+    if (user) {
+      const userDocRef = doc(this.firestore, `users/${user.uid}`);
+      const docSnap = await getDoc(userDocRef);
+      if (docSnap.exists()) {
+        const appUser = { uid: docSnap.id, ...docSnap.data() } as AppUser;
+        // If the user is an institution, unsubscribe from their topic
+        if (appUser.isInstitution) {
+          console.log(`User is an institution. Unsubscribing from topic: institution_${appUser.uid}`);
+          this.fcmService.unsubscribeFromTopic(`institution_${appUser.uid}`);
+        }
+      }
+    }
     return from(this.auth.signOut());
   }
 
@@ -120,3 +149,4 @@ export class AuthService {
     }
   }
 }
+
