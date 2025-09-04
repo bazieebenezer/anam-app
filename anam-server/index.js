@@ -53,10 +53,14 @@ console.log('Connexion à Firebase initialisée.');
 // --- Logique d'envoi de notification ---
 
 /**
- * Envoie une notification push via FCM.
- * @param {string} topic Le sujet (topic) auquel envoyer la notification.
- * @param {string} title Le titre de la notification.
- * @param {string} body Le corps du message de la notification.
+ * Send a push notification to an FCM topic.
+ *
+ * If `topic` is falsy the function returns immediately without sending.
+ *
+ * @param {string} topic - FCM topic to which the message will be sent (e.g. "newPosts" or "institution_<id>").
+ * @param {string} title - Notification title shown to recipients.
+ * @param {string} body - Notification body text; typically a short summary.
+ * @returns {Promise<void>} Resolves after the send attempt completes (success or logged failure).
  */
 async function sendNotification(topic, title, body) {
   if (!topic) {
