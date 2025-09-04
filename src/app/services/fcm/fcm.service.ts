@@ -61,8 +61,8 @@ export class FcmService {
     // On success, we should be able to receive notifications
     await PushNotifications.addListener('registration', async (token: Token) => {
       console.log('Push registration success, token: ' + token.value);
-      // Subscribe to the general topic for all users
-      await this.subscribeToTopic('newPosts');
+      // Subscription logic will now be handled by the AuthService
+      // to allow for dynamic topic subscription based on user profile.
     });
 
     // Some issue with our setup and push will not work
