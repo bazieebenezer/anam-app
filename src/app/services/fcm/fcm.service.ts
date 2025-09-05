@@ -44,10 +44,7 @@ export class FcmService {
     }
   }
 
-  async presentToast(
-    message: string,
-    color: 'success' | 'warning' | 'danger'
-  ) {
+  async presentToast(message: string, color: 'success' | 'warning' | 'danger') {
     const toast = await this.toastController.create({
       message: message,
       duration: 3000,
@@ -59,11 +56,14 @@ export class FcmService {
 
   private async addListeners() {
     // On success, we should be able to receive notifications
-    await PushNotifications.addListener('registration', async (token: Token) => {
-      console.log('Push registration success, token: ' + token.value);
-      // Subscription logic will now be handled by the AuthService
-      // to allow for dynamic topic subscription based on user profile.
-    });
+    await PushNotifications.addListener(
+      'registration',
+      async (token: Token) => {
+        console.log('Push registration success, token: ' + token.value);
+        // Subscription logic will now be handled by the AuthService
+        // to allow for dynamic topic subscription based on user profile.
+      }
+    );
 
     // Some issue with our setup and push will not work
     await PushNotifications.addListener('registrationError', (error: any) => {
@@ -75,10 +75,7 @@ export class FcmService {
       'pushNotificationReceived',
       (notification: PushNotificationSchema) => {
         console.log('Push received: ' + JSON.stringify(notification));
-        this.presentToast(
-          `Nouveau message : ${notification.title}`,
-          'success'
-        );
+        this.presentToast(`Nouveau message : ${notification.title}`, 'success');
       }
     );
 
@@ -93,6 +90,7 @@ export class FcmService {
   }
 
   async subscribeToTopic(topic: string) {
+    if (Capacitor.getPlatform() === 'web') return;
     try {
       await FCM.subscribeTo({ topic });
       console.log(`Subscribed to topic: ${topic}`);
@@ -104,6 +102,7 @@ export class FcmService {
   }
 
   async unsubscribeFromTopic(topic: string) {
+    if (Capacitor.getPlatform() === 'web') return;
     try {
       await FCM.unsubscribeFrom({ topic });
       console.log(`Unsubscribed from topic: ${topic}`);
