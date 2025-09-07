@@ -30,3 +30,87 @@ ion-content {
     }
   }
 }
+
+.user-info {
+  .user-card {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    box-shadow: var(--ion-box-shadow);
+    border: 2px solid var(--ion-color-very-light-gray);
+    border-radius: 8px;
+    height: 100px;
+  }
+
+  .user-card-content {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 16px;
+  }
+
+  div.avatar-content {
+    height: max-content;
+    width: max-content;
+    border-radius: 50%;
+    overflow: hidden;
+    svg {
+      height: 70px;
+      width: 70px;
+    }
+  }
+
+  .user-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    // flex-grow: 1;
+  }
+
+  .user-name {
+    font-weight: 600;
+    font-size: 24px;
+    margin-bottom: 4px;
+    color: var(--ion-color-secondary-contrast);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
+  }
+
+  .user-email {
+    font-size: 14px;
+    color: var(--ion-color-gray);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
+  }
+
+  .no-user-card {
+    height: auto;
+  }
+
+  .no-user-content {
+    flex-direction: column; /* Stack message and button */
+    text-align: center;
+    gap: 8px;
+  }
+
+  .no-user-message {
+    font-size: 16px;
+    color: var(--ion-color-medium);
+  }
+
+  ion-button {
+    --border-radius: 8px;
+    text-transform: none;
+    height: 42px;
+    --box-shadow: none;
+    ion-icon {
+      margin-inline-end: 6px;
+    }
+  }
+}

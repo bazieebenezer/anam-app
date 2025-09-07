@@ -160,6 +160,17 @@ Le `src/app/services/auth/auth.service.ts` est responsable de la **logique méti
 
 Cette architecture garantit une gestion précise et sécurisée des canaux de notification, en s'assurant que seuls les utilisateurs concernés reçoivent les notifications ciblées.
 
+### 3.3. Retour Visuel pour l'Utilisateur (Toasts)
+
+Pour améliorer l'expérience utilisateur et faciliter le débogage, le `FcmService` a été enrichi pour fournir un retour visuel direct lors des opérations d'abonnement et de désabonnement aux topics. Cette amélioration utilise le `ToastController` d'Ionic pour afficher des messages non intrusifs.
+
+**Fonctionnement :**
+
+-   **En cas de succès :** Lorsqu'un abonnement ou un désabonnement à un topic réussit, un "toast" de couleur verte apparaît brièvement en haut de l'écran, confirmant l'action (par exemple, "Subscribed to newPosts").
+-   **En cas d'erreur :** Si une erreur se produit pendant l'opération, un toast de couleur rouge (danger) est affiché. Cela alerte immédiatement l'utilisateur ou le développeur d'un problème potentiel, sans qu'il soit nécessaire de consulter la console de débogage.
+
+Cette boucle de rétroaction immédiate offre à l'utilisateur l'assurance que ses actions sont bien prises en compte et simplifie grandement le diagnostic en cas de problème de communication avec les services FCM.
+
 ## 4. Tests et Dépannage
 
 Tester les notifications push peut être complexe. Voici quelques conseils :

@@ -31,6 +31,7 @@ import {
   shareSharp,
   shareSocial,
   trash,
+  logInOutline,
 } from 'ionicons/icons';
 
 import { PublicationService } from './services/publication/publication.service';
@@ -95,6 +96,7 @@ export class AppComponent implements OnInit {
       trash,
       arrowForward,
       appsOutline,
+      logInOutline,
     });
   }
 }
