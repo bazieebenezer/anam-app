@@ -109,7 +109,6 @@ export class AddPage implements OnInit {
       target: ['', [Validators.required]],
       description: ['', [Validators.required]],
       endDate: [new Date().toISOString(), [Validators.required]],
-      
       tips: this.fb.array([this.fb.control('')]),
     });
   }

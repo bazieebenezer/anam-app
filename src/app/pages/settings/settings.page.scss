@@ -3,11 +3,12 @@ ion-header {
   border: 1px solid rgba(var(--ion-color-secondary-contrast-rgb), 0.1);
   height: 80px;
   ion-toolbar {
-    height: 80px;
+    height: 100%;
     display: flex;
     justify-content: center;
     ion-title {
       font-size: 21px;
+      margin-top: 8px;
     }
   }
 }

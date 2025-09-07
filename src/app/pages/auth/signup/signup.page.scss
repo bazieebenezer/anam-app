@@ -9,7 +9,7 @@ ion-content {
     margin-top: 10%;
     margin-inline-start: 16px;
     margin-inline-end: 16px;
-    font-size: 38px;
+    font-size: 36px;
     font-weight: 600;
     color: var(--ion-color-light);
   }
@@ -19,10 +19,11 @@ ion-content {
     margin-inline-end: 16px;
     color: rgba(var(--ion-color-light-rgb), 0.8);
     font-weight: 200;
+    font-size: 21px;
   }
 
   form {
-    margin-top: 10%;
+    margin-top: 6%;
     margin-inline-start: 16px;
     margin-inline-end: 16px;
     p {
@@ -38,7 +39,7 @@ ion-content {
     ion-input {
       height: 50px;
       --border-radius: 8px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       --background: var(--ion-color-light);
       --color: var(--ion-color-secondary-contrast);
     }
@@ -48,7 +49,7 @@ ion-content {
       text-transform: none;
       --box-shadow: none;
       --border-radius: 8px;
-      height: 50px;
+      height: 48px;
       width: 180px;
       font-weight: 300;
       font-size: 16px;
@@ -75,11 +76,13 @@ ion-content {
     }
     ion-button {
       border: 2px solid var(--ion-color-very-light-gray);
-      height: 50px;
+      height: 46px;
       width: 150px;
       --background: none;
       --box-shadow: none;
       border-radius: 8px;
+      color: var(--ion-color-secondary-contrast);
+      text-transform: none;
     }
   }
 

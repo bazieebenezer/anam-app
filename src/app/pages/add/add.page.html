@@ -125,7 +125,7 @@
       type="submit"
       [disabled]="alertForm.invalid || isSubmitting"
     >
-      {{ isSubmitting ? 'Envoi en cours...' : 'Publier le bulletin' }}
+      {{ isSubmitting ? 'Publication en cours...' : 'Publier le bulletin' }}
     </ion-button>
   </form>
   } @if (activeForm === 'event') {
@@ -210,7 +210,7 @@
       type="submit"
       [disabled]="eventForm.invalid || isSubmitting"
     >
-      {{ isSubmitting ? 'Envoi en cours...' : "Publier l'événement" }}
+      {{ isSubmitting ? 'Publication en cours...' : "Publier l'événement" }}
     </ion-button>
   </form>
   }

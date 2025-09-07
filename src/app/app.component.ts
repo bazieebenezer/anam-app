@@ -6,7 +6,31 @@ import localeFr from '@angular/common/locales/fr';
 import { register } from 'swiper/element/bundle';
 
 import {
-  add, addOutline, appsOutline, arrowDownOutline, arrowForward, calendarOutline, chevronForwardOutline, close, closeCircle, downloadOutline, filterOutline, homeOutline, homeSharp, image, newspaper, newspaperOutline, newspaperSharp, notificationsOutline, refresh, remove, settings, settingsOutline, shareSharp, shareSocial, trash
+  add,
+  addOutline,
+  appsOutline,
+  arrowDownOutline,
+  arrowForward,
+  calendarOutline,
+  chevronForwardOutline,
+  close,
+  closeCircle,
+  downloadOutline,
+  filterOutline,
+  homeOutline,
+  homeSharp,
+  image,
+  newspaper,
+  newspaperOutline,
+  newspaperSharp,
+  notificationsOutline,
+  refresh,
+  remove,
+  settings,
+  settingsOutline,
+  shareSharp,
+  shareSocial,
+  trash,
 } from 'ionicons/icons';
 
 import { PublicationService } from './services/publication/publication.service';
@@ -18,8 +42,8 @@ registerLocaleData(localeFr);
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
-  standalone: true, // Flag to mark component as standalone
-  imports: [IonApp, IonRouterOutlet, CommonModule], // Import necessary modules
+  standalone: true,
+  imports: [IonApp, IonRouterOutlet, CommonModule],
   providers: [
     {
       provide: LOCALE_ID,
@@ -30,14 +54,13 @@ registerLocaleData(localeFr);
 export class AppComponent implements OnInit {
   constructor(
     private publicationService: PublicationService,
-    private fcmService: FcmService // Inject the FCM service
+    private fcmService: FcmService
   ) {
     this.addIcons();
-    this.initializeApp(); // Initialize the app
+    this.initializeApp();
   }
 
   initializeApp() {
-    // Initialize push notifications
     this.fcmService.initPush();
   }
 
@@ -47,8 +70,31 @@ export class AppComponent implements OnInit {
 
   private addIcons() {
     addIcons({
-      homeOutline, newspaperOutline, newspaperSharp, addOutline, settingsOutline, notificationsOutline, filterOutline, shareSharp, shareSocial, arrowDownOutline, homeSharp, downloadOutline, close, add, remove, refresh, calendarOutline, newspaper, settings, closeCircle, image, chevronForwardOutline, trash, arrowForward, appsOutline
+      homeOutline,
+      newspaperOutline,
+      newspaperSharp,
+      addOutline,
+      settingsOutline,
+      notificationsOutline,
+      filterOutline,
+      shareSharp,
+      shareSocial,
+      arrowDownOutline,
+      homeSharp,
+      downloadOutline,
+      close,
+      add,
+      remove,
+      refresh,
+      calendarOutline,
+      newspaper,
+      settings,
+      closeCircle,
+      image,
+      chevronForwardOutline,
+      trash,
+      arrowForward,
+      appsOutline,
     });
   }
 }
-

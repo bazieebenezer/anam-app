@@ -44,7 +44,7 @@ export class FcmService {
     }
   }
 
-  async presentToast(message: string, color: 'success' | 'warning' | 'danger') {
+  async presentToast(message: string, color: 'success' | 'warning' | 'danger' | 'primary') {
     const toast = await this.toastController.create({
       message: message,
       duration: 3000,
@@ -75,7 +75,7 @@ export class FcmService {
       'pushNotificationReceived',
       (notification: PushNotificationSchema) => {
         console.log('Push received: ' + JSON.stringify(notification));
-        this.presentToast(`Nouveau message : ${notification.title}`, 'success');
+        this.presentToast(`Nouveau message : ${notification.title}`, 'primary');
       }
     );
 
@@ -94,10 +94,10 @@ export class FcmService {
     try {
       await FCM.subscribeTo({ topic });
       console.log(`Subscribed to topic: ${topic}`);
-      await this.presentToast(`Subscribed to ${topic}`, 'success');
+      // await this.presentToast(`Subscribed to ${topic}`, 'success');
     } catch (e) {
       console.error(`Error subscribing to topic ${topic}`, e);
-      await this.presentToast(`Error subscribing to ${topic}`, 'danger');
+      // await this.presentToast(`Error subscribing to ${topic}`, 'danger');
     }
   }
 

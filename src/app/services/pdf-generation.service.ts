@@ -138,7 +138,7 @@ export class PdfGenerationService {
       document.body.appendChild(pdfContainer);
 
       const images = Array.from(pdfContainer.getElementsByTagName('img'));
-      const imagePromises = images.map(img => {
+      const imagePromises = images.map((img) => {
         // For already cached images, the 'load' event might not fire.
         // Setting the src again triggers it.
         // See: https://html.spec.whatwg.org/multipage/images.html#updating-the-image-data
@@ -147,7 +147,8 @@ export class PdfGenerationService {
         }
         return new Promise<void>((resolve, reject) => {
           img.onload = () => resolve();
-          img.onerror = () => reject(new Error('Could not load image: ' + img.src));
+          img.onerror = () =>
+            reject(new Error('Could not load image: ' + img.src));
           // In case the image is already loaded but not 'complete'
           if (img.naturalWidth > 0) {
             resolve();

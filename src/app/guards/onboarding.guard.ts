@@ -9,7 +9,7 @@ export const onboardingGuard: CanActivateFn = async () => {
   const hasSeenOnboarding = await onboardingService.hasSeenOnboarding();
 
   if (!hasSeenOnboarding) {
-    router.navigate(['/']);
+    router.navigate(['/onboarding']);
     return false;
   }
 

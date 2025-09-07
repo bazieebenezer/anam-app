@@ -12,18 +12,13 @@ import { OnboardingService } from '../../services/onboarding.service';
   standalone: true,
   imports: [IonButton, IonImg, IonContent, CommonModule, FormsModule],
 })
-export class OnboardingPage implements OnInit {
+export class OnboardingPage {
   constructor(
     private router: Router,
     private onboardingService: OnboardingService
   ) {}
 
-  async ngOnInit() {
-    const hasSeenOnboarding = await this.onboardingService.hasSeenOnboarding();
-    if (hasSeenOnboarding) {
-      this.router.navigate(['/tabs']);
-    }
-  }
+  
 
   async finishOnboarding() {
     await this.onboardingService.setOnboardingComplete();

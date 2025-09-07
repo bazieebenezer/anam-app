@@ -21,7 +21,7 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular(),
+    provideIonicAngular({ swipeBackEnabled: false }),
     provideRouter(routes),
     // Configuration AngularFire corrigée
     provideFirebaseApp(() => initializeApp(environment.firebase)),

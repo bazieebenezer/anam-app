@@ -1,115 +1,136 @@
-# README : Implémentation des Fonctionnalités "Institution"
+# Documentation Technique Approfondie de la Fonctionnalité "Institution"
 
-## Introduction
+## 1. Introduction : Segmentation de Contenu et Contrôle d'Accès
 
-Ce document sert de documentation technique pour les tâches de développement réalisées le 24 août 2025. L'objectif principal de ces tâches était d'implémenter un système de rôles et de diffusion de contenu ciblé, désigné sous le nom de "Fonctionnalité d'Institution".
+La fonctionnalité "Institution" est une implémentation sophistiquée de contrôle d'accès et de diffusion de contenu ciblé au sein de l'application ANAM. Son objectif principal est de créer une distinction claire et sécurisée entre les utilisateurs standards et les comptes d'"Institution" (par exemple, des organisations gouvernementales, des municipalités, des services d'urgence, des entreprises partenaires). Ce statut spécial permet à ces entités de recevoir des bulletins d'information qui leur sont spécifiquement adressés, en plus des bulletins publics accessibles à tous.
 
-Ce système permet à des utilisateurs standards de s'élever au statut d'"Institution" via un code, et aux administrateurs de diffuser des bulletins d'information spécifiques à ces institutions, en plus des bulletins publics.
+Cette fonctionnalité est un exemple concret de **Contrôle d'Accès Basé sur les Rôles (RBAC)** et de **segmentation des données**. Elle ne se contente pas de modifier l'interface utilisateur ; elle met en place une architecture complète qui s'étend de la base de données aux notifications push, garantissant que les informations sensibles ou spécifiques ne sont accessibles qu'aux destinataires prévus.
 
-## Prérequis
+Ce document technique couvre l'ensemble de la fonctionnalité, de la modification des modèles de données à la logique de l'interface utilisateur, en passant par les mécanismes de sécurité et de notification qui en sont les piliers.
 
-Pour comprendre, maintenir ou étendre cette fonctionnalité, les éléments suivants sont nécessaires :
+## 2. Architecture et Extension des Modèles de Données
 
-- **Environnement de développement :**
-  - **Framework :** Ionic v7+ / Angular v17+
-  - **Langage :** TypeScript
-  - **Node.js :** v18 ou supérieure
-- **Backend & Dépendances :**
-  - **Firebase :** Un projet Firebase actif est requis.
-    - **Firestore :** Utilisé comme base de données NoSQL.
-    - **Firebase Authentication :** Utilisé pour la gestion des utilisateurs.
-  - **AngularFire :** La bibliothèque officielle pour lier Angular à Firebase.
-- **Outils :**
-  - **Firebase CLI :** Nécessaire pour le déploiement des règles de sécurité Firestore.
-  - **Angular CLI :** Pour la gestion du projet Angular.
+L'implémentation de la fonctionnalité a nécessité l'extension des modèles de données existants pour supporter le concept d'institution et de ciblage de contenu.
 
-## Procédures et Démarches
+### 2.1. Modèle Utilisateur (`AppUser`)
 
-Voici la chronologie détaillée des opérations effectuées pour mettre en place la fonctionnalité.
+L'interface `AppUser` (dans `src/app/services/auth/auth.service.ts`) a été étendue avec un champ booléen `isInstitution`. C'est le pivot central de la fonctionnalité. La présence de ce champ `true` sur un document utilisateur dans Firestore lui confère son statut spécial.
 
-### 1. Modification des Modèles de Données
+```typescript
+export interface AppUser {
+  uid: string;
+  email: string;
+  displayName?: string;
+  photoURL?: string;
+  isAdmin?: boolean;
+  isInstitution?: boolean; // Champ clé de la fonctionnalité
+}
+```
 
-La première étape a été d'étendre les modèles de données pour supporter le nouveau concept d'institution.
+### 2.2. Modèle Bulletin (`WeatherBulletin`)
 
-- **Modèle Utilisateur (`AppUser`) :** L'interface `AppUser` dans `src/app/services/auth/auth.service.ts` a été modifiée pour inclure un nouveau champ booléen.
-  ```typescript
-  export interface AppUser {
-    // ... autres champs
-    isInstitution?: boolean;
+L'interface `WeatherBulletin` (dans `src/app/model/bulletin.model.ts`) a été étendue pour permettre le ciblage d'un bulletin vers une institution spécifique. Le champ `targetInstitutionId` stocke l'UID de l'utilisateur de l'institution cible.
+
+```typescript
+export interface WeatherBulletin {
+  id?: string;
+  // ... autres champs
+  targetInstitutionId?: string | null; // Stocke l'UID de l'institution cible
+}
+```
+-   Si `targetInstitutionId` est `null` ou `undefined`, le bulletin est considéré comme **public**.
+-   Si `targetInstitutionId` contient un UID, il est considéré comme **privé** et destiné uniquement à l'institution correspondante.
+
+## 3. Flux de Données Complet : De la Création à la Réception
+
+Pour bien comprendre la fonctionnalité, il est utile de suivre le parcours d'un bulletin ciblé à travers le système.
+
+**Étape 1 : Élévation de Rôle (Devient une Institution)**
+-   Un utilisateur standard, via la `SettingsPage`, clique sur "Devenir une institution".
+-   La méthode `promptBecomeInstitution()` demande un code secret (`95160`).
+-   Si le code est correct, `authService.setUserAsInstitution()` est appelé.
+-   Cette méthode met à jour le document de l'utilisateur dans Firestore : `updateDoc(userDocRef, { isInstitution: true })`.
+
+**Étape 2 : Création d'un Bulletin Ciblé par un Admin**
+-   Un administrateur se rend sur la `AddPage`.
+-   Dans `ngOnInit`, la page appelle `authService.getInstitutionUsers()` pour récupérer la liste de tous les utilisateurs où `isInstitution === true`.
+-   Cette liste est utilisée pour peupler un menu déroulant `<ion-select>` permettant de choisir une cible.
+-   L'administrateur remplit le formulaire, sélectionne une institution cible dans le menu déroulant, et clique sur "Publier".
+-   La méthode `submitAlert()` récupère la valeur du formulaire. Si la cible n'est pas "all", elle assigne l'UID de l'institution sélectionnée au champ `targetInstitutionId` de l'objet bulletin.
+-   `publicationService.addAlert()` est appelé, et le nouveau document de bulletin est écrit dans Firestore avec le `targetInstitutionId`.
+
+**Étape 3 : Déclenchement de la Notification Ciblée**
+-   Le serveur backend `anam-server`, qui écoute la collection `bulletins` avec `onSnapshot`, détecte l'ajout du nouveau document.
+-   Il inspecte le champ `targetInstitutionId`. Comme il n'est pas nul, le serveur détermine que le topic de notification est `institution_` suivi de l'UID de la cible (ex: `institution_xyz123`).
+-   Le serveur envoie une notification push via FCM à ce topic spécifique.
+
+**Étape 4 : Réception et Affichage par l'Utilisateur de l'Institution**
+-   L'utilisateur de l'institution ouvre l'application et arrive sur la `HomePage`.
+-   Dans `ngOnInit`, la page récupère l'utilisateur actuel via `authService.currentUser$`. Elle voit que `user.isInstitution` est `true`.
+-   La page s'abonne à `bulletinService.getPublications()` et applique un filtre : `bulletins.filter(b => !b.targetInstitutionId || b.targetInstitutionId === user.uid)`.
+-   Cette logique garantit que l'utilisateur voit **les bulletins publics ET les bulletins qui lui sont spécifiquement destinés**.
+-   Simultanément, l'appareil de l'utilisateur, qui est abonné au topic `institution_xyz123`, reçoit la notification push envoyée par le serveur.
+
+## 4. Notifications Push Ciblées : Le Rôle Clé de `AuthService`
+
+Un avantage majeur du statut d'institution est la réception de notifications push ciblées. Ceci est réalisé grâce à une gestion dynamique des abonnements aux topics de Firebase Cloud Messaging (FCM), orchestrée par `AuthService`.
+
+La méthode privée `handleInstitutionSubscription` est appelée chaque fois que l'état de l'utilisateur est chargé ou mis à jour, assurant une gestion réactive des abonnements.
+
+```typescript
+// Dans src/app/services/auth/auth.service.ts
+private async handleInstitutionSubscription(user: AppUser) {
+  const newTopic = user.isInstitution ? `institution_${user.uid}` : null;
+
+  if (this.institutionTopic !== newTopic) {
+    if (this.institutionTopic) {
+      this.fcmService.unsubscribeFromTopic(this.institutionTopic);
+    }
+    if (newTopic) {
+      this.fcmService.subscribeToTopic(newTopic);
+    }
+    this.institutionTopic = newTopic;
   }
-  ```
-- **Modèle Bulletin (`WeatherBulletin`) :** L'interface dans `src/app/model/bulletin.model.ts` a été modifiée pour permettre le ciblage.
-  ```typescript
-  export interface WeatherBulletin {
-    // ... autres champs
-    targetInstitutionId?: string;
-  }
-  ```
+}
+```
 
-### 2. Implémentation du Flux "Devenir Institution"
+**Analyse détaillée de la logique :**
+1.  **Création du Topic Unique**: Si l'utilisateur est une institution, un nom de topic unique est généré en préfixant son UID : `institution_xxxxxxxx`. Ce nom est prévisible et peut être reconstruit par le serveur.
+2.  **Gestion des Changements d'État**: Le service compare le `newTopic` avec celui auquel il est actuellement abonné (`this.institutionTopic`). Cette comparaison est cruciale pour éviter des abonnements/désabonnements inutiles.
+3.  **Désabonnement Intelligent**: Si l'ancien topic existe (l'utilisateur était une institution mais ne l'est plus, ou l'utilisateur se déconnecte), le service se désabonne de ce topic pour ne plus recevoir de notifications ciblées.
+4.  **Abonnement Intelligent**: Si un nouveau topic est défini (l'utilisateur vient de devenir une institution), le service abonne l'appareil à ce topic unique.
 
-Ce flux permet à un utilisateur de s'auto-assigner le rôle d'institution.
+Ce mécanisme garantit que seuls les appareils de l'utilisateur de l'institution recevront les notifications envoyées à ce topic spécifique, assurant ainsi la confidentialité.
 
-- **Interface :** Un bouton a été rendu cliquable dans `src/app/pages/settings/settings.page.html`.
-- **Logique :** La méthode `promptBecomeInstitution()` dans `settings.page.ts` a été créée. Elle utilise le service `AlertController` d'Ionic pour demander un code (`95160`).
-- **Mise à jour en base de données :** En cas de succès, la méthode `setUserAsInstitution()` du `AuthService` est appelée pour mettre à jour le document de l'utilisateur dans Firestore.
+## 5. Considérations de Sécurité : Les Règles Firestore
 
-### 3. Implémentation du Ciblage des Bulletins
+L'implémentation côté client est robuste, mais pour une sécurité à toute épreuve, la segmentation des données doit également être appliquée au niveau de la base de données via les **Règles de Sécurité Firestore**. Sans elles, un utilisateur malveillant pourrait potentiellement contourner la logique du client pour lire des bulletins qui ne lui sont pas destinés.
 
-Les administrateurs doivent pouvoir sélectionner une institution lors de la création d'un bulletin.
+Voici un exemple de règles de sécurité qui pourraient être implémentées pour la collection `bulletins` :
 
-- **Récupération des données :** Une méthode `getInstitutionUsers()` a été ajoutée à `auth.service.ts` pour lister tous les utilisateurs où `isInstitution` est `true`.
-- **Interface du formulaire :** La page `add.page.ts` a été modifiée pour appeler cette méthode et stocker le résultat. Le template `add.page.html` utilise ces données pour peupler un `ion-select`, permettant à l'admin de choisir une institution cible.
-- **Enregistrement des données :** La méthode `submitAlert()` a été modifiée pour inclure le `targetInstitutionId` dans l'objet bulletin envoyé à Firestore.
+```json
+// dans firestore.rules
+match /bulletins/{bulletinId} {
+  // Tout le monde peut lire les bulletins publics.
+  allow read: if resource.data.targetInstitutionId == null;
 
-### 4. Affichage Filtré des Bulletins
+  // Un utilisateur peut lire un bulletin si son UID correspond au targetInstitutionId.
+  allow read: if request.auth.uid == resource.data.targetInstitutionId;
 
-La page d'accueil doit afficher les bulletins en fonction du statut de l'utilisateur.
+  // Seuls les administrateurs peuvent créer, mettre à jour ou supprimer des bulletins.
+  allow write: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+}
+```
 
-- **Logique de filtrage :** La méthode `ngOnInit` de `home.page.ts` a été modifiée. Elle détermine si l'utilisateur est une institution et filtre la liste des bulletins pour n'afficher que les bulletins publics et ceux qui lui sont spécifiquement adressés.
-- **Indicateur visuel :** Un `ion-badge` "Spécifique" a été ajouté à `home.page.html` pour différencier les bulletins ciblés.
+Ces règles garantissent que :
+-   La lecture d'un bulletin n'est autorisée que s'il est public ou si l'UID de l'utilisateur demandeur correspond à l'ID de la cible.
+-   L'écriture (création, modification) est réservée aux administrateurs.
 
-## Techniques et Bonnes Pratiques
+## 6. Conclusion et Prochaines Étapes
 
-Plusieurs décisions techniques ont été prises pour assurer la qualité et la robustesse du code.
+La fonctionnalité "Institution" est un système robuste et bien intégré qui permet une segmentation efficace des utilisateurs et une diffusion ciblée de l'information. Elle est sécurisée, s'appuie sur des pratiques de code solides et offre une expérience utilisateur cohérente.
 
-- **Robustesse des écritures Firestore :** L'utilisation de `setDoc(..., { merge: true })` a été préférée à `updateDoc` pour la mise à jour du statut d'institution. Cette approche prévient les erreurs si le document utilisateur n'existe pas encore, en le créant au lieu de retourner une erreur.
-- **Intégrité des données à la connexion :** La fonction `loginWithEmailAndPassword` a été modifiée pour appeler systématiquement `updateUserData`. Cela garantit que le document Firestore de l'utilisateur est toujours synchronisé et complet, prévenant les bugs où des utilisateurs sans document en base de données pouvaient exister.
-- **Sécurité par le moindre privilège :** Lors de la correction des règles de sécurité, l'accès en `list` à la collection `users` n'a été accordé qu'aux administrateurs, plutôt qu'à tous les utilisateurs authentifiés. Ceci est crucial pour protéger les données des utilisateurs.
-- **Expérience utilisateur :** Pour l'affichage des institutions dans la liste déroulante, un fallback sur l'email (`displayName || email`) a été implémenté pour garantir qu'un identifiant soit toujours visible, même si le nom d'affichage n'est pas défini.
-
-## Problèmes Rencontrés et Solutions
-
-Le processus de développement a nécessité la résolution de plusieurs problèmes critiques.
-
-1.  **Problème :** Permissions insuffisantes sur Firestore.
-    - **Symptôme :** Erreur `FirebaseError: Missing or insufficient permissions` lors de la tentative de lister les institutions.
-    - **Cause :** Les règles de sécurité n'autorisaient que la lecture de documents uniques (`allow read`) et non l'interrogation de listes (`allow list`).
-    - **Solution :** Mise à jour du fichier `firestore.rules` pour accorder la permission `list` aux administrateurs sur la collection `users`.
-
-2.  **Problème :** Requête invalide (`400 Bad Request`).
-    - **Symptôme :** Erreur réseau sur le canal `Listen` de Firestore lors de l'écoute des institutions.
-    - **Cause :** La requête `where('isInstitution', '==', true)` nécessitait un index qui n'était pas activé.
-    - **Solution :** Réactivation de l'index à champ unique pour le champ `isInstitution` via l'interface de la console Firebase.
-
-3.  **Problème :** Données manquantes pour certains utilisateurs.
-    - **Symptôme :** Des lignes vides apparaissaient dans la liste des institutions.
-    - **Cause :** Des documents utilisateurs dans Firestore étaient incomplets (sans `email` ou `displayName`). La cause racine était que la fonction de connexion par email/mot de passe ne créait/mettait pas à jour le document associé dans Firestore.
-    - **Solution :** Modification de `loginWithEmailAndPassword` dans `auth.service.ts` pour y inclure l'appel à `updateUserData`.
-
-## Résultat Final
-
-À l'issue de ces tâches, l'application dispose d'une nouvelle fonctionnalité complète et fonctionnelle :
-
-- Les utilisateurs peuvent devenir des "Institutions".
-- Les administrateurs peuvent créer des bulletins publics ou ciblés vers une institution spécifique.
-- La page d'accueil affiche une liste de bulletins personnalisée en fonction du statut de l'utilisateur.
-- Les problèmes de sécurité et de configuration de la base de données sous-jacents ont été résolus, rendant l'application plus stable et sécurisée.
-
-## Prochaines Étapes
-
-Pour continuer à améliorer le projet, les actions suivantes sont recommandées :
-
-- **Écrire des tests unitaires :** Ajouter des tests pour les nouvelles méthodes dans `auth.service.ts` et pour la logique de filtrage dans les composants afin de prévenir les régressions.
-- **Renforcer la sécurité :** Les règles pour les collections `bulletins` et `events` sont actuellement très permissives (`allow read, write: if true;`). Il est recommandé de les restreindre pour n'autoriser l'écriture qu'aux administrateurs.
-- **Améliorer l'UX :** Fournir un retour visuel (ex: un spinner) lors du chargement de la liste des institutions. Désactiver ou masquer le bouton "Devenir une institution" une fois que l'utilisateur a déjà ce statut, au lieu de simplement le rediriger.
+**Améliorations futures recommandées :**
+1.  **Tableau de Bord Institution**: Créer une page ou un tableau de bord dédié où les utilisateurs d'une institution peuvent voir un historique de tous les bulletins qui leur ont été spécifiquement adressés, séparément du flux public.
+2.  **Gestion des Institutions par les Admins**: Développer une interface d'administration où les administrateurs peuvent voir la liste des institutions, leur assigner ce statut manuellement (plutôt que par un code secret), ou le révoquer.
+3.  **Tests Unitaires et d'Intégration**: Renforcer la couverture de tests pour les nouvelles logiques dans `AuthService`, `HomePage`, `AddPage` et les règles de sécurité Firestore pour garantir la non-régression et la robustesse du système.

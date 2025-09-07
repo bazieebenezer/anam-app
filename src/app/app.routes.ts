@@ -1,12 +1,27 @@
-import { Routes } from '@angular/router';
-// import { AuthGuard } from './guards/auth.guard';
-// import { onboardingGuard } from './guards/onboarding.guard';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router, Routes } from '@angular/router';
+import { OnboardingService } from './services/onboarding.service';
+import { onboardingGuard } from './guards/onboarding.guard';
+
+export const alreadyOnboardedGuard: CanActivateFn = async () => {
+  const onboardingService = inject(OnboardingService);
+  const router = inject(Router);
+
+  const hasSeenOnboarding = await onboardingService.hasSeenOnboarding();
+
+  if (hasSeenOnboarding) {
+    router.navigate(['/tabs/home']);
+    return false;
+  }
+
+  return true;
+};
 
 export const routes: Routes = [
   {
     path: 'tabs',
     loadComponent: () => import('./tabs/tabs.page').then((m) => m.TabsPage),
-    // canActivate: [AuthGuard],
+    canActivate: [onboardingGuard],
     children: [
       {
         path: '',
@@ -50,11 +65,12 @@ export const routes: Routes = [
     ],
   },
   {
-    path: '',
+    path: 'onboarding',
     loadComponent: () =>
       import('./pages/onboarding/onboarding.page').then(
         (m) => m.OnboardingPage
       ),
+    canActivate: [alreadyOnboardedGuard],
   },
   {
     path: 'signup',
@@ -65,5 +81,10 @@ export const routes: Routes = [
     path: 'signin',
     loadComponent: () =>
       import('./pages/auth/signin/signin.page').then((m) => m.SigninPage),
+  },
+  {
+    path: '',
+    redirectTo: 'tabs',
+    pathMatch: 'full',
   },
 ];

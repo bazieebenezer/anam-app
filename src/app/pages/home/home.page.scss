@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 2px;
   margin-bottom: 18px;
   .count {
     font-weight: 500;
@@ -14,7 +14,8 @@
     text-transform: none;
     font-weight: 400;
     --border-radius: 8px;
-    width: 74px;
+    width: 68px;
+    height: 36px;
     --background: transparent;
     color: var(--ion-color-secondary-contrast);
   }
@@ -25,7 +26,8 @@
   }
   ion-button.unselect {
     border-radius: 8px;
-    width: 74px;
+    width: 68px;
+    height: 36px;
     border: 2px solid var(--ion-color-very-light-gray);
     font-weight: 400;
   }
@@ -170,7 +172,7 @@ ion-content {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 180px;
+        width: 150px;
         height: 40px;
         border-radius: 8px;
         font-size: 14px;
@@ -235,7 +237,7 @@ ion-modal#share-modal {
     margin-top: 32px;
     margin-bottom: 16px;
     text-transform: none;
-    height: 48px;
+    height: 46px;
     --box-shadow: none;
   }
 }

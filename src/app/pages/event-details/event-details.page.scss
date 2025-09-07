@@ -9,7 +9,7 @@ ion-content {
     }
   }
   ion-back-button {
-    position: absolute;
+    position: fixed;
     top: 48px;
     left: 16px;
     --background: var(--ion-color-primary-contrast);
@@ -45,14 +45,14 @@ ion-content {
       swiper-slide {
         img {
           width: 100%;
-          height: 250px;
+          height: 200px;
           border-radius: 8px;
           margin-bottom: 32px;
           transition: transform 0.2s ease;
           object-fit: cover;
-
+          transform: scale(0.93);
           &:hover {
-            transform: scale(1.02);
+            transform: scale(0.94);
           }
         }
       }
