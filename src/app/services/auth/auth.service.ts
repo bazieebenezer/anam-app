@@ -85,14 +85,11 @@ export class AuthService {
   }
 
   loginWithGoogle() {
-    const platform = Capacitor.getPlatform();
-    if (platform === 'web') {
-      return from(signInWithRedirect(this.auth, new GoogleAuthProvider()));
-    } else {
-      return from(signInWithPopup(this.auth, new GoogleAuthProvider())).pipe(
-        tap(credential => { this.updateUserData(credential.user); })
-      );
-    }
+    // Use signInWithPopup for both web and native platforms for simplicity and reliability.
+    // signInWithRedirect can be problematic on web if not handled carefully.
+    return from(signInWithPopup(this.auth, new GoogleAuthProvider())).pipe(
+      tap(credential => { this.updateUserData(credential.user); })
+    );
   }
 
   createUserWithEmailAndPassword(email: string, password: string) {

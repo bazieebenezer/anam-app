@@ -7,15 +7,16 @@ import {
   IonTitle,
   IonToolbar,
   IonItem,
-  IonToggle,
   IonRadioGroup,
   IonRadio,
   IonIcon,
   IonList,
   ToastController,
   AlertController,
-  IonGrid,
-} from '@ionic/angular/standalone';
+  IonCard,
+  IonCardContent,
+  IonAvatar,
+  IonText } from '@ionic/angular/standalone';
 import { ThemeService } from '../../services/theme.service';
 import { takeUntil } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
@@ -30,12 +31,11 @@ type Theme = 'light' | 'dark' | 'system';
   templateUrl: './settings.page.html',
   styleUrls: ['./settings.page.scss'],
   standalone: true,
-  imports: [
+  imports: [ IonText, IonAvatar, IonCardContent, IonCard, 
     IonList,
     IonIcon,
     IonRadio,
     IonRadioGroup,
-    IonToggle,
     IonItem,
     IonContent,
     IonHeader,
