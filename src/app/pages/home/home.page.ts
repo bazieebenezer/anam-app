@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -29,6 +29,7 @@ import { NewPostService, Post } from 'src/app/services/new-post.service';
 import { NewPostsSheetComponent } from 'src/app/components/new-posts-sheet/new-posts-sheet.component';
 import { PdfGenerationService } from 'src/app/services/pdf-generation.service';
 import { ShareService } from 'src/app/services/share.service';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-home',
@@ -65,6 +66,7 @@ export class HomePage implements OnInit {
   filteredBulletins: WeatherBulletin[] = [];
   isLoading: boolean = true;
   newPostsCount$!: Observable<number>;
+  themeService = inject(ThemeService);
 
   constructor(
     private router: Router,

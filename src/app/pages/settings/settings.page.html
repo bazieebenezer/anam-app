@@ -14,7 +14,33 @@
             @if (user.photoURL) {
             <img [src]="user.photoURL" alt="User Avatar" />
             } @else {
-            <img src="assets/img/user-avatar.png" alt="Default Avatar" />
+            <svg
+              viewBox="0 0 96 96"
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+              aria-label="Avatar"
+            >
+              <!-- Couleurs personnalisables -->
+              <style>
+                :root {
+                  --avatar-bg: #8a8a8a; /* gris du fond */
+                  --avatar-fg: #ffffff; /* silhouette */
+                }
+              </style>
+
+              <!-- Fond circulaire -->
+              <circle cx="48" cy="48" r="46" fill="var(--avatar-bg)" />
+
+              <!-- Tête -->
+              <circle cx="48" cy="36" r="14" fill="var(--avatar-fg)" />
+
+              <!-- Épaules / buste -->
+              <path
+                d="M24 76c0-13.25 10.75-24 24-24s24 10.75 24 24v4H24v-4z"
+                fill="var(--avatar-fg)"
+              />
+            </svg>
+
             }
           </ion-avatar>
         </div>
@@ -22,7 +48,7 @@
           @if (user.displayName) {
           <ion-text class="user-name">{{ user.displayName }}</ion-text>
           } @else {
-          <ion-text class="user-name">Utilisateur Anonyme</ion-text>
+          <ion-text class="user-name">Anonyme</ion-text>
           }
           <ion-text class="user-email">{{ user.email }}</ion-text>
         </div>

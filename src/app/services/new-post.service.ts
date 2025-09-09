@@ -6,6 +6,7 @@ import { PublicationService } from './publication/publication.service';
 import { EventService } from './evenments/event.service';
 import { WeatherBulletin } from '../model/bulletin.model';
 import { AnamEvent } from '../model/event.model';
+import { AuthService, AppUser } from './auth/auth.service';
 
 // Union type for posts
 export type Post = (WeatherBulletin & { type: 'bulletin' }) | (AnamEvent & { type: 'event' });
@@ -22,7 +23,8 @@ export class NewPostService {
   constructor(
     private storage: Storage,
     private publicationService: PublicationService,
-    private eventService: EventService
+    private eventService: EventService,
+    private authService: AuthService
   ) {
     this.initStorage();
   }
@@ -42,11 +44,27 @@ export class NewPostService {
       map(events => events.map(e => ({ ...e, type: 'event' } as Post)))
     );
 
-    return combineLatest([bulletins$, events$, this.seenPosts]).pipe(
-      map(([bulletins, events, seen]) => {
+    return combineLatest([
+      bulletins$,
+      events$,
+      this.seenPosts,
+      this.authService.currentUser$
+    ]).pipe(
+      map(([bulletins, events, seen, currentUser]) => {
         const allPosts = [...bulletins, ...events];
+
+        const filteredPosts = allPosts.filter(post => {
+          if (post.type === 'bulletin' && post.targetInstitutionId) {
+            // This is a targeted bulletin
+            return currentUser?.uid === post.targetInstitutionId;
+          }
+          // This is a general post (event or bulletin)
+          return true;
+        });
+
         // Filter out seen posts
-        const newPosts = allPosts.filter(post => post.id && !seen.includes(post.id));
+        const newPosts = filteredPosts.filter(post => post.id && !seen.includes(post.id));
+        
         // Sort by creation date, newest first
         return newPosts.sort((a, b) => {
           const dateA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;

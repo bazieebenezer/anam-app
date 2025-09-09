@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, authState, User, signInWithRedirect } from '@angular/fire/auth';
 import { from, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { doc, getDoc, Firestore, setDoc, updateDoc, collection, query, where, collectionData } from '@angular/fire/firestore';
+import { doc, getDoc, Firestore, setDoc, updateDoc, collection, query, where, collectionData, docData } from '@angular/fire/firestore';
 import { FcmService } from '../fcm/fcm.service';
 
 export interface AppUser {
@@ -31,12 +31,11 @@ export class AuthService {
       switchMap(user => {
         if (user) {
           const userDocRef = doc(this.firestore, `users/${user.uid}`);
-          return from(getDoc(userDocRef)).pipe(
-            map(docSnap => {
-              if (docSnap.exists()) {
-                const appUser = { uid: docSnap.id, ...docSnap.data() } as AppUser;
-                this.handleInstitutionSubscription(appUser);
-                return appUser;
+          return docData(userDocRef, { idField: 'uid' }).pipe(
+            map(appUser => {
+              if (appUser) {
+                this.handleInstitutionSubscription(appUser as AppUser);
+                return appUser as AppUser;
               } else {
                 const newUser: AppUser = { uid: user.uid, email: user.email || '' };
                 setDoc(userDocRef, newUser, { merge: true });

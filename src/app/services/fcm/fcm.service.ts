@@ -75,7 +75,7 @@ export class FcmService {
       'pushNotificationReceived',
       (notification: PushNotificationSchema) => {
         console.log('Push received: ' + JSON.stringify(notification));
-        this.presentToast(`Nouveau message : ${notification.title}`, 'primary');
+        this.presentToast(`Nouveau: ${notification.title}`, 'primary');
       }
     );
 
