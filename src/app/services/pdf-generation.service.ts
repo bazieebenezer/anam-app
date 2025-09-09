@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { WeatherBulletin } from 'src/app/model/bulletin.model';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -7,6 +7,7 @@ import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Capacitor } from '@capacitor/core';
 import { ToastController } from '@ionic/angular';
 import { DatePipe } from '@angular/common';
+import { ThemeService } from './theme.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +17,8 @@ export class PdfGenerationService {
     private toastController: ToastController,
     private datePipe: DatePipe
   ) {}
+
+  themeService = inject(ThemeService);
 
   private getSeverityColor(severity: 'urgent' | 'eleve' | 'normal'): string {
     switch (severity) {
@@ -57,12 +60,12 @@ export class PdfGenerationService {
       );
 
       pdfContainer.innerHTML = `
-        <div style="width: 210mm; padding: 12mm; font-family: Arial, sans-serif; color: #222; background-color: #fff; box-sizing: border-box;">
+        <div style="width: 210mm; padding: 12mm; font-family: Arial, sans-serif; color: #222 !important; background-color: #fff !important; box-sizing: border-box;">
 
   <!-- En-tête -->
-  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd; padding-bottom: 6mm;">
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #ddd !important; padding-bottom: 6mm;">
     <img src="assets/logo/anam_logo.png" style="width: 40mm;">
-    <h1 style="font-size: 20px; font-weight: bold; text-align: right; margin: 0; color: #333;">${
+    <h1 style="font-size: 20px; font-weight: bold; text-align: right; margin: 0; color: #333 !important;">${
       bulletin.title
     }</h1>
   </div>
@@ -75,25 +78,28 @@ export class PdfGenerationService {
   </div>
 
   <!-- Dates -->
-  <div style="margin-top: 8mm; font-size: 14px; color: #555;">
-    <p style="margin: 4px 0;">📅 <strong>Publié le :</strong> ${formattedCreatedAt}</p>
-    <p style="margin: 4px 0;">⏳ <strong>Valable jusqu'au :</strong> ${formattedEndDate}</p>
+  <div style="margin-top: 8mm; font-size: 14px; color: #555 !important;">
+    <p style="margin: 4px 0; color: #555 !important;">📅 <strong>Publié le :</strong> ${formattedCreatedAt}</p>
+    <p style="margin: 4px 0; color: #555 !important;">⏳ <strong>Valable jusqu'au :</strong> ${formattedEndDate}</p>
   </div>
 
   <!-- Description -->
   <div style="margin-top: 12mm;">
     <h3 style="font-size: 16px; color: #444; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 3px;">Description</h3>
-    <p style="text-align: justify; line-height: 1.5; margin: 6px 0;">${
+    <p style="text-align: justify; line-height: 1.5; margin: 6px 0; color: #555 !important;">${
       bulletin.description
     }</p>
   </div>
 
   <!-- Conseils pratiques -->
   <div style="margin-top: 12mm;">
-    <h3 style="font-size: 16px; color: #444; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 3px;">Conseils pratiques</h3>
-    <ul style="color: #333; padding-left: 18px; margin: 6px 0; line-height: 1.6;">
+    <h3 style="font-size: 16px; color: #444 !important; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 3px;">Conseils pratiques</h3>
+    <ul style="color: #333 !important; padding-left: 18px; margin: 6px 0; line-height: 1.6;">
       ${bulletin.tips
-        .map((tip) => `<li style="margin-bottom: 4px;">${tip}</li>`)
+        .map(
+          (tip) =>
+            `<li style="margin-bottom: 4px; color: #333 !important">${tip}</li>`
+        )
         .join('')}
     </ul>
   </div>
@@ -101,8 +107,8 @@ export class PdfGenerationService {
   <!-- Criticité + Spécificité -->
   <div style="margin-top: 12mm; display: flex; justify-content: center; padding: 8px; border: 1px solid #ddd; border-radius: 6px; background: #f9f9f9;">
     <div>
-      <span style="font-weight: bold;">⚠ Criticité :</span>
-      <span style="color: ${severityColor}; font-weight: bold; text-transform: uppercase;">${
+      <span style="font-weight: bold; color: #444 !important">⚠ Criticité :</span>
+      <span style="color: ${severityColor} !important; font-weight: bold; text-transform: uppercase;">${
         bulletin.severity
       }</span>
     </div>
@@ -110,8 +116,8 @@ export class PdfGenerationService {
       bulletin.targetInstitutionId
         ? `
     <div>
-      <span style="font-weight: bold;">🏛 Spécificité :</span>
-      <span>Spécifique</span>
+      <span style="font-weight: bold; color: #444 !important">🏛 Spécificité :</span>
+      <span color: #333 !important>Spécifique</span>
     </div>`
         : ''
     }
@@ -119,7 +125,7 @@ export class PdfGenerationService {
 
   <!-- Images secondaires -->
   <div style="margin-top: 14mm;">
-    <h3 style="font-size: 16px; color: #444; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 3px;">Images</h3>
+    <h3 style="font-size: 16px; color: #444 !important; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 3px;">Images</h3>
     <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px;">
       ${bulletin.images
         .slice(1)

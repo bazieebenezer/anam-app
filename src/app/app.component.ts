@@ -32,10 +32,15 @@ import {
   shareSocial,
   trash,
   logInOutline,
+  wifi,
+  removeCircleOutline,
+  checkmarkOutline,
 } from 'ionicons/icons';
 
 import { PublicationService } from './services/publication/publication.service';
 import { FcmService } from './services/fcm/fcm.service';
+import { ThemeService } from './services/theme.service';
+import { ConnectivityService } from './services/connectivity/connectivity.service';
 
 register();
 registerLocaleData(localeFr);
@@ -55,7 +60,9 @@ registerLocaleData(localeFr);
 export class AppComponent implements OnInit {
   constructor(
     private publicationService: PublicationService,
-    private fcmService: FcmService
+    private fcmService: FcmService,
+    private themeService: ThemeService,
+    private connectivityService: ConnectivityService
   ) {
     this.addIcons();
     this.initializeApp();
@@ -63,6 +70,7 @@ export class AppComponent implements OnInit {
 
   initializeApp() {
     this.fcmService.initPush();
+    this.connectivityService.initialize();
   }
 
   ngOnInit() {
@@ -97,6 +105,9 @@ export class AppComponent implements OnInit {
       arrowForward,
       appsOutline,
       logInOutline,
+      wifi,
+      removeCircleOutline,
+      checkmarkOutline,
     });
   }
 }
