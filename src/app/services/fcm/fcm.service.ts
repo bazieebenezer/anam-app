@@ -44,12 +44,16 @@ export class FcmService {
     }
   }
 
-  async presentToast(message: string, color: 'success' | 'warning' | 'danger' | 'primary') {
+  async presentToast(
+    message: string,
+    color: 'success' | 'warning' | 'danger' | 'primary'
+  ) {
     const toast = await this.toastController.create({
       message: message,
-      duration: 3000,
+      duration: 8000,
       color: color,
       position: 'top',
+      cssClass: 'top-toast',
     });
     toast.present();
   }

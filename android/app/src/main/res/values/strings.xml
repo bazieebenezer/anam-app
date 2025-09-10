@@ -4,4 +4,5 @@
     <string name="title_activity_main">Météo Burkina</string>
     <string name="package_name">com.example.app</string>
     <string name="custom_url_scheme">com.example.app</string>
+    <string name="server_client_id">248991475042-vnodgbbgaopnuo7u84n1taivhealhcks.apps.googleusercontent.com</string>
 </resources>
