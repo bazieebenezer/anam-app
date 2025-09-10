@@ -4,6 +4,8 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import localeFr from '@angular/common/locales/fr';
 import { register } from 'swiper/element/bundle';
+import { SocialLogin } from '@capgo/capacitor-social-login';
+import { Capacitor } from '@capacitor/core';
 
 import {
   add,
@@ -68,7 +70,14 @@ export class AppComponent implements OnInit {
     this.initializeApp();
   }
 
-  initializeApp() {
+  async initializeApp() {
+    if (Capacitor.isNativePlatform()) {
+      await SocialLogin.initialize({
+        google: {
+          webClientId: '248991475042-vnodgbbgaopnuo7u84n1taivhealhcks.apps.googleusercontent.com',
+        },
+      });
+    }
     this.fcmService.initPush();
     this.connectivityService.initialize();
   }
