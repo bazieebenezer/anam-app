@@ -85,7 +85,7 @@ export class PdfGenerationService {
 
   <!-- Description -->
   <div style="margin-top: 12mm;">
-    <h3 style="font-size: 16px; color: #444; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 3px;">Description</h3>
+    <h3 style="font-size: 16px; color: #444 !important; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 3px;">Description</h3>
     <p style="text-align: justify; line-height: 1.5; margin: 6px 0; color: #555 !important;">${
       bulletin.description
     }</p>

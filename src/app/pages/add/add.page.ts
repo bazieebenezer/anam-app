@@ -89,6 +89,17 @@ export class AddPage implements OnInit {
     toast.present();
   }
 
+  async presentFileSizeToast() {
+    const toast = await this.toastController.create({
+      message: 'La taille des images ne doit pas dépasser 800 Ko',
+      duration: 8000,
+      color: 'warning',
+      position: 'top',
+      cssClass: 'top-toast',
+    });
+    toast.present();
+  }
+
   ngOnInit() {
     this.initAlertForm();
     this.initEventForm();
@@ -168,6 +179,11 @@ export class AddPage implements OnInit {
 
       for (const image of images.photos) {
         if (image.path) {
+          const stats = await Filesystem.stat({ path: image.path });
+          if (stats.size > 800 * 1024) {
+            await this.presentFileSizeToast();
+            continue;
+          }
           const file = await Filesystem.readFile({ path: image.path });
           const dataUrl = 'data:image/jpeg;base64,' + file.data;
           this.selectedImages.push({ preview: dataUrl });
@@ -183,6 +199,10 @@ export class AddPage implements OnInit {
     if (input.files) {
       const files = Array.from(input.files);
       files.forEach((file) => {
+        if (file.size > 800 * 1024) {
+          this.presentFileSizeToast();
+          return;
+        }
         if (file.type.startsWith('image/')) {
           const reader = new FileReader();
           reader.onload = () => {
