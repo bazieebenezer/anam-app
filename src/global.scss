@@ -248,6 +248,12 @@ span {
   ion-skeleton-text {
     --background-rgb: 232, 232, 232;
   }
+
+  .image-preview {
+    ion-icon {
+      color: var(--ion-color-danger) !important;
+    }
+  }
 }
 
 .top-toast {
