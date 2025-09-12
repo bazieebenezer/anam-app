@@ -43,6 +43,39 @@ Chaque fonctionnalité est analysée selon son objectif, son scénario d'utilisa
     9.  **`OnboardingService`** : Écrit la clé `hasSeenOnboarding` avec la valeur `'true'` dans le stockage de l'appareil.
     10. **Routeur Angular** : Navigue vers `/tabs`. Le `onboardingGuard` s'exécute à nouveau, mais cette fois, il reçoit `true` et autorise la navigation.
 
+```mermaid
+sequenceDiagram
+    participant User
+    participant AngularRouter as Routeur Angular
+    participant OnboardingGuard as onboardingGuard
+    participant OnboardingService
+    participant DeviceStorage as Stockage Appareil
+
+    User->>AngularRouter: Lance l'application
+    AngularRouter->>OnboardingGuard: Tente de naviguer vers /tabs
+    OnboardingGuard->>OnboardingService: checkHasSeenOnboarding()
+    OnboardingService->>DeviceStorage: get('hasSeenOnboarding')
+    DeviceStorage-->>OnboardingService: null
+    OnboardingService-->>OnboardingGuard: false
+    OnboardingGuard-->>AngularRouter: Annule navigation, redirige vers /onboarding
+    AngularRouter-->>User: Affiche OnboardingPage
+
+    User->>OnboardingPage: Clique sur "Commencer"
+    OnboardingPage->>OnboardingService: setOnboardingComplete()
+    OnboardingService->>DeviceStorage: set('hasSeenOnboarding', 'true')
+    DeviceStorage-->>OnboardingService: OK
+    OnboardingService-->>OnboardingPage: OK
+    OnboardingPage->>AngularRouter: Navigue vers /tabs
+
+    AngularRouter->>OnboardingGuard: Tente de naviguer vers /tabs
+    OnboardingGuard->>OnboardingService: checkHasSeenOnboarding()
+    OnboardingService->>DeviceStorage: get('hasSeenOnboarding')
+    DeviceStorage-->>OnboardingService: 'true'
+    OnboardingService-->>OnboardingGuard: true
+    OnboardingGuard-->>AngularRouter: Autorise la navigation
+    AngularRouter-->>User: Affiche la page principale (/tabs)
+```
+
 -   **Détails Techniques et Classes Impliquées** :
     -   **`OnboardingService`**: Service singleton qui abstrait la logique de persistance. Il utilise `@capacitor/preferences` pour une compatibilité multiplateforme du stockage clé-valeur.
     -   **`onboardingGuard`**: Un `CanActivateFn` Angular moderne qui protège les routes principales. Il utilise l'injection de dépendances (`inject()`) pour accéder au service et au routeur.
@@ -65,8 +98,32 @@ Chaque fonctionnalité est analysée selon son objectif, son scénario d'utilisa
     10. **`AuthService`** : Appelle `signInWithCredential()` pour connecter l'utilisateur à Firebase.
     11. **`AuthService`** : Appelle `updateUserData()` pour créer/mettre à jour le profil de l'utilisateur dans la collection `users` de Firestore.
 
+```mermaid
+sequenceDiagram
+    participant User
+    participant SigninPage as Page de Connexion
+    participant AuthService
+    participant SocialLoginPlugin as @capgo/capacitor-social-login
+    participant GoogleSDK as SDK Natif Google
+    participant Firebase
+
+    User->>SigninPage: Clique sur "Se connecter avec Google"
+    SigninPage->>AuthService: loginWithGoogle()
+    AuthService->>SocialLoginPlugin: login({ provider: 'google' })
+    SocialLoginPlugin->>GoogleSDK: Déclenche le flux de connexion
+    GoogleSDK-->>User: Affiche la sélection de compte
+    User->>GoogleSDK: Sélectionne un compte
+    GoogleSDK-->>SocialLoginPlugin: Retourne idToken
+    SocialLoginPlugin-->>AuthService: Retourne idToken
+    AuthService->>Firebase: signInWithCredential(GoogleAuthProvider.credential(idToken))
+    Firebase-->>AuthService: Utilisateur connecté
+    AuthService->>Firebase: updateUserData(user) dans Firestore
+    Firebase-->>AuthService: Profil utilisateur mis à jour
+    AuthService-->>SigninPage: Connexion réussie
+```
+
 -   **Détails Techniques et Classes Impliquées** :
-    -   **`AuthService`**: Le service central qui orchestre l'authentification. Il expose un `Observable<AppUser>` (`currentUser$`) qui fusionne les données de Firebase Auth et de Firestore en temps réel.
+    -   **`AuthService`**: Le service central qui orchestre l'authentification. Il expose un `Observable<AppUser>` (`currentUser) qui fusionne les données de Firebase Auth et de Firestore en temps réel.
     -   **`@capgo/capacitor-social-login`**: Plugin Capacitor essentiel pour une expérience de connexion Google native.
     -   **`AppUser` (Interface)** : Modèle de données pour le profil utilisateur étendu stocké dans Firestore (incluant les rôles).
     -   **`auth.guard.ts` et `admin.guard.ts`**: **(Recommandation Critique)** Les documentations révèlent que ces gardiens sont inactifs. Il est impératif de les activer pour protéger les routes. `authGuard` doit vérifier si un utilisateur est connecté, et `adminGuard` doit vérifier si `user.isAdmin` est `true`.
@@ -84,6 +141,34 @@ Chaque fonctionnalité est analysée selon son objectif, son scénario d'utilisa
     6.  **`SettingsPage`** : Valide le code en le comparant à une chaîne de caractères codée en dur (`'02112'`).
     7.  **`SettingsPage`** : Si le code est correct, appelle `authService.setUserAsAdmin()`.
     8.  **`AuthService`** : Récupère l'UID de l'utilisateur courant et utilise `updateDoc` de Firestore pour mettre à jour le document `users/{uid}` avec le champ `{ isAdmin: true }`.
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant SettingsPage as Page Paramètres
+    participant AlertController as Boîte de dialogue
+    participant AuthService
+    participant Firestore
+
+    User->>SettingsPage: Navigue vers la page
+    SettingsPage-->>User: Affiche le bouton "Devenir administrateur"
+
+    User->>SettingsPage: Clique sur le bouton
+    SettingsPage->>AlertController: promptBecomeAdmin()
+    AlertController-->>User: Affiche la demande de code
+    User->>AlertController: Entre le code secret
+    AlertController-->>SettingsPage: Retourne le code
+
+    SettingsPage->>SettingsPage: Valide le code (côté client)
+    alt Code Correct
+        SettingsPage->>AuthService: setUserAsAdmin()
+        AuthService->>Firestore: updateDoc('users/{uid}', { isAdmin: true })
+        Firestore-->>AuthService: Document mis à jour
+        AuthService-->>SettingsPage: OK
+    else Code Incorrect
+        SettingsPage-->>User: Affiche une erreur
+    end
+```
 
 -   **Détails Techniques et Critiques** :
     -   **`SettingsPage`**: Le composant d'interface qui sert de point d'entrée pour l'élévation de privilèges.
@@ -108,6 +193,28 @@ Chaque fonctionnalité est analysée selon son objectif, son scénario d'utilisa
     6.  **`AddPage`** : Crée un objet `AnamEvent` ou `WeatherBulletin` et assigne le tableau de chaînes Base64 au champ `images`.
     7.  **`AddPage`** : Appelle `eventService.addEvent()` ou `publicationService.addAlert()`.
     8.  **Service** : Utilise `addDoc` pour enregistrer l'objet entier, y compris les images encodées, dans un **unique document Firestore**.
+
+```mermaid
+sequenceDiagram
+    participant Admin
+    participant AddPage as Page d'Ajout
+    participant CameraPlugin as @capacitor/camera
+    participant EventService
+    participant Firestore
+
+    Admin->>AddPage: Remplit le formulaire
+    Admin->>AddPage: Clique pour ajouter une image
+    AddPage->>CameraPlugin: getPhoto()
+    CameraPlugin-->>AddPage: Retourne le chemin de l'image
+    AddPage->>AddPage: Lit l'image et la convertit en Base64
+    AddPage->>AddPage: Stocke la chaîne Base64 dans un tableau
+
+    Admin->>AddPage: Clique sur "Publier"
+    AddPage->>EventService: addEvent(data avec image Base64)
+    EventService->>Firestore: addDoc(collection, {..., images: ['data:image/...']})
+    Firestore-->>EventService: Document créé (potentiellement très volumineux)
+    EventService-->>AddPage: Publication réussie
+```
 
 -   **Détails Techniques et Dette Technique Majeure** :
     -   **`AddPage`**: Le composant central qui gère la logique de formulaire et de traitement d'image.
@@ -137,6 +244,28 @@ Chaque fonctionnalité est analysée selon son objectif, son scénario d'utilisa
     7.  **FCM** : Distribue la notification uniquement aux appareils abonnés à ce topic.
     8.  **Appareil de l'Utilisateur Institutionnel** : L'utilisateur, lors de sa connexion, a été abonné à ce topic par `AuthService`. Il reçoit la notification.
 
+```mermaid
+sequenceDiagram
+    participant Admin
+    participant AddPage as Page d'Ajout
+    participant PublicationService
+    participant Firestore
+    participant AnamServer as `anam-server` (Node.js)
+    participant FCM as Firebase Cloud Messaging
+    participant UserDevice as Appareil Utilisateur
+
+    Admin->>AddPage: Crée un bulletin et cible une institution
+    AddPage->>PublicationService: addAlert({..., targetInstitutionId: 'inst_123'})
+    PublicationService->>Firestore: addDoc('bulletins', bulletinData)
+
+    Firestore-->>AnamServer: Détecte un nouveau document (onSnapshot)
+    AnamServer->>AnamServer: Lit le document et voit `targetInstitutionId`
+    AnamServer->>AnamServer: Construit le topic: 'institution_inst_123'
+    AnamServer->>FCM: Envoie une notification au topic 'institution_inst_123'
+    FCM->>UserDevice: Pousse la notification
+    UserDevice-->>User: Affiche la notification
+```
+
 -   **Détails Techniques et Classes Impliquées** :
     -   **`anam-server/index.js`**: Le backend Node.js qui écoute Firestore et envoie les notifications. Il utilise le SDK Admin Firebase.
     -   **`FcmService`**: Service Angular qui encapsule les interactions techniques avec les plugins Capacitor (`@capacitor/push-notifications`, `@capacitor-community/fcm`).
@@ -156,6 +285,37 @@ Chaque fonctionnalité est analysée selon son objectif, son scénario d'utilisa
     7.  **`PdfGenerationService`** :
         -   Sur le **web**, appelle `pdf.save()` pour déclencher un téléchargement.
         -   Sur **mobile**, convertit le PDF en Base64, l'écrit dans un fichier temporaire avec `@capacitor/filesystem`, puis utilise `@capacitor-community/file-opener` pour demander au système d'ouvrir le fichier.
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant BulletinDetailsPage as Page Détail Bulletin
+    participant PdfGenerationService
+    participant html2canvas
+    participant jsPDF
+    participant FileSystemPlugin as @capacitor/filesystem
+    participant FileOpenerPlugin as @capacitor-community/file-opener
+
+    User->>BulletinDetailsPage: Clique sur "Télécharger en PDF"
+    BulletinDetailsPage->>PdfGenerationService: generatePdf(bulletinData)
+    PdfGenerationService->>PdfGenerationService: Crée un <div> HTML invisible avec le contenu
+    note right of PdfGenerationService: Attend le chargement des images
+    PdfGenerationService->>html2canvas: Capture le <div>
+    html2canvas-->>PdfGenerationService: Retourne une image sur un <canvas>
+    PdfGenerationService->>jsPDF: Crée un PDF et y ajoute l'image du canvas
+    jsPDF-->>PdfGenerationService: Objet PDF généré
+
+    alt Plateforme Mobile
+        PdfGenerationService->>PdfGenerationService: Convertit le PDF en Base64
+        PdfGenerationService->>FileSystemPlugin: writeFile(path, data_base64)
+        FileSystemPlugin-->>PdfGenerationService: Fichier écrit
+        PdfGenerationService->>FileOpenerPlugin: open(filePath)
+        FileOpenerPlugin-->>User: Le système ouvre le PDF
+    else Plateforme Web
+        PdfGenerationService->>jsPDF: pdf.save('bulletin.pdf')
+        jsPDF-->>User: Le navigateur déclenche le téléchargement
+    end
+```
 
 -   **Détails Techniques et Bibliothèques Clés** :
     -   **`PdfGenerationService`**: Le service central qui orchestre tout le processus.
