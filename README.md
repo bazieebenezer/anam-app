@@ -425,79 +425,69 @@ Le système identifie quatre types d'acteurs humains et un acteur système :
 
 Le diagramme ci-dessous illustre les principaux cas d'utilisation et leurs relations.
 
-```plantuml
-@startuml
-' Mise en page
-left to right direction
-skinparam actorStyle awesome
-skinparam usecase {
-    BackgroundColor #A9DCDF
-    BorderColor #007B8E
-}
-skinparam rectangle {
-    BorderColor #007B8E
-}
+```mermaid
+%% Diagramme de cas d'utilisation simulé en Mermaid
+%% Type : diagramme de cas d'utilisation
+graph LR
+    %% Acteurs
+    Visiteur[Visiteur]
+    Utilisateur[Utilisateur]
+    Administrateur[Administrateur]
+    Institution[Institution]
+    Systeme[Système ANAM]
 
+    %% Cas d'utilisation
+    UC_Auth["S'authentifier"]
+    UC_View["Consulter le contenu"]
+    UC_Manage["Gérer le contenu"]
+    UC_Interact["Interagir avec le contenu"]
+    UC_Profile["Gérer son profil"]
+    UC_ReceiveNotif["Recevoir des notifications"]
+    UC_SendNotif["Envoyer des notifications"]
 
-' Définition des Acteurs
-actor Visiteur
-actor Utilisateur
-actor Administrateur
-actor Institution
-actor Système
+    %% Sous-cas / inclusions
+    VoirDetails["Voir les détails"]
+    RechercherFiltrer["Rechercher / Filtrer"]
+    Partager["Partager"]
+    GenererPDF["Générer PDF"]
+    TelechargerImage["Télécharger image"]
+    ChangerTheme["Changer de thème"]
+    SeDeconnecter["Se déconnecter"]
 
-' Hiérarchie des acteurs
-Visiteur <|-- Utilisateur
-Utilisateur <|-- Administrateur
-Utilisateur <|-- Institution
+    %% Extensions
+    AvecGoogle["avec Google"]
+    AvecImage["avec image"]
+    CiblerInstitution["Cibler Institution"]
+    DevenirAdmin["Devenir Admin"]
+    DevenirInstitution["Devenir Institution"]
 
-rectangle "Système ANAM" {
+    %% Relations acteurs -> cas d'utilisation
+    Visiteur --> UC_Auth
+    Utilisateur --> UC_View
+    Utilisateur --> UC_Interact
+    Utilisateur --> UC_Profile
+    Utilisateur --> UC_ReceiveNotif
+    Administrateur --> UC_Manage
+    Systeme --> UC_SendNotif
 
-  ' --- Cas d'utilisation principaux ---
-  usecase "S'authentifier" as UC_Auth
-  usecase "Consulter le contenu" as UC_View
-  usecase "Gérer le contenu" as UC_Manage
-  usecase "Interagir avec le contenu" as UC_Interact
-  usecase "Gérer son profil" as UC_Profile
-  usecase "Recevoir des notifications" as UC_ReceiveNotif
-  usecase "Envoyer des notifications" as UC_SendNotif
+    %% Relations d'inclusion
+    UC_View --> VoirDetails
+    UC_View --> RechercherFiltrer
+    UC_Interact --> Partager
+    UC_Interact --> GenererPDF
+    UC_Interact --> TelechargerImage
+    UC_Profile --> ChangerTheme
+    UC_Profile --> SeDeconnecter
 
-  ' --- Relations d'inclusion ---
-  UC_View .> (Voir les détails) : <<include>>
-  UC_View .> (Rechercher / Filtrer) : <<include>>
-  
-  UC_Interact .> (Partager) : <<include>>
-  UC_Interact .> (Générer PDF) : <<include>>
-  UC_Interact .> (Télécharger image) : <<include>>
-  
-  UC_Profile .> (Changer de thème) : <<include>>
-  UC_Profile .> (Se déconnecter) : <<include>>
+    %% Relations d'extension
+    UC_Auth --> AvecGoogle
+    Partager --> AvecImage
+    UC_Manage --> CiblerInstitution
+    UC_Profile --> DevenirAdmin
+    UC_Profile --> DevenirInstitution
 
-  ' --- Relations d'extension ---
-  (S'authentifier) <. (avec Google) : <<extend>>
-  (Partager) <. (avec image) : <<extend>>
-  (Gérer le contenu) <. (Cibler Institution) : <<extend>>
-  (Gérer son profil) <. (Devenir Admin) : <<extend>>
-  (Gérer son profil) <. (Devenir Institution) : <<extend>>
-  
-}
-
-' --- Relations avec les acteurs ---
-Visiteur -- UC_Auth
-
-Utilisateur -- UC_View
-Utilisateur -- UC_Interact
-Utilisateur -- UC_Profile
-Utilisateur -- UC_ReceiveNotif
-
-Administrateur -- UC_Manage
-
-Système -- UC_SendNotif
-
-' --- Relation de déclenchement ---
-UC_Manage ..> UC_SendNotif : <<trigger>>
-
-@enduml
+    %% Relation de déclenchement
+    UC_Manage -.-> UC_SendNotif
 ```
 
 ### 5.3. Explication des Relations
