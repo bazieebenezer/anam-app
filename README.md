@@ -21,6 +21,60 @@ Le projet est construit sur une stack technologique moderne et éprouvée, favor
 
 Cette architecture découplée permet une grande flexibilité et scalabilité, tout en s'appuyant sur des services managés pour minimiser la charge de maintenance de l'infrastructure.
 
+### 1.2. Diagramme de Classes Conceptuel
+
+Ce diagramme de classes Mermaid illustre les principales entités métier de l'application et leurs relations. Il met en évidence la structure des utilisateurs et des types de contenu.
+
+```mermaid
+classDiagram
+    direction LR
+
+    class Utilisateur {
+        <<Interface>>
+        +uid: string
+        +email: string
+        +displayName: string
+    }
+
+    class Administrateur {
+        +role: "admin"
+        +creerPublication()
+    }
+
+    class Institution {
+        +role: "institution"
+        +institutionId: string
+    }
+
+    class Publication {
+        <<Interface>>
+        +id: string
+        +title: string
+        +content: string
+        +author: Administrateur
+        +createdAt: Date
+        +images: string[]
+    }
+
+    class Bulletin {
+        +targetInstitution: Institution
+    }
+
+    class Evenement {
+        +eventDate: Date
+    }
+
+    Utilisateur <|-- Administrateur
+    Utilisateur <|-- Institution
+
+    Publication <|-- Bulletin
+    Publication <|-- Evenement
+
+    Administrateur "1" -- "0..*" Publication : Crée >
+    Institution "1" ..> "0..*" Bulletin : Est ciblé par <
+    Utilisateur "1" -- "0..*" Publication : Consulte >
+```
+
 ---
 
 ## 2. Analyse Approfondie des Fonctionnalités
