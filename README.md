@@ -407,6 +407,109 @@ sequenceDiagram
 
 ---
 
+## 5. Diagramme des Cas d'Utilisation
+
+Ce diagramme, réalisé en PlantUML, présente une vue d'ensemble des interactions possibles entre les différents acteurs et le système ANAM. Il met en évidence les fonctionnalités clés et les relations qui les unissent.
+
+### 5.1. Acteurs
+
+Le système identifie quatre types d'acteurs humains et un acteur système :
+
+-   **Visiteur** : Toute personne qui utilise l'application sans être authentifiée. Son interaction principale est de tenter de se connecter.
+-   **Utilisateur** : Un visiteur qui s'est authentifié avec succès. Il hérite des capacités du visiteur et peut en plus consulter et interagir avec le contenu, gérer son profil et recevoir des notifications. C'est l'acteur de base du système.
+-   **Administrateur** : Un `Utilisateur` avec des privilèges élevés. Il hérite de tous les droits de l'utilisateur et a en plus la capacité de créer et gérer le contenu de l'application.
+-   **Institution** : Un `Utilisateur` représentant une entité spécifique. Il hérite des droits de l'utilisateur et bénéficie d'un traitement spécial pour la consultation de contenu et la réception de notifications ciblées.
+-   **Système** : Représente le backend automatisé (`anam-server`) qui est responsable de l'envoi des notifications push.
+
+### 5.2. Diagramme PlantUML
+
+Le diagramme ci-dessous illustre les principaux cas d'utilisation et leurs relations.
+
+```plantuml
+@startuml
+' Mise en page
+left to right direction
+skinparam actorStyle awesome
+skinparam usecase {
+    BackgroundColor #A9DCDF
+    BorderColor #007B8E
+}
+skinparam rectangle {
+    BorderColor #007B8E
+}
+
+
+' Définition des Acteurs
+actor Visiteur
+actor Utilisateur
+actor Administrateur
+actor Institution
+actor Système
+
+' Hiérarchie des acteurs
+Visiteur <|-- Utilisateur
+Utilisateur <|-- Administrateur
+Utilisateur <|-- Institution
+
+rectangle "Système ANAM" {
+
+  ' --- Cas d'utilisation principaux ---
+  usecase "S'authentifier" as UC_Auth
+  usecase "Consulter le contenu" as UC_View
+  usecase "Gérer le contenu" as UC_Manage
+  usecase "Interagir avec le contenu" as UC_Interact
+  usecase "Gérer son profil" as UC_Profile
+  usecase "Recevoir des notifications" as UC_ReceiveNotif
+  usecase "Envoyer des notifications" as UC_SendNotif
+
+  ' --- Relations d'inclusion ---
+  UC_View .> (Voir les détails) : <<include>>
+  UC_View .> (Rechercher / Filtrer) : <<include>>
+  
+  UC_Interact .> (Partager) : <<include>>
+  UC_Interact .> (Générer PDF) : <<include>>
+  UC_Interact .> (Télécharger image) : <<include>>
+  
+  UC_Profile .> (Changer de thème) : <<include>>
+  UC_Profile .> (Se déconnecter) : <<include>>
+
+  ' --- Relations d'extension ---
+  (S'authentifier) <. (avec Google) : <<extend>>
+  (Partager) <. (avec image) : <<extend>>
+  (Gérer le contenu) <. (Cibler Institution) : <<extend>>
+  (Gérer son profil) <. (Devenir Admin) : <<extend>>
+  (Gérer son profil) <. (Devenir Institution) : <<extend>>
+  
+}
+
+' --- Relations avec les acteurs ---
+Visiteur -- UC_Auth
+
+Utilisateur -- UC_View
+Utilisateur -- UC_Interact
+Utilisateur -- UC_Profile
+Utilisateur -- UC_ReceiveNotif
+
+Administrateur -- UC_Manage
+
+Système -- UC_SendNotif
+
+' --- Relation de déclenchement ---
+UC_Manage ..> UC_SendNotif : <<trigger>>
+
+@enduml
+```
+
+### 5.3. Explication des Relations
+
+-   **Héritage (flèche à tête blanche)** : Montre la spécialisation des acteurs. Un `Utilisateur` est un `Visiteur` avec plus de droits. Un `Administrateur` est un `Utilisateur` avec encore plus de droits.
+-   **Association (ligne pleine)** : Indique qu'un acteur participe directement à un cas d'utilisation.
+-   **`<<include>>` (flèche pointillée)** : Représente une fonctionnalité qui est obligatoirement incluse dans un autre cas d'utilisation. Par exemple, pour "Consulter le contenu", on inclut la possibilité de "Voir les détails".
+-   **`<<extend>>` (flèche pointillée)** : Représente une fonctionnalité optionnelle qui peut étendre le comportement d'un cas d'utilisation de base. Par exemple, le cas "Partager" peut être étendu par "avec image" sur les plateformes mobiles.
+-   **`<<trigger>>` (flèche pointillée)** : Indique qu'un cas d'utilisation en déclenche un autre. Ici, "Gérer le contenu" (par une création) déclenche l'envoi de notifications par le "Système".
+
+---
+
 ## 4. Conclusion et Recommandations Stratégiques
 
 L'application ANAM est une plateforme fonctionnelle et bien architecturée, tirant parti des forces d'Ionic/Angular pour le frontend et de Firebase pour le backend. Cependant, l'analyse des documentations révèle plusieurs points critiques qui nécessitent une attention prioritaire pour garantir la performance, la sécurité et la scalabilité à long terme.
