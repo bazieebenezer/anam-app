@@ -22,6 +22,6 @@ export class OnboardingPage {
 
   async finishOnboarding() {
     await this.onboardingService.setOnboardingComplete();
-    this.router.navigate(['/tabs']);
+    this.router.navigate(['/signup']);
   }
 }

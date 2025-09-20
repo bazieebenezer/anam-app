@@ -62,7 +62,7 @@ const imagePromises = images.map((img) => {
 });
 await Promise.all(imagePromises);
 ```
-Cette étape cruciale parcourt toutes les balises `<img>` du template dynamique et crée un tableau de `Promise`. `Promise.all` garantit que la suite du code ne s'exécutera que lorsque toutes les images auront signalé leur événement `onload`.
+Cette étape cruciale parcourt toutes les balises `<img>` du template dynamique et crée un tableau de `Promise`. Pour garantir la fiabilité, le code gère également le cas où les images seraient déjà présentes dans le cache du navigateur (en vérifiant leur propriété `complete`). `Promise.all` garantit que la suite du code ne s'exécutera que lorsque toutes les images, qu'elles soient nouvelles ou mises en cache, seront prêtes à être rendues.
 
 ### Étape 3 : Capture du HTML avec `html2canvas`
 
@@ -119,14 +119,14 @@ while (heightLeft > 0) {
     c. Ajoute à nouveau la *même* grande image sur cette nouvelle page, mais avec la position verticale ajustée. `jsPDF` se charge de ne dessiner que la partie de l'image qui tombe dans les limites de la nouvelle page.
     d. On décrémente la hauteur restante.
 
-Cette technique de pagination manuelle est robuste et garantit que l'intégralité du contenu est rendue, quelle que soit sa longueur.
+Cette technique de pagination manuelle est robuste et garantit que l'intégralité du contenu est rendue, quelle que soit sa longueur. Le nom du fichier généré est également dynamique, incluant la date de publication du bulletin (par exemple, `bulletin du 15 septembre 2025.pdf`), ce qui facilite l'organisation des fichiers pour l'utilisateur.
 
 ### Étape 5 : Sauvegarde ou Ouverture du Fichier (Logique Multiplateforme)
 
 La dernière étape consiste à fournir le PDF à l'utilisateur, avec un comportement différent pour le web et le mobile.
 
 #### Logique pour le Web :
-C'est le cas le plus simple. L'appel à `pdf.save('bulletin.pdf')` déclenche la fonctionnalité de téléchargement standard du navigateur.
+C'est le cas le plus simple. L'appel à `pdf.save(fileName)` (où `fileName` est une chaîne de caractères comme `"bulletin du 15 septembre 2025.pdf"`) déclenche la fonctionnalité de téléchargement standard du navigateur, en fournissant directement un nom de fichier pertinent.
 
 #### Logique pour Mobile (Android/iOS) :
 Sur un appareil natif, on ne peut pas simplement "télécharger" un fichier. Il faut l'enregistrer dans le système de fichiers de l'application, puis demander au système d'exploitation de l'ouvrir.
@@ -137,7 +137,7 @@ Sur un appareil natif, on ne peut pas simplement "télécharger" un fichier. Il 
 
 ### Étape 6 : Finalisation et Gestion des Erreurs
 
-Que le processus réussisse ou échoue, il est essentiel de nettoyer et de notifier l'utilisateur. Le `div` temporaire est retiré du DOM et un toast de succès ou d'erreur est affiché.
+Que le processus réussisse ou échoue, il est essentiel de nettoyer et de notifier l'utilisateur. L'ensemble de la logique est encapsulé dans un bloc `try...catch` pour une gestion robuste des erreurs. Dans le bloc `finally` implicite (ou à la fin du `try` et au début du `catch`), le `div` temporaire est retiré du DOM pour ne laisser aucune trace. Un toast de succès ou d'erreur est ensuite affiché pour informer l'utilisateur du résultat de l'opération.
 
 ## 4. Conclusion
 

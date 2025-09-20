@@ -109,7 +109,7 @@ private async shareFallback(title: string, description: string) {
   }
 }
 ```
-Cette approche élimine complètement le risque d'erreur `NotAllowedError` et garantit que l'utilisateur peut toujours partager le contenu textuel de manière fiable, ce qui est l'objectif principal.
+Cette approche élimine complètement le risque d'erreur `NotAllowedError` et garantit que l'utilisateur peut toujours partager le contenu textuel de manière fiable, ce qui est l'objectif principal. Dans le cas où même ce partage textuel échouerait (par exemple, si l'utilisateur ferme manuellement la fenêtre de partage), une notification toast informe l'utilisateur de l'échec.
 
 ## 6. Conclusion
 

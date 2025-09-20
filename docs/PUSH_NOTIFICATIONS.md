@@ -162,7 +162,7 @@ Cette architecture garantit une gestion précise et sécurisée des canaux de no
 
 ### 3.3. Retour Visuel pour l'Utilisateur (Toasts)
 
-Pour améliorer l'expérience utilisateur et faciliter le débogage, le `FcmService` a été enrichi pour fournir un retour visuel direct lors des opérations d'abonnement et de désabonnement aux topics. Cette amélioration utilise le `ToastController` d'Ionic pour afficher des messages non intrusifs.
+Pour améliorer l'expérience utilisateur et faciliter le débogage, le `FcmService` avait été enrichi pour fournir un retour visuel direct lors des opérations d'abonnement et de désabonnement aux topics. Bien que cette fonctionnalité soit actuellement commentée dans le code source, elle reste une amélioration pertinente. Elle utilise le `ToastController` d'Ionic pour afficher des messages non intrusifs.
 
 **Fonctionnement :**
 

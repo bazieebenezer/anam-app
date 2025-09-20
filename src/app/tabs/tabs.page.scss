@@ -1,5 +1,12 @@
+ion-tab-button {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
 ion-icon {
   color: var(--ion-color-dark-shade);
+  margin-inline-end: 6px;
 }
 
 ion-tab-bar {
