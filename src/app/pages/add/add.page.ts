@@ -240,14 +240,18 @@ export class AddPage implements OnInit {
 
     try {
       const imageUrls = this.selectedImages.map((img) => img.preview);
+      const formValue = this.alertForm.value;
+      const filteredTips = formValue.tips.filter((tip: string) => tip && tip.trim() !== '');
+
       const alertData = {
-        ...this.alertForm.value,
+        ...formValue,
+        tips: filteredTips,
         images: imageUrls,
         createdAt: new Date(),
         targetInstitutionId:
-          this.alertForm.value.target === 'all'
+          formValue.target === 'all'
             ? null
-            : this.alertForm.value.target,
+            : formValue.target,
       };
       await this.publicationService.addAlert(alertData as WeatherBulletin);
       await this.presentToast('Alerte publiée avec succès !', 'success');
