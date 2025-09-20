@@ -1,4 +1,7 @@
 <ion-content fullscreen="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-item lines="none">
     <ion-img src="./assets/logo/anam_logo.png"></ion-img>
     <ion-button class="notifications" slot="end" (click)="openNewPostsSheet()">

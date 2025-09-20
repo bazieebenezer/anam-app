@@ -17,6 +17,8 @@ import {
   IonModal,
   IonSkeletonText,
   ModalController,
+  IonRefresher,
+  IonRefresherContent,
 } from '@ionic/angular/standalone';
 import { PublicationService } from 'src/app/services/publication/publication.service';
 import { WeatherBulletin } from 'src/app/model/bulletin.model';
@@ -37,6 +39,8 @@ import { ThemeService } from 'src/app/services/theme.service';
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
+    IonRefresherContent,
+    IonRefresher,
     IonModal,
     IonItem,
     IonText,
@@ -79,11 +83,26 @@ export class HomePage implements OnInit {
     private shareService: ShareService
   ) {}
 
-  async ngOnInit() {
-    this.isLoading = true;
-    this.newPostsCount$ = this.newPostService.getNewPostsCount();
-    const user = await firstValueFrom(this.authService.currentUser$);
-    this.bulletinService.getPublications().subscribe((bulletins) => {
+  ngOnInit() {
+    this.loadBulletins();
+  }
+
+  handleRefresh(event: any) {
+    this.loadBulletins(event);
+  }
+
+  private async loadBulletins(event?: any) {
+    if (!event) {
+      this.isLoading = true;
+    }
+
+    try {
+      this.newPostsCount$ = this.newPostService.getNewPostsCount();
+      const user = await firstValueFrom(this.authService.currentUser$);
+      const bulletins = await firstValueFrom(
+        this.bulletinService.getPublications()
+      );
+
       if (user && user.isInstitution) {
         this.bulletins = bulletins.filter(
           (b) => !b.targetInstitutionId || b.targetInstitutionId === user.uid
@@ -91,9 +110,16 @@ export class HomePage implements OnInit {
       } else {
         this.bulletins = bulletins.filter((b) => !b.targetInstitutionId);
       }
+
       this.applyFilters();
+    } catch (error) {
+      console.error('Error loading bulletins:', error);
+    } finally {
       this.isLoading = false;
-    });
+      if (event) {
+        event.target.complete();
+      }
+    }
   }
 
   onSearchChange(event: any) {
