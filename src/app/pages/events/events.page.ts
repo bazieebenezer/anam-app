@@ -15,11 +15,11 @@ import {
   IonButtons,
   IonText,
   IonModal,
-  IonSkeletonText,
-} from '@ionic/angular/standalone';
+  IonSkeletonText, IonRefresher, IonRefresherContent } from '@ionic/angular/standalone';
 import { EventService } from '../../services/evenments/event.service';
 import { AnamEvent } from '../../model/event.model';
 import { Router, RouterLink } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { ShareService } from 'src/app/services/share.service';
 
 @Component({
@@ -45,6 +45,8 @@ import { ShareService } from 'src/app/services/share.service';
     FormsModule,
     RouterLink,
     IonSkeletonText,
+    IonRefresher,
+    IonRefresherContent
   ],
 })
 export class EventsPage implements OnInit {
@@ -64,14 +66,31 @@ export class EventsPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.isLoading = true;
-    this.eventService.getEventsFromFirebase().subscribe((events) => {
-      this.events = events;
-      this.applyFilters();
-      this.isLoading = false;
-    });
+    this.loadEvents();
   }
 
+  handleRefresh(event: any) {
+    this.loadEvents(event);
+  }
+
+  private async loadEvents(event?: any) {
+    if (!event) {
+      this.isLoading = true;
+    }
+
+    try {
+      const events = await firstValueFrom(this.eventService.getEventsFromFirebase());
+      this.events = events;
+      this.applyFilters();
+    } catch (err) {
+      console.error('Error loading events:', err);
+    } finally {
+      this.isLoading = false;
+      if (event) {
+        event.target.complete();
+      }
+    }
+  }
   onSearchChange(event: any) {
     this.searchTerm = event.detail.value?.toLowerCase() || '';
     this.applyFilters();
