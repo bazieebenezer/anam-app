@@ -137,6 +137,11 @@ span {
     color: var(--ion-color-light-contrast) !important;
   }
 
+  .tab-label {
+    color: var(--ion-color-primary-tint) !important;
+    font-size: 12px !important;
+  }
+
   // Style spécifique pour les éléments qui nécessitent un contraste différent
   p.secondary-text,
   span.secondary-text {
