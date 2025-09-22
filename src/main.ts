@@ -1,7 +1,10 @@
 import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter } from '@angular/router';
-import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
+import {
+  IonicRouteStrategy,
+  provideIonicAngular,
+} from '@ionic/angular/standalone';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { DatePipe } from '@angular/common';
 
@@ -21,7 +24,7 @@ if (environment.production) {
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular({ swipeBackEnabled: false }),
+    provideIonicAngular({ swipeBackEnabled: false, mode: 'md' }),
     provideRouter(routes),
     // Configuration AngularFire corrigée
     provideFirebaseApp(() => initializeApp(environment.firebase)),
