@@ -3,7 +3,10 @@
     <ion-tab-button tab="home">
       @if(selectedTab() === "home" || selectedTab() === "bulletin-details") {
       <ion-icon name="home-sharp" color="primary"></ion-icon>
-      Accueil } @else {
+      <span style="color: var(--ion-color-primary); font-size: 12px"
+        >Accueil</span
+      >
+      } @else {
       <ion-icon name="home-outline"></ion-icon>
       }
     </ion-tab-button>
@@ -11,7 +14,10 @@
     <ion-tab-button tab="events">
       @if (selectedTab() === "events" || selectedTab() === "event-details") {
       <ion-icon name="newspaper" color="primary"></ion-icon>
-      Informations } @else {
+      <span style="color: var(--ion-color-primary); font-size: 12px"
+        >Informations</span
+      >
+      } @else {
       <ion-icon name="newspaper-outline"></ion-icon>
       }
     </ion-tab-button>
@@ -20,7 +26,10 @@
     <ion-tab-button tab="add">
       @if (selectedTab() === "add") {
       <ion-icon name="add-outline" color="primary"></ion-icon>
-      Publier } @else {
+      <span style="color: var(--ion-color-primary); font-size: 12px"
+        >Publier</span
+      >
+      } @else {
       <ion-icon name="add-outline"></ion-icon>
       }
     </ion-tab-button>
@@ -29,7 +38,10 @@
     <ion-tab-button tab="settings">
       @if (selectedTab() === "settings") {
       <ion-icon name="settings" color="primary"></ion-icon>
-      Paramètres } @else {
+      <span style="color: var(--ion-color-primary); font-size: 12px"
+        >Paramètres</span
+      >
+      } @else {
       <ion-icon name="settings-outline"></ion-icon>
       }
     </ion-tab-button>
